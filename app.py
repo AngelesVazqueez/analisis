@@ -1,7 +1,7 @@
 from flask import Flask, render_template
-
 from routes.main import main_routes
-
+from routes.user import user_routes
+from routes.admin import admin_routes
 import os
 
 app = Flask(__name__)
@@ -10,6 +10,11 @@ app.secret_key = os.environ.get('SECRET_KEY')
 
 # Registrar blueprints
 app.register_blueprint(main_routes)
+
+app.register_blueprint(user_routes)
+
+app.register_blueprint(admin_routes)
+
 
 # Ruta para manejar páginas no encontradas
 @app.errorhandler(404)

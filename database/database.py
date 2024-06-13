@@ -1,11 +1,25 @@
-import os
 import mysql.connector
+import os
 
-# Conexion a la base de datos
-conexion = mysql.connector.connect(
-   host = os.environ.get("DB_HOST"), 
-   port = os.environ.get("DB_PORT") ,
-   user = os.environ.get("DB_USER") ,
-   password = os.environ.get("DB_PASSWORD"),
-   db = os.environ.get("DB_NAME"),
-)
+# Obtener las variables de entorno
+MYSQL_HOST = os.environ.get('MYSQL_HOST')
+MYSQL_USER = os.environ.get('MYSQL_USER')
+MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
+
+def dbConnection():
+    try:
+        # Crear la conexión a la base de datos MySQL
+        connection = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='123456789',
+            database='analisis'
+        )
+        print("Conexión exitosa a la base de datos MySQL")
+        return connection
+    except mysql.connector.Error as err:
+        print("Error de conexión a la base de datos MySQL:", err)
+        return None
+
+dbConnection()
