@@ -34,7 +34,7 @@ def iniciar():
         # Buscar en la tabla de admin
         cursor.execute("SELECT * FROM admin WHERE email = %s", (email,))
         login_admin = cursor.fetchone()
-        if login_admin and bcrypt.checkpw(password.encode('utf-8'), login_admin['password'].encode('utf-8')):
+        if login_admin and login_admin['password'] == password:
             session['email'] = email
             return redirect(url_for('admin.admin'))
 
