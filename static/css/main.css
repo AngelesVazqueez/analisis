@@ -1554,14 +1554,3 @@ section,
 .starter-section {
   /* Add your styles here */
 }
-
-
-/*--------------------------------------------------------------
-# Boton de registro
---------------------------------------------------------------*/
-.user-button,
-.admin-button,
-.btn-primary {
-    background-color:#eb5d1e;
-    border-color: #eb5d1e;
-}
