@@ -1548,6 +1548,18 @@ section,
   color: var(--accent-color);
 }
 
+.small-card {
+  max-width: 600px; /* Ajusta este valor según sea necesario */
+  margin: auto;
+}
+
+.card-body {
+  border: 2px solid #f8f9fa; /* Cambia el color y el grosor según prefieras */
+  border-radius: 10px; /* Cambia este valor para bordes más redondeados o menos */
+}
+
+
+/* Cambia estos valores por los que desees */
 .boton {
   color: var(--contrast-color);
   background: var(--accent-color);
@@ -1556,7 +1568,7 @@ section,
   font-size: 15px;
   letter-spacing: 1px;
   display: inline-block;
-  padding: 10px 50px 12px 50px;
+  padding: 10px 28px 12px 28px;
   border-radius: 50px;
   transition: 0.5s;
   box-shadow: 0 8px 28px color-mix(in srgb, var(--accent-color), transparent 80%);
@@ -1568,59 +1580,3 @@ section,
   box-shadow: 0 8px 28px color-mix(in srgb, var(--accent-color), transparent 55%);
 }
 
-/* CSS ajustado para el borde de la tarjeta */
-.small-card {
-  max-width: 1200px; /* Aumenta el ancho máximo */
-  margin: 20px auto; /* Ajusta el margen para que no toque los bordes */
-  border: 2px solid #f4f9f5; /* Estilo de borde */
-  border-radius: 15px; /* Radio de las esquinas */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  padding: 30px; /* Espaciado interno */
-  min-height: 200px; /* Altura mínima específica para mayor tamaño vertical */
-}
-.estilo-input {
-  width: 90%; /* Ajusta el ancho al 100% del contenedor padre */
-  max-width: 1000px; /* Ancho máximo específico */
-  height: 40px; /* Altura específica */
-  font-size: 16px; /* Tamaño de texto */
-  padding: 10px; /* Espaciado interno */
-  border: 1px solid #ced4da; /* Borde */
-  border-radius: 4px; /* Esquinas redondeadas */
-  box-sizing: border-box; /* Incluye borde y relleno en el tamaño total */
-  margin: 0 auto; /* Centra el campo horizontalmente */
-}
-
-.alert-container {
-  margin: 20px auto;
-  max-width: 600px; /* Ajusta el ancho según sea necesario */
-}
-
-.alert {
-  background-color: #e7f3fe; /* Fondo azul claro */
-  color: #31708f; /* Texto azul oscuro */
-  border: 1px solid #bce8f1; /* Borde azul claro */
-  border-radius: 5px; /* Bordes redondeados */
-  padding: 15px; /* Espaciado interno */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  text-align: left; /* Alineación del texto */
-}
-
-.alert p {
-  margin: 0;
-  padding: 0;
-  font-size: 16px; /* Tamaño del texto */
-}
-
-.alert .close {
-  color: #31708f;
-  opacity: 0.8;
-}
-
-.alert .close:hover {
-  color: #215673;
-  opacity: 1;
-}
-
-p {
-  font-family: Arial;
-}
