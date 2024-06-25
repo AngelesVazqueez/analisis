@@ -30,3 +30,25 @@ def get_admin(email):
         except mysql.connector.Error as err:
             print("Error al obtener administrador:", err)
     return None
+
+def obtener_areas():
+    """Función para obtener todas las áreas disponibles desde la base de datos."""
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT IdArea, NombreArea FROM Areas")
+        areas = cursor.fetchall()
+        return areas
+    except mysql.connector.Error as err:
+        print(f"Error al obtener áreas desde la base de datos: {err}")
+        return []
+    
+def obtener_departamentos():
+    """Función para obtener todas las áreas disponibles desde la base de datos."""
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT IdArea, NombreArea FROM Departamentos")
+        areas = cursor.fetchall()
+        return areas
+    except mysql.connector.Error as err:
+        print(f"Error al obtener departamentos desde la base de datos: {err}")
+        return []

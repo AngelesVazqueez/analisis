@@ -39,7 +39,7 @@ def iniciar():
             return redirect(url_for('admin.admin'))
 
         flash('Correo o contraseña incorrectos')
-        return redirect(url_for('session.login'))
+        return redirect(url_for('main.index'))
     except mysql.connector.Error as err:
         print("Error al iniciar sesión:", err)
     finally:
