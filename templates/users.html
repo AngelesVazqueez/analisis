@@ -66,12 +66,38 @@
 
 			<div class="container">
 				<div class="row gy-4">
-					
+					{% for user in users %}
+					<div class="col-md-6 mb-3">
+						<div class="card">
+							<div class="card-header">
+								<h5 class="text-center">{{ user.name }}</h5>
+							</div>
+							<div class="card-body">
+								<form>
+									<div class="row">
+										<input type="hidden" class="form-control" value="{{ user.id }}" name="id">
+										<div class="col">
+											<small>Correo</small>
+											<input type="text" class="form-control" value="{{ user.email }}" readonly>
+										</div>
+										<div class="col">
+											<small>Número Telefónico</small>
+											<input type="text" class="form-control" value="{{ user.phone }}" readonly>
+										</div>
+									</div>
+									<!-- Botón para eliminar el usuario -->
+									<a href="{{ url_for('admin.delete_user', user_id=user.id) }}"
+										class="btn btn-danger btn-delete mt-3">Eliminar</a>
+								</form>
+							</div>
+						</div>
+					</div>
+					{% endfor %}
 				</div>
 			</div>
 
 		</section>
-        <!-- /Hero Section -->
+		<!-- /Hero Section -->
 
 	</main>
 
@@ -156,6 +182,7 @@
 
 	<!-- Main JS File -->
 	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
 
 </body>
 

@@ -13,7 +13,7 @@ def dbConnection():
         connection = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='12345',
+            password='123456789',
             database='analisis'
         )
         print("Conexión exitosa a la base de datos MySQL")

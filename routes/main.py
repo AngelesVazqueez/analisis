@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 import database.database as dbase
 import mysql.connector
-import bcrypt
 
 
 # Obtener la conexión a la base de datos
@@ -39,7 +38,7 @@ def iniciar():
             return redirect(url_for('admin.admin'))
 
         flash('Correo o contraseña incorrectos')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('session.login'))
     except mysql.connector.Error as err:
         print("Error al iniciar sesión:", err)
     finally:
