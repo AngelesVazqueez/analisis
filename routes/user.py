@@ -13,7 +13,7 @@ connection = dbase.dbConnection()
 def user():
     if 'email' in session:
         email = session['email']
-        # Función para obtener datos del usuario desde MongoDB
+        # Función para obtener datos del usuario desde la d
         user = get_user(email)
         if user:
             return render_template('user.html', user=user)
@@ -25,14 +25,13 @@ def user():
 def area():
     if 'email' in session:
         email = session['email']
-        # Función para obtener datos del usuario desde MongoDB
+        # Función para obtener datos del usuario desde bd
         user = get_user(email)
         if user:
             return render_template('area.html')
     else:
         return redirect(url_for('main.index'))
     
-
     
 @user_routes.route('/RegistrarArea/', methods=['GET', 'POST'])
 def RegistrarArea():
@@ -71,7 +70,7 @@ def RegistrarArea():
 def departamento():
    if 'email' in session:
         email = session['email']
-        user = get_user(email)  # Función para obtener detalles del usuario desde MongoDB
+        user = get_user(email)  # Función para obtener detalles del usuario desde desde bd
 
         if user:
             if request.method == 'POST':
@@ -116,10 +115,26 @@ def departamento():
 def puesto():
    if 'email' in session:
         email = session['email']
-        # Función para obtener datos del usuario desde MongoDB
+        # Función para obtener datos del usuario desde la bd
         user = get_user(email)
         if user:
             return render_template('puesto.html')
         else:
             return redirect(url_for('main.index'))
     
+        
+@user_routes.route('/areas/', methods=['GET', 'POST'])
+def areas():
+    cursor=connection.cursor()
+    cursor.execute("""SELECT Departamento.NombreDepartamento, Areas.NombreArea
+                    FROM Departamento
+                    JOIN Areas ON Departamento.IdArea = Areas.IdArea;""")
+    datosDB= cursor.fetchall()
+    #coversion de datos
+    insertObjeto= []
+    columName= [column[0] for column in cursor.description]
+    for registro in datosDB:
+        insertObjeto.append(dict(zip(columName, registro)))
+
+        cursor.close()
+    return render_template("mostrar.html", data=insertObjeto)
