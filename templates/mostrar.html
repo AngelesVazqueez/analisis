@@ -35,23 +35,32 @@
 	<header id="header" class="header d-flex align-items-center sticky-top">
 		<div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-			<a href="{{ url_for('admin.admin') }}" class="logo d-flex align-items-center me-auto">
-				<h1 class="sitename">Administrador</h1>
+			<a href="" class="logo d-flex align-items-center me-auto">
+				<!-- Uncomment the line below if you also wish to use an image logo -->
+				<!-- <img src="assets/img/logo.png" alt=""> -->
+				<h1 class="sitename">Usuario</h1>
 			</a>
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="{{ url_for('admin.admin') }}">Inicio</a></li>
-					<li><a href="{{ url_for('admin.registro') }}">Registro</a></li>
-					<li class="dropdown"><a href="#" class="active"><span>Listas</span> <i
+					<li><a href="" class="active">Home</a></li>
+					<li class="dropdown"><a href="#"><span>Agregar</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
-							<li><a href="{{ url_for('admin.users') }}">Usuarios</a></li>
-							<li><a href="{{ url_for('admin.admins') }}">Administradores</a></li>
+							<li><a href="{{ url_for('user.area') }}"">Área</a></li>
+							<li><a href=" {{ url_for('user.departamento') }}"">Departamento</a></li>
+							<li><a href="{{ url_for('user.puesto') }}"">Puesto</a></li>
 						</ul>
 					</li>
-				</ul>
-				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+					<li class=" dropdown"><a href="#"><span>Lista</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+									<ul>
+										<li><a href="{{ url_for('user.areas') }}">Área</a></li>
+										<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+										<li><a href="#">Puesto</a></li>
+									</ul>
+							</li>
+						</ul>
+						<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 			</nav>
 
 			<a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
@@ -59,35 +68,41 @@
 		</div>
 	</header>
 
+	<!-- Main Content -->
 	<main class="main">
-
 		<!-- Hero Section -->
 		<section id="hero" class="section hero">
-
 			<div class="container">
 				<div class="row gy-4">
-					{% for user in users %}
+					{% for area in data %}
 					<div class="col-md-6 mb-3">
 						<div class="card">
 							<div class="card-header">
-								<h5 class="text-center">{{ user.name }}</h5>
+								<h5 class="text-center">{{ area.NombreArea }}</h5>
 							</div>
 							<div class="card-body">
 								<form>
+									{% if area.Departamentos %}
 									<div class="row">
-										<input type="hidden" class="form-control" value="{{ user.id }}" name="id">
 										<div class="col">
-											<small>Correo</small>
-											<input type="text" class="form-control" value="{{ user.email }}" readonly>
-										</div>
-										<div class="col">
-											<small>Número Telefónico</small>
-											<input type="text" class="form-control" value="{{ user.phone }}" readonly>
+											<h5 name="IdArea" class="text-center">Id del área: {{ area.IdArea }}</h5>
 										</div>
 									</div>
-									<!-- Botón para eliminar el usuario -->
-									<a href="{{ url_for('admin.delete_user', user.id=user.id) }}"
-										class="btn btn-danger btn-delete mt-3">Eliminar</a>
+									{% for departamento in area.Departamentos.split(', ') %}
+									<div class="row">
+										<div class="col">
+											<small>Departamento:</small>
+											<input type="text" class="form-control" value="{{ departamento }}" readonly>
+										</div>
+									</div>
+									{% endfor %}
+		
+									{% else %}
+									<p>No hay departamentos registrados en esta área.</p>
+									{% endif %}
+									<!-- Botón para eliminar el área -->
+									<a href="{{ url_for('user.eliminar_area', IdArea=area.IdArea) }}"
+									class="btn btn-danger btn-delete mt-3">Eliminar</a>
 								</form>
 							</div>
 						</div>
@@ -95,8 +110,8 @@
 					{% endfor %}
 				</div>
 			</div>
-
 		</section>
+		
 		<!-- /Hero Section -->
 
 	</main>
@@ -106,7 +121,7 @@
 			<div class="row gy-4">
 				<div class="col-lg-4 col-md-6 footer-about">
 					<a href="index.html" class="d-flex align-items-center">
-						<span class="sitename">Ánalisis de Puestos</span>
+						<span class="sitename">Ninestars</span>
 					</a>
 					<div class="footer-contact pt-3">
 						<p>A108 Adam Street</p>

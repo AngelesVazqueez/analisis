@@ -78,462 +78,356 @@
                     <div class="card-header text-center mt-4">
                         <h1>Agregar Puesto</h1>
                     </div>
-                    <form>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Nombre del puesto:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Selecciona el departamento:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            //{% for area in areas %}
-                                            <option value="{{ area[0] }}">{{ area[1] }}</option>
-                                       // {% endfor %}
-                                        </select>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Jefe:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Empieza por apellido paterno">
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Clave:</label>
-                                        <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Número de plazas:</label>
-                                        <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Objetivo:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" >
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-5">
-                                        <label for="exampleFormControlFile1" class="form-label">Ubicación:</label>
-                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Funciones especificas:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" >
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Equipo de trabajo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" ></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Reemplaza a:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Es reemplazado por:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                    </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h1>Relaciones Internas</h1>
-                                <h2 class="mt-4">Dentro del departamento</h2>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Selecciona el departamento:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                        </select>
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Objetivo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h2 class="mt-4">Dentro del Área</h2>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Selecciona el Área:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                        </select>
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Objetivo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h2 class="mt-4">Fuera del Área</h2>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Selecciona:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                        </select>
-                                      </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Objetivo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h1>Relaciones Externas</h1>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Selecciona:</label>
-                                        <select id="exampleInputEmail1" name="id_area" class="form-select" required>
-                                            <option value=""></option>
-                                        </select>
-                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Objetivo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="form-group mt-3">
-                                    <label for="exampleInputEmail1" class="form-label">Funciones Específicas:</label>
-                                    <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                  </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h3>Condiciones de trabajo</h3>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div>
-                                        <label for="exampleInputEmail1" class="form-label">Esfuerzo físico:</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Normal" value="Normal">
-                                        <label class="form-check-label" for="inlineRadio1">Normal</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="Complejo" value="Complejo">
-                                        <label class="form-check-label" for="inlineRadio2">Complejo</label>
-                                    </div>  
-                                </div>
-
-                                <div class="col">
-                                    <div>
-                                        <label for="exampleInputEmail1" class="form-label">Esfuerzo mental:</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                        <label class="form-check-label" for="inlineRadio1">Rutina</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">Mediana</label>
-                                    </div>  
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                        <label class="form-check-label" for="inlineRadio2">Definido</label>
-                                    </div>  
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Riesgo de accidente:</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">Nulo</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Regular</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Poco</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Frecuente</label>
-                                        </div>  
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Ambiente:</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">Normal interno</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Deficiente interno</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Normal exterior</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">Deficiente exterior</label>
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Equipo de trabajo:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" ></textarea>
-                                      </div>
-                                </div>
-                            </div>
-
-                            <div class="card-header text-center mt-4">
-                                <h1>Perfil de Puesto</h1>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Edad:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                </div>
-                                <div class="col">
+                    <div class="card-body text-center mt-2">
+						<!-- Flash Messages -->
+						{% with messages = get_flashed_messages() %}
+						{% if messages %}
+						<div class="alert-container">
+							{% for message in messages %}
+							<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+								<p>{{ message }}</p>
+							</div>
+							{% endfor %}
+						</div>
+						{% endif %}
+						{% endwith %}		
+                        <form method="post" action="{{ url_for('user.puesto') }}">
+                            <div class="container">
+                                <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="exampleInputEmail1" class="form-label">Sexo:</label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                            <label for="nombre_puesto" class="form-label">Nombre del puesto:</label>
+                                            <input type="text" class="form-control" id="nombre_puesto" name="nombre_puesto" required>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Estado civil:</label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                </div>
-                                <div class="col">
+                                
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="exampleInputEmail1" class="form-label">Escolaridad:</label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                                            <label for="id_departamento" class="form-label">Departamento:</label>
+                                            <select class="form-control" id="id_departamento" name="id_departamento" required>
+                                                {% for departamento in departamentos %}
+                                                    <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            
-                            
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-3">
-                                        <label for="exampleInputEmail1" class="form-label">Conocimientos especificos:</label>
-                                        <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></textarea>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="jefe" class="form-label">Jefe:</label>
+                                            <input type="text" class="form-control" id="jefe" name="jefe" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="clave" class="form-label">Clave:</label>
+                                            <input type="text" class="form-control" id="clave" name="clave" required>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="no_plazas" class="form-label">No. de Plazas:</label>
+                                            <input type="number" class="form-control" id="no_plazas" name="no_plazas" required>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="col">
+                                            <div class="form-group mt-3">
+                                                <label for="fecha" class="form-label">Fecha:</label>
+                                                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-5">
+                                            <label for="ubicacion" class="form-label">Ubicación:</label>
+                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="funciones" class="form-label">Funciones Específicas:</label>
+                                            <textarea class="form-control" id="funciones" name="funciones" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="objetivo" class="form-label">Objetivo:</label>
+                                            <textarea type="text" class="form-control" id="objetivo" name="objetivo" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="equipo_trabajo" class="form-label">Equipo de Trabajo:</label>
+                                            <textarea class="form-control" id="equipo_trabajo" name="equipo_trabajo" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="reemplaza" class="form-label">Reemplaza a:</label>
+                                            <select class="form-control" id="reemplaza" name="reemplaza">
+                                                {% for puesto in puestos %}
+                                                    <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="reemplazado" class="form-label">Es reemplazado por:</label>
+                                            <input type="text" class="form-control" id="reemplazado" name="reemplazado">
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div class="row">
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Relaciones</h2>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="nombre_relacion" class="form-label">Relación:</label>
+                                            <select class="form-control" id="nombre_relacion" name="nombre_relacion">
+                                                {% for puesto in puestos %}
+                                                    <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="objetivo_relacion" class="form-label">Objetivo de Relación:</label>
+                                            <input type="text" class="form-control" id="objetivo_relacion" name="objetivo_relacion">
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <div class="card-header text-center mt-4">
+                                    <h3>Condiciones de trabajo</h3>
+                                </div>
 
-                            <div class="card-header text-center mt-4">
-                                <h2>Competencias Generales</h2>
-                                <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Responsabilidad:</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="esfuerzo_fisico" class="form-label"> Esfuerzo Físico:</label>
+                                            <select id="esfuerzo_fisico" name="esfuerzo_fisico" class="form-select" required>
+                                                <option value="Normal">Normal</option>
+                                                <option value="Complejo">Complejo</option>
+                                            </select>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="esfuerzo_mental" class="form-label"> Esfuerzo Mental:</label>
+                                            <select id="esfuerzo_mental" name="esfuerzo_mental" class="form-select" required>
+                                                <option value="Rutina">Rutina</option>
+                                                <option value="Mediana">Mediana</option>
+                                                <option value="Definido">Definido</option>
+                                            </select>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>  
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Compromiso organizacional:</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>
-                                    </div>  
-                                </div>
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Empatía:</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>
-                                    </div>  
-                                </div>
-                            </div>
 
-                            <div class="card-header text-center mt-4">
-                                <h2>Competencias Específicas</h2>
-                                <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group mt-4">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Conocimiento técnico en mantenimiento de vehículos:</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="riesgo_accidente" class="form-label"> Riesgo de accidente:</label>
+                                            <select id="riesgo_accidente" name="riesgo_accidente" class="form-select" required>
+                                                <option value="Nulo">Nulo</option>
+                                                <option value="Poco">Poco</option>
+                                                <option value="Regular">Regular</option>
+                                                <option value="Frecuente">Frecuente</option>
+                                            </select>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="ambiente" class="form-label"> Ambiente :</label>
+                                            <select id="ambiente" name="ambiente" class="form-select" required>
+                                                <option value="Normal Interno">Normal Interno</option>
+                                                <option value="Normal Exterior">Normal Exterior</option>
+                                                <option value="Deficiente Interno">Deficiente Interno</option>
+                                                <option value="Deficiente Exterior">Deficiente Exterior</option>
+                                            </select>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>  
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group mt-5">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Trabajo en equipo:</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>
-                                    </div>  
+
+                                <div class="card-header text-center mt-4">
+                                    <h2>Perfil del puesto</h2>
                                 </div>
-                                <div class="col">
-                                    <div class="form-group mt-5">
-                                        <div>
-                                            <label for="exampleInputEmail1" class="form-label">Dinamismo - Energía:</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="edad" class="form-label">Edad:</label>
+                                            <input type="text" class="form-control" id="edad" name="edad">
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                            <label class="form-check-label" for="inlineRadio1">A</label>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="sexo" class="form-label">Sexo:</label>
+                                            <input type="text" class="form-control" id="sexo" name="sexo">
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">B</label>
-                                        </div>  
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                            <label class="form-check-label" for="inlineRadio2">C</label>
-                                        </div>
-                                    </div>  
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="card-header text-center mt-4">
-                            <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
-                            </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="estado_civil" class="form-label">Estado Civil:</label>
+                                            <input type="text" class="form-control" id="estado_civil" name="estado_civil">
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="experiencia" class="form-label">Experiencia:</label>
+                                            <input type="text" class="form-control" id="experiencia" name="experiencia">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="escolaridad" class="form-label">Escolaridad:</label>
+                                            <input type="text" class="form-control" id="escolaridad" name="escolaridad">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-3">
+                                            <label for="conocimientos" class="form-label">Conocimientos Específicos:</label>
+                                            <input type="text" class="form-control" id="conocimientos" name="conocimientos">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Competencias Generales</h2>
+                                        <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group mt-4">
+                                                <div>
+                                                    <label for="responsabilidad" class="form-label">Responsabilidad:</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="A">
+                                                    <label class="form-check-label" for="responsabilidad">A</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="B">
+                                                    <label class="form-check-label" for="responsabilidad">B</label>
+                                                </div>  
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="C">
+                                                    <label class="form-check-label" for="responsabilidad">C</label>
+                                                </div>  
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group mt-4">
+                                                <div>
+                                                    <label for="compromiso" class="form-label">Compromiso organizacional:</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="A">
+                                                    <label class="form-check-label" for="compromiso">A</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="B">
+                                                    <label class="form-check-label" for="compromiso">B</label>
+                                                </div>  
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="C">
+                                                    <label class="form-check-label" for="compromiso">C</label>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group mt-4">
+                                                <div>
+                                                    <label for="empatia" class="form-label">Empatía:</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="A">
+                                                    <label class="form-check-label" for="empatia">A</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="B">
+                                                    <label class="form-check-label" for="empatia">B</label>
+                                                </div>  
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="C">
+                                                    <label class="form-check-label" for="empatia">C</label>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+
+                                    <div class="card-header text-center mt-4">
+                                        <h2>Competencias Específicas</h2>
+                                        <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group mt-5">
+                                                <div>
+                                                    <label for="trabajo_equipo" class="form-label">Trabajo en equipo:</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="A">
+                                                    <label class="form-check-label" for="trabajo_equipo">A</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="B">
+                                                    <label class="form-check-label" for="trabajo_equipo">B</label>
+                                                </div>  
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="C">
+                                                    <label class="form-check-label" for="trabajo_equipo">C</label>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group mt-5">
+                                                <div>
+                                                    <label for="energia" class="form-label">Dinamismo - Energía:</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="A">
+                                                    <label class="form-check-label" for="energia">A</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="B">
+                                                    <label class="form-check-label" for="energia">B</label>
+                                                </div>  
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="C">
+                                                    <label class="form-check-label" for="energia">C</label>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div class="card-header text-center mt-4">
+                                    <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>                  
                 </div>
             </div>
         </section>
