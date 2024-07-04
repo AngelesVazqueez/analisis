@@ -697,8 +697,6 @@ def actualizarArea(IdArea):
         print("Error al editar área:", err)
         db.rollback()
         flash('Error al editar área', 'error')
-    finally:
-        cursor.close()
     return redirect(url_for('user.areas'))
 
 #Ruta para actualizar Departamento
