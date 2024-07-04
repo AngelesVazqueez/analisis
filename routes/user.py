@@ -453,8 +453,6 @@ def eliminar_area(IdArea):
                                                                            FROM Departamento 
                                                                            WHERE IdArea = %s)))
         """, (IdArea,))
-        #Eliminar relaciones de puesto relacionados con el área
-        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         #Eliminar perfiles de puesto relacionados con el área
         cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         # Eliminar puestos relacionados con el área
@@ -539,8 +537,6 @@ def eliminar_depa(IdDepartamento):
                                                                            FROM Departamento 
                                                                            WHERE IdDepartamento = %s)))
         """, (IdDepartamento,))
-        #Eliminar relaciones de puesto relacionados con el departamento
-        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
         #Eliminar perfiles de puesto relacionados con el departamento
         cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
         # Eliminar puestos relacionados con el departamento
@@ -653,31 +649,30 @@ def mostrarPuestos():
 def eliminar_puesto(IdPuesto):
     cursor = db.cursor()
     try:
-         #Eliminar condiciones de trabajo de perfiles relacionados con el puesto
+        # Eliminar condiciones de trabajo de perfiles relacionados con el puesto
         cursor.execute("""
             DELETE FROM CondicionesTrabajo 
             WHERE IdPerfil IN (SELECT IdPerfil 
                                FROM PerfilPuesto 
                                WHERE IdPuesto = %s)
         """, (IdPuesto,))
-        #Eliminar competencias de perfiles relacionados con el puesto
+
+        # Eliminar competencias de perfiles relacionados con el puesto
         cursor.execute("""
             DELETE FROM Competencias 
             WHERE IdPerfil IN (SELECT IdPerfil 
                                FROM PerfilPuesto 
                                WHERE IdPuesto = %s)
         """, (IdPuesto,))
-        #Eliminar relaciones de perfiles relacionados con el puesto
-        cursor.execute("""
-            DELETE FROM Relaciones WHERE IdPuesto = %s)
-        """, (IdPuesto,))
-        #Eliminar perfiles de puesto relacionados con el área
-        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto = %s"), (IdPuesto,)
-        # Eliminar puestos relacionados con el área
-        cursor.execute("DELETE FROM Puestos WHERE  IdPuesto = %s"), ( IdPuesto,)
-        
+
+        # Eliminar perfiles de puesto relacionados con el puesto
+        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto = %s", (IdPuesto,))
+
+        # Eliminar el puesto en la tabla Puestos
+        cursor.execute("DELETE FROM Puestos WHERE IdPuesto = %s", (IdPuesto,))
+
         db.commit()
-        flash('Puesto eliminada correctamente', 'success')
+        flash('Puesto eliminado correctamente', 'success')
     except mysql.connector.Error as err:
         print("Error al eliminar Puesto:", err)
         db.rollback()
