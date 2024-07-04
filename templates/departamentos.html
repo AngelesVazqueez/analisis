@@ -69,127 +69,104 @@
 		</div>
 	</header>
 
+	<!-- Main Content -->
 	<main class="main">
-
 		<!-- Hero Section -->
 		<section id="hero" class="section hero">
-
 			<div class="container">
-				<div class="row gy-4">
-					<div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-						<h1>Ánalisis de Puestos</h1>
-						<p>Realiza un análisis de puestos eficaz para optimizar roles y responsabilidades dentro de tu empresa.</p>
-						<div class="d-flex">
-							<a href="#services" class="btn-get-started">Agregar</a>
-						</div>
-					</div>
-					<div class="col-lg-6 order-1 order-lg-2 hero-img">
-						<img src="{{ url_for('static', filename='img/hero-img.svg') }}" class="img-fluid animated"
-							alt="">
-					</div>
+				<div class="card-header text-center mt-4">
+					<h1>Lista de departamentos</h1>
 				</div>
-			</div>
-
-		</section><!-- /Hero Section -->
-
-		<!-- About Section -->
-		<section id="about" class="section about">
-
-			<div class="container">
-
-				<div class="row gy-3">
-
-					<div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-						<img src="{{ url_for('static', filename='img/about-img.svg') }}" alt="" class="img-fluid">
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<div class="alert-container mt-3">
+					{% for message in messages %}
+					<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+							<p>{{ message }}</p>
 					</div>
-
-					<div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up"
-						data-aos-delay="200">
-						<div class="about-content ps-0 ps-lg-3">
-							<h3>Voluptatem dignissimos provident quasi corporis voluptates sit assumenda.</h3>
-							<p class="fst-italic">
-								Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-								incididunt ut labore et dolore
-								magna aliqua.
-							</p>
-							<ul>
-								<li>
-									<i class="bi bi-diagram-3"></i>
-									<div>
-										<h4>Ullamco laboris nisi ut aliquip consequat</h4>
-										<p>Magni facilis facilis repellendus cum excepturi quaerat praesentium libre
-											trade</p>
+					{% endfor %}
+				</div>
+				{% endif %}
+				{% endwith %}	
+				<div class="row gy-4 mt-3">
+					{% for departamento in data %}
+					<div class="col-md-6 mb-3">
+						<div class="card">
+							<div class="card-header">
+								<h5 class="text-center">{{ departamento.NombreDepartamento }}</h5>
+							</div>
+							<div class="card-body">
+								<form>
+									<div class="row">
+										<div class="col">
+											<h5 name="IdDepartamento" class="text-center">Id del Departamento: {{ departamento.IdDepartamento }}</h5>
+										</div>
 									</div>
-								</li>
-								<li>
-									<i class="bi bi-fullscreen-exit"></i>
-									<div>
-										<h4>Magnam soluta odio exercitationem reprehenderi</h4>
-										<p>Quo totam dolorum at pariatur aut distinctio dolorum laudantium illo direna
-											pasata redi</p>
+									<div class="row">
+										<div class="col">
+											<small>Área del Departamento :</small>
+											<input type="text" class="form-control" value="{{ departamento.NombreArea }}" readonly>
+										</div>
 									</div>
-								</li>
-							</ul>
-							<p>
-								Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-								reprehenderit in voluptate
-								velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-								proident, sunt in
-								culpa qui officia deserunt mollit anim id est laborum
-							</p>
-						</div>
+									{% if departamento.Puestos %}
+									{% for puesto in departamento.Puestos.split(', ') %}
+									<div class="row">
+										<div class="col">
+											<small>Puesto:</small>
+											<input type="text" class="form-control" value="{{ puesto }}" readonly>
+										</div>
+									</div>
+									{% endfor %}
+		
+									{% else %}
+									<p class="text-center">No hay puestos registrados en este departamento.</p>
+									{% endif %}
+									<a href="{{ url_for('user.eliminar_depa', IdDepartamento=departamento.IdDepartamento) }}"
+									class="btn btn-danger btn-delete mt-3">Eliminar</a>
+									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ departamento.IdDepartamento }}"
+                                data-bs-toggle="modal" data-bs-target="#modal{{ departamento.IdDepartamento }}">Editar Departamento</a>
+								</form>
+							</div>
 
+							 <!--MODAL -->
+							<div class="modal-dialog">
+								<div class="modal fade" id="modal{{departamento.IdDepartamento}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title fs-5" id="exampleModalLabel">{{ departamento.NombreDepartamento }}</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form action="/actualizarDepa/{{ departamento.IdDepartamento }}" method="post">
+													<h4 class="text-center">Editar Departamento</h4>
+													<label>Nombre de Área:</label>
+													<input type="text" class="form-control mb-3" name="NombreDepartamento"
+														value="{{departamento.NombreDepartamento}}">
+								
+													<label for="Area" class="form-label">Área:</label>
+													<select id="Area" name="Area" class="form-select" required>
+														{% for area in areas %}
+														<option value="{{ area[0] }}" {% if area[0] == departamento.IdArea %} selected {% endif %}>{{ area[1] }}</option>
+														{% endfor %}
+													</select>
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>								
+							</div>
+						</div>
 					</div>
+					{% endfor %}
 				</div>
-
 			</div>
-
-		</section><!-- /About Section -->
-
-		<!-- Services Section -->
-		<section id="services" class="services section">
-
-			<!-- Section Title -->
-			<div class="container section-title" data-aos="fade-up">
-				<h2>Services</h2>
-				<p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-			</div><!-- End Section Title -->
-
-			<div class="container">
-
-				<div class="row">
-
-					<div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="100">
-						<div class="service-item position-relative">
-							<div class="icon"><i class="bi bi-activity icon"></i></div>
-							<h4><a href="{{ url_for('user.area') }}" class="stretched-link">Agregar Área</a></h4>
-							<p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-						</div>
-					</div><!-- End Service Item -->
-
-					<div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="200">
-						<div class="service-item position-relative">
-							<div class="icon"><i class="bi bi-bounding-box-circles icon"></i></div>
-							<h4><a href="{{ url_for('user.departamento') }}" class="stretched-link">Agregar Departamento</a></h4>
-							<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-						</div>
-					</div><!-- End Service Item -->
-
-					<div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="300">
-						<div class="service-item position-relative">
-							<div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
-							<h4><a href="{{ url_for('user.puesto') }}" class="stretched-link">Agregar Puestos</a></h4>
-							<p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-						</div>
-					</div><!-- End Service Item -->
-				</div>
-
-			</div>
-
-		</section><!-- /Services Section -->
-
-
-
+		</section>
+		
+		<!-- /Hero Section -->
 
 	</main>
 
@@ -274,6 +251,7 @@
 
 	<!-- Main JS File -->
 	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
 
 </body>
 

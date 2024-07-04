@@ -35,7 +35,7 @@
 	<header id="header" class="header d-flex align-items-center sticky-top">
 		<div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-			<a href="" class="logo d-flex align-items-center me-auto">
+			<a href="{{ url_for('user.user') }}" class="logo d-flex align-items-center me-auto">
 				<!-- Uncomment the line below if you also wish to use an image logo -->
 				<!-- <img src="assets/img/logo.png" alt=""> -->
 				<h1 class="sitename">Usuario</h1>
@@ -43,24 +43,25 @@
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="" class="active">Home</a></li>
+					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
 					<li class="dropdown"><a href="#"><span>Agregar</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
-							<li><a href="{{ url_for('user.area') }}"">Área</a></li>
-							<li><a href=" {{ url_for('user.departamento') }}"">Departamento</a></li>
-							<li><a href="{{ url_for('user.puesto') }}"">Puesto</a></li>
+							<li><a href="{{ url_for('user.area') }}">Área</a></li>
+							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
 						</ul>
 					</li>
-					<li class=" dropdown"><a href="#"><span>Lista</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-									<ul>
-										<li><a href="{{ url_for('user.areas') }}">Área</a></li>
-										<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
-										<li><a href="#">Puesto</a></li>
-									</ul>
-							</li>
-						</ul>
-						<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+					<li class="dropdown"><a href="#"><span>Lista</span> <i
+						class="bi bi-chevron-down toggle-dropdown"></i></a>
+				<ul>
+					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
+					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
+				</ul>
+			</li>
+				</ul>
+				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 			</nav>
 
 			<a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
@@ -73,6 +74,17 @@
 		<!-- Hero Section -->
 		<section id="hero" class="section hero">
 			<div class="container">
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<div class="alert-container">
+					{% for message in messages %}
+					<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+							<p>{{ message }}</p>
+					</div>
+					{% endfor %}
+				</div>
+				{% endif %}
+				{% endwith %}	
 				<div class="row gy-4">
 					{% for area in data %}
 					<div class="col-md-6 mb-3">
@@ -103,9 +115,35 @@
 									<!-- Botón para eliminar el área -->
 									<a href="{{ url_for('user.eliminar_area', IdArea=area.IdArea) }}"
 									class="btn btn-danger btn-delete mt-3">Eliminar</a>
+									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ area.IdArea }}"
+                                data-bs-toggle="modal" data-bs-target="#modal{{ area.IdArea }}">Editar Área</a>
+								</form>
+							</div> 
+						</div>
+						 <!--MODAL -->
+						<div class="modal fade" id="modal{{area.IdArea}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h1 class="modal-title fs-5" id="exampleModalLabel">{{ area.NombreArea }}</h1>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<form action="/actualizarArea/{{area.IdArea}}" method="post">
+										<h4 class="text-center">Editar Área</h4>
+										<label>Nombre de Área:</label>
+										<input type="text" class="form-control mb-3" name="NombreDepartamento"
+											value="{{area.NombreArea}}">
+
+								</div>
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+								</div>
 								</form>
 							</div>
 						</div>
+					</div>
 					</div>
 					{% endfor %}
 				</div>

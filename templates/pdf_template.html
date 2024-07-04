@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF</title>
+</head>
+<body>
+    <h1>Datos del Puesto</h1>
+    <p>Id: {{ puesto['IdPuesto'] }}</p>
+    <p>Nombre: {{ puesto['NombrePuesto'] }}</p>
+    <p>Departamento: {{ puesto['Departamento'] }}</p>
+    <p>Jefe: {{ puesto['Jefe'] }}</p>
+    <p>Clave: {{ puesto['Clave'] }}</p>
+    <p>Número de plazas: {{ puesto['NoPlazas'] }}</p>
+    <p>Objetivo: {{ puesto['Objetivo'] }}</p>
+    
+    {% if puesto['Ubicacion'] %}
+    <p>Ubicacion:</p>
+    <img style="width: 400px; height: 400px" src="data:image/jpeg;base64,{{ puesto['Ubicacion'] }}" alt="Ubicación">
+    {% endif %}
+    
+    <p>Funciones Específicas: {{ puesto['FuncionesEspecificas'] }}</p>
+    <p>Equipo de Trabajo: {{ puesto['EquipoTrabajo'] }}</p>
+    <p>Fecha: {{ puesto['Fecha'] }}</p>
+    <p>Reemplaza a: {{ puesto['Reemplazar'] }}</p>
+    <p>Reemplazado por: {{ puesto['Reemplazado'] }}</p>
+    <p>Relaciones: {{ puesto['RelacionesNombre'] }}</p>
+    <p>Objetivo de la relación: {{ puesto['RelacionesObjetivo'] }}</p>
+    <p>Puesto relacionado: {{ puesto['PuestoRelacionadoNombre'] }}</p>
+    <p>Edad: {{ puesto['Edad'] }}</p>
+    <p>Sexo: {{ puesto['Sexo'] }}</p>
+    <p>Estado Civil: {{ puesto['EstadoCivil'] }}</p>
+    <p>Experiencia: {{ puesto['Experiencia'] }}</p>
+    <p>Escolaridad: {{ puesto['Escolaridad'] }}</p>
+    <p>Conocimientos Especificos: {{ puesto['ConocimientosEspecificos'] }}</p>
+    <p>Esfuerzo Físico: {{ puesto['EsfuerzoFisico'] }}</p>
+    <p>Esfuerzo Mental: {{ puesto['EsfuerzoMental'] }}</p>
+    <p>Riesgo de accidente: {{ puesto['RiesgoAccidente'] }}</p>
+    <p>Ambiente: {{ puesto['Ambiente'] }}</p>
+    <p>Responsabilidad: {{ puesto['Responsabilidad'] }}</p>
+    <p>Compromiso: {{ puesto['Compromiso'] }}</p>
+    <p>Empatía: {{ puesto['Empatia'] }}</p>
+    <p>Trabajo en equipo: {{ puesto['TrabajoEquipo'] }}</p>
+    <p>Energía: {{ puesto['Energia'] }}</p>
+    <p>Departamento: {{ puesto['NombreDepartamento'] }}</p>
+    <p>Área: {{ puesto['NombreArea'] }}</p>
+
+</body>
+</html>

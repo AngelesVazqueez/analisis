@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, url_for, redirect, session, request, flash, current_app
+from flask import Blueprint, render_template, url_for, redirect, session, request, flash, make_response
 from func.func import get_user, obtener_areas
 from database.database import dbConnection
 import mysql.connector
 from datetime import datetime
-
+from bson.binary import Binary
+import base64
+from io import  BytesIO
+from xhtml2pdf import pisa
 
 user_routes = Blueprint('user', __name__)
 # Obtener la conexión a la base de datos
@@ -23,7 +26,7 @@ def user():
         return redirect(url_for('main.index'))
         
     
-@user_routes.route('/area/')
+@user_routes.route('/user/area/')
 def area():
     if 'email' in session:
         email = session['email']
@@ -191,8 +194,8 @@ def puesto():
         reemplazado = request.form.get('reemplazado')
         equipo_trabajo = request.form.get('equipo_trabajo')
         fecha = request.form.get('fecha')
-        nombre_relacion = request.form.get('nombre_relacion')
-        objetivo_relacion = request.form.get('objetivo_relacion')
+        nombre_relaciones = request.form.getlist('nombre_relacion')
+        objetivo_relaciones = request.form.getlist('objetivo_relacion')
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')
         estado_civil = request.form.get('estado_civil')
@@ -208,6 +211,7 @@ def puesto():
         empatia = request.form.get('empatia')
         trabajo_equipo = request.form.get('trabajo_equipo')
         energia = request.form.get('energia')
+        ubicacion = request.files.get('ubicacion')
         
         # Validaciones básicas de los campos del formulario
         if not nombre_puesto or not id_departamento:
@@ -217,26 +221,39 @@ def puesto():
         try:
             with db.cursor() as cursor:
                 cursor.execute("""
-                    SELECT * FROM Puestos 
+                    SELECT * FROM puestos 
                     WHERE NombrePuesto = %s AND DepartamentoId = %s
                 """, (nombre_puesto, id_departamento))
-                existepuesto = cursor.fetchone()
+                existe_puesto = cursor.fetchone()
 
-                if existepuesto is None:
+                if ubicacion:
+                    if ubicacion.filename.endswith('.jpg'):
+                        ubicacion_data = ubicacion.read()
+                        ubicacion_bin = Binary(ubicacion_data)
+                    else:
+                        flash('El archivo debe ser JPG')
+                        return redirect(url_for('user.puesto'))
+                else: 
+                    ubicacion_bin = None
+
+                if existe_puesto is None:
+                    # Comenzar transacción
+                    cursor.execute("START TRANSACTION")
+
                     # Inserción del puesto
                     sql_puesto = """
-                    INSERT INTO Puestos 
-                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, id) 
+                    INSERT INTO puestos 
+                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones, equipo_trabajo, fecha, reemplaza, reemplazado, user['id']
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin
                     ))
                     id_puesto = cursor.lastrowid
 
                     # Inserción del perfil del puesto
                     sql_perfil = """
-                    INSERT INTO PerfilPuesto 
+                    INSERT INTO perfilpuesto 
                     (Edad, Sexo, EstadoCivil, Experiencia, Escolaridad, ConocimientosEspecificos, IdPuesto) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """
@@ -246,18 +263,20 @@ def puesto():
                     id_perfil = cursor.lastrowid
 
                     # Inserción de relaciones
-                    sql_relaciones = """
-                    INSERT INTO Relaciones 
-                    (Nombre, Objetivo, IdPuesto)
-                    VALUES (%s, %s, %s)
-                    """
-                    cursor.execute(sql_relaciones, (
-                        nombre_relacion, objetivo_relacion, id_puesto
-                    ))
+                    for nombre_relacion, objetivo_relacion in zip(nombre_relaciones, objetivo_relaciones):
+                        if nombre_relacion.strip() and objetivo_relacion.strip():
+                            sql_relaciones = """
+                            INSERT INTO relaciones 
+                            (Nombre, Objetivo, IdPuesto)
+                            VALUES (%s, %s, %s)
+                            """
+                            cursor.execute(sql_relaciones, (
+                                nombre_relacion, objetivo_relacion, id_puesto
+                            ))
 
                     # Inserción de condiciones de trabajo
                     sql_condiciones = """
-                    INSERT INTO CondicionesTrabajo
+                    INSERT INTO condicionestrabajo
                     (EsfuerzoFisico, EsfuerzoMental, RiesgoAccidente, Ambiente, IdPerfil)
                     VALUES (%s, %s, %s, %s, %s)
                     """
@@ -267,7 +286,7 @@ def puesto():
 
                     # Inserción de competencias
                     sql_competencias = """
-                    INSERT INTO Competencias
+                    INSERT INTO competencias
                     (Responsabilidad, Compromiso, Empatia, TrabajoEquipo, Energia, IdPerfil)
                     VALUES (%s, %s, %s, %s, %s, %s)
                     """
@@ -275,6 +294,7 @@ def puesto():
                         responsabilidad, compromiso, empatia, trabajo_equipo, energia, id_perfil
                     ))
 
+                    # Confirmar transacción
                     db.commit()
                     flash('Se registró el puesto correctamente', 'success')
                 else:
@@ -292,8 +312,98 @@ def puesto():
 
     return render_template('puesto.html', departamentos=departamentos, puestos=puestos, user=user)
 
+
+@user_routes.route('/pdf/<int:IdPuesto>')
+def pdf(IdPuesto):
+    try:
+        # Recuperar datos del usuario desde la base de datos
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("""SELECT 
+                        p1.IdPuesto, 
+                        p1.NombrePuesto, 
+                        p1.Departamento, 
+                        p1.Jefe, 
+                        p1.Clave, 
+                        p1.NoPlazas, 
+                        p1.Objetivo, 
+                        p1.Ubicacion, 
+                        p1.FuncionesEspecificas, 
+                        p1.EquipoTrabajo, 
+                        p1.Fecha, 
+                        p1.Reemplazar, 
+                        p1.Reemplazado, 
+                        Relaciones.Nombre AS RelacionesNombre, 
+                        Relaciones.Objetivo AS RelacionesObjetivo,
+                        p2.NombrePuesto AS PuestoRelacionadoNombre,
+                        PerfilPuesto.Edad, 
+                        PerfilPuesto.Sexo, 
+                        PerfilPuesto.EstadoCivil, 
+                        PerfilPuesto.Experiencia,
+                        PerfilPuesto.Escolaridad, 
+                        PerfilPuesto.ConocimientosEspecificos,
+                        CondicionesTrabajo.EsfuerzoFisico, 
+                        CondicionesTrabajo.EsfuerzoMental, 
+                        CondicionesTrabajo.RiesgoAccidente, 
+                        CondicionesTrabajo.Ambiente,
+                        Competencias.Responsabilidad, 
+                        Competencias.Compromiso, 
+                        Competencias.Empatia, 
+                        Competencias.TrabajoEquipo,
+                        Competencias.Energia,
+                        Departamento.NombreDepartamento, 
+                        Areas.NombreArea
+                    FROM 
+                        Puestos p1
+                    LEFT JOIN 
+                        Relaciones ON Relaciones.IdPuesto = p1.IdPuesto
+                    LEFT JOIN 
+                        Puestos p2 ON Relaciones.IdPuestoRelacionado = p2.IdPuesto
+                    LEFT JOIN 
+                        PerfilPuesto ON PerfilPuesto.IdPuesto = p1.IdPuesto
+                    LEFT JOIN 
+                        CondicionesTrabajo ON CondicionesTrabajo.IdPerfil = PerfilPuesto.IdPerfil
+                    LEFT JOIN 
+                        Competencias ON Competencias.IdPerfil = PerfilPuesto.IdPerfil
+                    LEFT JOIN 
+                        Departamento ON p1.DepartamentoId = Departamento.IdDepartamento
+                    LEFT JOIN 
+                        Areas ON Departamento.IdArea = Areas.IdArea
+                    WHERE 
+                        p1.IdPuesto = %s""", (IdPuesto,))
+        puesto = cursor.fetchone()
+
+        if puesto and 'Ubicacion' in puesto:
+                ubicacion_bin = puesto['Ubicacion']
+                if ubicacion_bin:
+                    # Convertir la ubicación binaria a base64
+                    puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
+
+        cursor.close()
+
+        if not puesto:
+            return "Puesto no encontrado", 404
+
+        # Renderizar la plantilla HTML con los datos del usuario
+        rendered = render_template('pdf_template.html', puesto=puesto)
+
+        # Convertir la plantilla HTML a PDF
+        pdf = convert_html_to_pdf(rendered)
+
+        response = make_response(pdf)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = 'inline; filename=user_{}.pdf'.format(IdPuesto)
+        return response
     
-    
+    except mysql.connector.Error as err:
+        print(f"Error al obtener el puesto de la base de datos: {err}")
+        return "Error en la consulta a la base de datos", 500
+
+def convert_html_to_pdf(source_html):
+    # Convertir HTML a PDF usando xhtml2pdf
+    output = BytesIO()
+    pisa_status = pisa.CreatePDF(source_html, dest=output)
+    return output.getvalue() if not pisa_status.err else None
+
 #Ruta para ver áreas y departamentos  
 @user_routes.route('/areas/', methods=['GET', 'POST'])
 def areas():
@@ -329,6 +439,7 @@ def areas():
 
     return render_template("mostrar.html", data=insertObjeto)
 
+
 #Ruta para eliminar áreas.
 @user_routes.route('/eliminar_area/<int:IdArea>/')
 def eliminar_area(IdArea):
@@ -356,6 +467,8 @@ def eliminar_area(IdArea):
                                                                            FROM Departamento 
                                                                            WHERE IdArea = %s)))
         """, (IdArea,))
+        #Eliminar relaciones de puesto relacionados con el área
+        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         #Eliminar perfiles de puesto relacionados con el área
         cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         # Eliminar puestos relacionados con el área
@@ -373,3 +486,263 @@ def eliminar_area(IdArea):
     finally:
         cursor.close()
     return redirect(url_for('user.areas'))
+
+
+@user_routes.route('/mostrarDepartamentos/', methods=['GET', 'POST'])
+def mostrarDepartamentos():
+    insertObjeto = []
+    cursor = None
+
+    try:
+        if 'email' in session:
+            email = session['email']
+            user = get_user(email)  # Función para obtener detalles del usuario desde la base de datos
+
+            if user:
+                cursor = db.cursor()
+                cursor.execute("""
+                    SELECT Departamento.IdDepartamento, Departamento.NombreDepartamento, Areas.NombreArea, 
+                           GROUP_CONCAT(Puestos.NombrePuesto ORDER BY Puestos.NombrePuesto SEPARATOR ', ') AS Puestos
+                    FROM Departamento
+                    LEFT JOIN Areas ON Departamento.IdArea = Areas.IdArea
+                    LEFT JOIN Puestos ON Puestos.DepartamentoId = Departamento.IdDepartamento
+                    WHERE Areas.id = %s
+                    GROUP BY Departamento.IdDepartamento;
+                """, (user['id'],))
+                datosDB = cursor.fetchall()
+                columName = [column[0] for column in cursor.description]
+                for registro in datosDB:
+                    insertObjeto.append(dict(zip(columName, registro)))
+
+    except Exception as e:
+        print(f"Error al ejecutar la consulta: {e}")
+        return "Error en la consulta a la base de datos", 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()  # Asegúrate de cerrar el cursor
+
+    areas = obtener_areas(user['id'],)
+    return render_template("departamentos.html", data=insertObjeto, areas=areas)
+
+
+#Ruta para eliminar departamentos.
+@user_routes.route('/eliminar_depa/<int:IdDepartamento>/')
+def eliminar_depa(IdDepartamento):
+    cursor = db.cursor()
+    try:
+         #Eliminar condiciones de trabajo de perfiles relacionados con el departamento
+        cursor.execute("""
+            DELETE FROM CondicionesTrabajo 
+            WHERE IdPerfil IN (SELECT IdPerfil 
+                               FROM PerfilPuesto 
+                               WHERE IdPuesto IN (SELECT IdPuesto 
+                                                  FROM Puestos 
+                                                  WHERE DepartamentoId IN (SELECT IdDepartamento 
+                                                                           FROM Departamento 
+                                                                           WHERE IdDepartamento = %s)))
+        """, (IdDepartamento,))
+        #Eliminar competencias de perfiles relacionados con el departamento
+        cursor.execute("""
+            DELETE FROM Competencias 
+            WHERE IdPerfil IN (SELECT IdPerfil 
+                               FROM PerfilPuesto 
+                               WHERE IdPuesto IN (SELECT IdPuesto 
+                                                  FROM Puestos 
+                                                  WHERE DepartamentoId IN (SELECT IdDepartamento 
+                                                                           FROM Departamento 
+                                                                           WHERE IdDepartamento = %s)))
+        """, (IdDepartamento,))
+        #Eliminar relaciones de puesto relacionados con el departamento
+        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
+        #Eliminar perfiles de puesto relacionados con el departamento
+        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
+        # Eliminar puestos relacionados con el departamento
+        cursor.execute("DELETE FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s)", (IdDepartamento,))
+        # Eliminar departamentos relacionados con el área
+        cursor.execute("DELETE FROM Departamento WHERE IdDepartamento = %s", (IdDepartamento,))
+        db.commit()
+        flash('Departamento eliminada correctamente', 'success')
+    except mysql.connector.Error as err:
+        print("Error al eliminar departamento:", err)
+        db.rollback()
+        flash('Error al eliminar departamento', 'error')
+    finally:
+        cursor.close()
+    return redirect(url_for('user.mostrarDepartamentos'))
+    
+@user_routes.route('/mostrarPuestos/', methods=['GET', 'POST'])
+def mostrarPuestos():
+    puestos_completos = []
+    cursor = None
+
+    try:
+        if 'email' in session:
+            email = session['email']
+            user = get_user(email)
+
+            if user:
+                cursor = db.cursor()
+                query = """
+                SELECT 
+                    p1.IdPuesto, 
+                    p1.NombrePuesto, 
+                    p1.Departamento, 
+                    p1.Jefe, 
+                    p1.Clave, 
+                    p1.NoPlazas, 
+                    p1.Objetivo, 
+                    p1.Ubicacion, 
+                    p1.FuncionesEspecificas, 
+                    p1.EquipoTrabajo, 
+                    p1.Fecha, 
+                    p1.Reemplazar, 
+                    p1.Reemplazado, 
+                    Relaciones.Nombre AS RelacionesNombre, 
+                    Relaciones.Objetivo AS RelacionesObjetivo,
+                    p2.NombrePuesto AS PuestoRelacionadoNombre,
+                    PerfilPuesto.Edad, 
+                    PerfilPuesto.Sexo, 
+                    PerfilPuesto.EstadoCivil, 
+                    PerfilPuesto.Experiencia,
+                    PerfilPuesto.Escolaridad, 
+                    PerfilPuesto.ConocimientosEspecificos,
+                    CondicionesTrabajo.EsfuerzoFisico, 
+                    CondicionesTrabajo.EsfuerzoMental, 
+                    CondicionesTrabajo.RiesgoAccidente, 
+                    CondicionesTrabajo.Ambiente,
+                    Competencias.Responsabilidad, 
+                    Competencias.Compromiso, 
+                    Competencias.Empatia, 
+                    Competencias.TrabajoEquipo,
+                    Competencias.Energia,
+                    Departamento.NombreDepartamento, 
+                    Areas.NombreArea
+                FROM 
+                    Puestos p1
+                LEFT JOIN 
+                    Relaciones ON Relaciones.IdPuesto = p1.IdPuesto
+                LEFT JOIN 
+                    Puestos p2 ON Relaciones.IdPuestoRelacionado = p2.IdPuesto
+                LEFT JOIN 
+                    PerfilPuesto ON PerfilPuesto.IdPuesto = p1.IdPuesto
+                LEFT JOIN 
+                    CondicionesTrabajo ON CondicionesTrabajo.IdPerfil = PerfilPuesto.IdPerfil
+                LEFT JOIN 
+                    Competencias ON Competencias.IdPerfil = PerfilPuesto.IdPerfil
+                LEFT JOIN 
+                    Departamento ON p1.DepartamentoId = Departamento.IdDepartamento
+                LEFT JOIN 
+                    Areas ON Departamento.IdArea = Areas.IdArea
+                WHERE 
+                    p1.id = %s;
+
+                """
+                cursor.execute(query, (user['id'],))
+                datosDB = cursor.fetchall()
+                columName = [column[0] for column in cursor.description]
+                for registro in datosDB:
+                    puesto = dict(zip(columName, registro))
+
+                    # Convertir la ubicación binaria a base64 si es necesario
+                    ubicacion_bin = puesto.get('Ubicacion')
+                    if ubicacion_bin:
+                        puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
+                    else:
+                        puesto['Ubicacion'] = None
+
+                    puestos_completos.append(puesto)
+
+    except mysql.connector.Error as err:
+        print(f"Error al obtener puestos completos: {err}")
+        return "Error en la consulta a la base de datos", 500
+
+    finally:
+        if cursor is not None:
+            cursor.close()
+    # Obtener áreas disponibles utilizando la función obtener_areas()
+    return render_template("puestos.html", data=puestos_completos, areas=areas)
+
+#Ruta para eliminar puestos.
+@user_routes.route('/eliminar_puesto/<int:IdPuesto>/')
+def eliminar_puesto(IdPuesto):
+    cursor = db.cursor()
+    try:
+         #Eliminar condiciones de trabajo de perfiles relacionados con el puesto
+        cursor.execute("""
+            DELETE FROM CondicionesTrabajo 
+            WHERE IdPerfil IN (SELECT IdPerfil 
+                               FROM PerfilPuesto 
+                               WHERE IdPuesto = %s)
+        """, (IdPuesto,))
+        #Eliminar competencias de perfiles relacionados con el puesto
+        cursor.execute("""
+            DELETE FROM Competencias 
+            WHERE IdPerfil IN (SELECT IdPerfil 
+                               FROM PerfilPuesto 
+                               WHERE IdPuesto = %s)
+        """, (IdPuesto,))
+        #Eliminar relaciones de perfiles relacionados con el puesto
+        cursor.execute("""
+            DELETE FROM Relaciones WHERE IdPuesto = %s)
+        """, (IdPuesto,))
+        #Eliminar perfiles de puesto relacionados con el área
+        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto = %s"), (IdPuesto,)
+        # Eliminar puestos relacionados con el área
+        cursor.execute("DELETE FROM Puestos WHERE  IdPuesto = %s"), ( IdPuesto,)
+        
+        db.commit()
+        flash('Puesto eliminada correctamente', 'success')
+    except mysql.connector.Error as err:
+        print("Error al eliminar Puesto:", err)
+        db.rollback()
+        flash('Error al eliminar Puesto', 'error')
+    finally:
+        cursor.close()
+    return redirect(url_for('user.mostrarPuestos'))
+
+#Ruta para actualizar Área
+@user_routes.route('/actualizarArea/<string:IdArea>', methods=['POST'])
+def actualizarArea(IdArea):
+    try:
+        NombreArea=request.form["NombreArea"]
+        if IdArea and NombreArea:
+            cursor = db.cursor()
+            sql="UPDATE Areas SET NombreArea=%s WHERE IdArea=%s"
+            datos=(NombreArea, IdArea)
+            cursor.execute(sql, datos)
+            db.commit()
+            flash('Área actualizada correctamente', 'success')
+    except mysql.connector.Error as err:
+        print("Error al editar área:", err)
+        db.rollback()
+        flash('Error al editar área', 'error')
+    finally:
+        cursor.close()
+    return redirect(url_for('user.areas'))
+
+#Ruta para actualizar Departamento
+@user_routes.route('/actualizarDepa/<string:IdDepartamento>', methods=['POST'])
+def actualizarDepa(IdDepartamento):
+    print(request.form)
+    try:
+        NombreDepartamento = request.form["NombreDepartamento"]
+        Area = request.form["Area"]
+        if IdDepartamento and NombreDepartamento:
+            cursor = db.cursor()
+            sql = "UPDATE Departamento SET NombreDepartamento=%s, IdArea=%s WHERE IdDepartamento=%s"
+            datos = (NombreDepartamento, Area, IdDepartamento)
+            cursor.execute(sql, datos)
+            db.commit()
+            flash('Departamento actualizado correctamente', 'success')
+        else:
+            flash('Todos los campos son requeridos', 'error')
+    except KeyError as e:
+        flash(f'Error: campo requerido {e} no encontrado', 'error')
+    except mysql.connector.Error as err:
+        print("Error al editar Departamento:", err)
+        db.rollback()
+        flash('Error al editar Departamento', 'error')
+    return redirect(url_for('user.mostrarDepartamentos'))
+
+
