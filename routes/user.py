@@ -150,7 +150,7 @@ def obtener_departamentos(usuario_id):
         return []
     
 def obtener_puestos(usuario_id):
-    """Función para obtener los puestos del usuario disponibles desde la base de datos."""
+
     try:
         cursor = db.cursor()
         query = """
@@ -194,8 +194,9 @@ def puesto():
         reemplazado = request.form.get('reemplazado')
         equipo_trabajo = request.form.get('equipo_trabajo')
         fecha = request.form.get('fecha')
-        nombre_relaciones = request.form.getlist('nombre_relacion')
-        objetivo_relaciones = request.form.getlist('objetivo_relacion')
+        relaciones = request.form.get('Relaciones')  # Captura del campo Relaciones
+        relaciones_lista = [r.strip() for r in relaciones.split(',')] if relaciones else []  # Convertir a lista
+        relaciones_str = ','.join(relaciones_lista)  # Convertir a cadena
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')
         estado_civil = request.form.get('estado_civil')
@@ -212,7 +213,7 @@ def puesto():
         trabajo_equipo = request.form.get('trabajo_equipo')
         energia = request.form.get('energia')
         ubicacion = request.files.get('ubicacion')
-        
+
         # Validaciones básicas de los campos del formulario
         if not nombre_puesto or not id_departamento:
             flash('El nombre del puesto y el departamento son obligatorios', 'warning')
@@ -243,11 +244,11 @@ def puesto():
                     # Inserción del puesto
                     sql_puesto = """
                     INSERT INTO puestos 
-                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str
                     ))
                     id_puesto = cursor.lastrowid
 
@@ -262,17 +263,6 @@ def puesto():
                     ))
                     id_perfil = cursor.lastrowid
 
-                    # Inserción de relaciones
-                    for nombre_relacion, objetivo_relacion in zip(nombre_relaciones, objetivo_relaciones):
-                        if nombre_relacion.strip() and objetivo_relacion.strip():
-                            sql_relaciones = """
-                            INSERT INTO relaciones 
-                            (Nombre, Objetivo, IdPuesto)
-                            VALUES (%s, %s, %s)
-                            """
-                            cursor.execute(sql_relaciones, (
-                                nombre_relacion, objetivo_relacion, id_puesto
-                            ))
 
                     # Inserción de condiciones de trabajo
                     sql_condiciones = """
@@ -318,58 +308,54 @@ def pdf(IdPuesto):
     try:
         # Recuperar datos del usuario desde la base de datos
         cursor = db.cursor(dictionary=True)
-        cursor.execute("""SELECT 
-                        p1.IdPuesto, 
-                        p1.NombrePuesto, 
-                        p1.Departamento, 
-                        p1.Jefe, 
-                        p1.Clave, 
-                        p1.NoPlazas, 
-                        p1.Objetivo, 
-                        p1.Ubicacion, 
-                        p1.FuncionesEspecificas, 
-                        p1.EquipoTrabajo, 
-                        p1.Fecha, 
-                        p1.Reemplazar, 
-                        p1.Reemplazado, 
-                        Relaciones.Nombre AS RelacionesNombre, 
-                        Relaciones.Objetivo AS RelacionesObjetivo,
-                        p2.NombrePuesto AS PuestoRelacionadoNombre,
-                        PerfilPuesto.Edad, 
-                        PerfilPuesto.Sexo, 
-                        PerfilPuesto.EstadoCivil, 
-                        PerfilPuesto.Experiencia,
-                        PerfilPuesto.Escolaridad, 
-                        PerfilPuesto.ConocimientosEspecificos,
-                        CondicionesTrabajo.EsfuerzoFisico, 
-                        CondicionesTrabajo.EsfuerzoMental, 
-                        CondicionesTrabajo.RiesgoAccidente, 
-                        CondicionesTrabajo.Ambiente,
-                        Competencias.Responsabilidad, 
-                        Competencias.Compromiso, 
-                        Competencias.Empatia, 
-                        Competencias.TrabajoEquipo,
-                        Competencias.Energia,
-                        Departamento.NombreDepartamento, 
-                        Areas.NombreArea
-                    FROM 
-                        Puestos p1
-                    LEFT JOIN 
-                        Relaciones ON Relaciones.IdPuesto = p1.IdPuesto
-                    LEFT JOIN 
-                        Puestos p2 ON Relaciones.IdPuestoRelacionado = p2.IdPuesto
-                    LEFT JOIN 
-                        PerfilPuesto ON PerfilPuesto.IdPuesto = p1.IdPuesto
-                    LEFT JOIN 
-                        CondicionesTrabajo ON CondicionesTrabajo.IdPerfil = PerfilPuesto.IdPerfil
-                    LEFT JOIN 
-                        Competencias ON Competencias.IdPerfil = PerfilPuesto.IdPerfil
-                    LEFT JOIN 
-                        Departamento ON p1.DepartamentoId = Departamento.IdDepartamento
-                    LEFT JOIN 
-                        Areas ON Departamento.IdArea = Areas.IdArea
-                    WHERE 
-                        p1.IdPuesto = %s""", (IdPuesto,))
+        cursor.execute("""
+                        SELECT 
+                    p1.IdPuesto, 
+                    p1.NombrePuesto, 
+                    p1.Departamento, 
+                    p1.Jefe, 
+                    p1.Clave, 
+                    p1.NoPlazas, 
+                    p1.Objetivo, 
+                    p1.Ubicacion, 
+                    p1.FuncionesEspecificas, 
+                    p1.EquipoTrabajo, 
+                    p1.Fecha, 
+                    p1.Reemplazar, 
+                    p1.Reemplazado, 
+                    p1.Relaciones,
+                    PerfilPuesto.Edad, 
+                    PerfilPuesto.Sexo, 
+                    PerfilPuesto.EstadoCivil, 
+                    PerfilPuesto.Experiencia,
+                    PerfilPuesto.Escolaridad, 
+                    PerfilPuesto.ConocimientosEspecificos,
+                    CondicionesTrabajo.EsfuerzoFisico, 
+                    CondicionesTrabajo.EsfuerzoMental, 
+                    CondicionesTrabajo.RiesgoAccidente, 
+                    CondicionesTrabajo.Ambiente,
+                    Competencias.Responsabilidad, 
+                    Competencias.Compromiso, 
+                    Competencias.Empatia, 
+                    Competencias.TrabajoEquipo,
+                    Competencias.Energia,
+                    Departamento.NombreDepartamento, 
+                    Areas.NombreArea
+                FROM 
+                    Puestos p1
+                LEFT JOIN 
+                    PerfilPuesto ON PerfilPuesto.IdPuesto = p1.IdPuesto
+                LEFT JOIN 
+                    CondicionesTrabajo ON CondicionesTrabajo.IdPerfil = PerfilPuesto.IdPerfil
+                LEFT JOIN 
+                    Competencias ON Competencias.IdPerfil = PerfilPuesto.IdPerfil
+                LEFT JOIN 
+                    Departamento ON p1.DepartamentoId = Departamento.IdDepartamento
+                LEFT JOIN 
+                    Areas ON Departamento.IdArea = Areas.IdArea
+                WHERE 
+                    p1.id = %s;
+                    """, (IdPuesto,))
         puesto = cursor.fetchone()
 
         if puesto and 'Ubicacion' in puesto:
@@ -467,8 +453,6 @@ def eliminar_area(IdArea):
                                                                            FROM Departamento 
                                                                            WHERE IdArea = %s)))
         """, (IdArea,))
-        #Eliminar relaciones de puesto relacionados con el área
-        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         #Eliminar perfiles de puesto relacionados con el área
         cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdArea = %s))", (IdArea,))
         # Eliminar puestos relacionados con el área
@@ -553,8 +537,6 @@ def eliminar_depa(IdDepartamento):
                                                                            FROM Departamento 
                                                                            WHERE IdDepartamento = %s)))
         """, (IdDepartamento,))
-        #Eliminar relaciones de puesto relacionados con el departamento
-        cursor.execute("DELETE FROM Relaciones WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
         #Eliminar perfiles de puesto relacionados con el departamento
         cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto IN (SELECT IdPuesto FROM Puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM Departamento WHERE IdDepartamento = %s))", (IdDepartamento,))
         # Eliminar puestos relacionados con el departamento
@@ -571,7 +553,7 @@ def eliminar_depa(IdDepartamento):
         cursor.close()
     return redirect(url_for('user.mostrarDepartamentos'))
     
-@user_routes.route('/mostrarPuestos/', methods=['GET', 'POST'])
+@user_routes.route('/mostrarPuestos/', methods=['GET'])
 def mostrarPuestos():
     puestos_completos = []
     cursor = None
@@ -598,9 +580,7 @@ def mostrarPuestos():
                     p1.Fecha, 
                     p1.Reemplazar, 
                     p1.Reemplazado, 
-                    Relaciones.Nombre AS RelacionesNombre, 
-                    Relaciones.Objetivo AS RelacionesObjetivo,
-                    p2.NombrePuesto AS PuestoRelacionadoNombre,
+                    p1.Relaciones,
                     PerfilPuesto.Edad, 
                     PerfilPuesto.Sexo, 
                     PerfilPuesto.EstadoCivil, 
@@ -621,10 +601,6 @@ def mostrarPuestos():
                 FROM 
                     Puestos p1
                 LEFT JOIN 
-                    Relaciones ON Relaciones.IdPuesto = p1.IdPuesto
-                LEFT JOIN 
-                    Puestos p2 ON Relaciones.IdPuestoRelacionado = p2.IdPuesto
-                LEFT JOIN 
                     PerfilPuesto ON PerfilPuesto.IdPuesto = p1.IdPuesto
                 LEFT JOIN 
                     CondicionesTrabajo ON CondicionesTrabajo.IdPerfil = PerfilPuesto.IdPerfil
@@ -636,7 +612,6 @@ def mostrarPuestos():
                     Areas ON Departamento.IdArea = Areas.IdArea
                 WHERE 
                     p1.id = %s;
-
                 """
                 cursor.execute(query, (user['id'],))
                 datosDB = cursor.fetchall()
@@ -651,6 +626,12 @@ def mostrarPuestos():
                     else:
                         puesto['Ubicacion'] = None
 
+                    # Convertir el campo Relaciones a una lista
+                    if puesto['Relaciones']:
+                        puesto['Relaciones'] = puesto['Relaciones'].split(',')
+                    else:
+                        puesto['Relaciones'] = []
+
                     puestos_completos.append(puesto)
 
     except mysql.connector.Error as err:
@@ -660,39 +641,38 @@ def mostrarPuestos():
     finally:
         if cursor is not None:
             cursor.close()
-    # Obtener áreas disponibles utilizando la función obtener_areas()
-    return render_template("puestos.html", data=puestos_completos, areas=areas)
+    
+    return render_template("puestos.html", data=puestos_completos)
 
 #Ruta para eliminar puestos.
 @user_routes.route('/eliminar_puesto/<int:IdPuesto>/')
 def eliminar_puesto(IdPuesto):
     cursor = db.cursor()
     try:
-         #Eliminar condiciones de trabajo de perfiles relacionados con el puesto
+        # Eliminar condiciones de trabajo de perfiles relacionados con el puesto
         cursor.execute("""
             DELETE FROM CondicionesTrabajo 
             WHERE IdPerfil IN (SELECT IdPerfil 
                                FROM PerfilPuesto 
                                WHERE IdPuesto = %s)
         """, (IdPuesto,))
-        #Eliminar competencias de perfiles relacionados con el puesto
+
+        # Eliminar competencias de perfiles relacionados con el puesto
         cursor.execute("""
             DELETE FROM Competencias 
             WHERE IdPerfil IN (SELECT IdPerfil 
                                FROM PerfilPuesto 
                                WHERE IdPuesto = %s)
         """, (IdPuesto,))
-        #Eliminar relaciones de perfiles relacionados con el puesto
-        cursor.execute("""
-            DELETE FROM Relaciones WHERE IdPuesto = %s)
-        """, (IdPuesto,))
-        #Eliminar perfiles de puesto relacionados con el área
-        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto = %s"), (IdPuesto,)
-        # Eliminar puestos relacionados con el área
-        cursor.execute("DELETE FROM Puestos WHERE  IdPuesto = %s"), ( IdPuesto,)
-        
+
+        # Eliminar perfiles de puesto relacionados con el puesto
+        cursor.execute("DELETE FROM PerfilPuesto WHERE IdPuesto = %s", (IdPuesto,))
+
+        # Eliminar el puesto en la tabla Puestos
+        cursor.execute("DELETE FROM Puestos WHERE IdPuesto = %s", (IdPuesto,))
+
         db.commit()
-        flash('Puesto eliminada correctamente', 'success')
+        flash('Puesto eliminado correctamente', 'success')
     except mysql.connector.Error as err:
         print("Error al eliminar Puesto:", err)
         db.rollback()

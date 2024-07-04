@@ -149,12 +149,12 @@
                                     <p>Sin imagen de Ubicación</p>
                                     {% endif %}
                                     </div>
-                                    <small>Se relaciona con </small>
-                                    <input type="text" class="form-control" value="{{ puesto.RelacionesNombre }}" name="Nombre"
-                                        readonly>
-                                    <small>Objetivo de la relación</small>
-                                    <input type="text" class="form-control" value="{{ puesto.RelacionesObjetivo }}" name="Objetivo"
-                                        readonly>
+                                    <small>Se relaciona con:</small>
+                                    <ul class="list-group mb-3">
+                                        {% for relacion in puesto.Relaciones %}
+                                        <li class="list-group-item">{{ relacion }}</li>
+                                        {% endfor %}
+                                    </ul>
                                     <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
                                     <small>Reemplaza a: </small>
                                     <input type="text" class="form-control" value="{{ puesto.Reemplazar }}" name="Reemplazar"
