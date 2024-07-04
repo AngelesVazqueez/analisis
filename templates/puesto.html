@@ -15,7 +15,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -32,41 +34,41 @@
 
     <!-- Header -->
     <header id="header" class="header d-flex align-items-center sticky-top">
-		<div class="container-fluid container-xl position-relative d-flex align-items-center">
+        <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
-			<a href="{{ url_for('user.user') }}" class="logo d-flex align-items-center me-auto">
-				<!-- Uncomment the line below if you also wish to use an image logo -->
-				<!-- <img src="assets/img/logo.png" alt=""> -->
-				<h1 class="sitename">Usuario</h1>
-			</a>
+            <a href="{{ url_for('user.user') }}" class="logo d-flex align-items-center me-auto">
+                <!-- Uncomment the line below if you also wish to use an image logo -->
+                <!-- <img src="assets/img/logo.png" alt=""> -->
+                <h1 class="sitename">Usuario</h1>
+            </a>
 
-			<nav id="navmenu" class="navmenu">
-				<ul>
-					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
-					<li class="dropdown"><a href="#"><span>Agregar</span> <i
-								class="bi bi-chevron-down toggle-dropdown"></i></a>
-						<ul>
-							<li><a href="{{ url_for('user.area') }}">Área</a></li>
-							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
-							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
-						</ul>
-					</li>
-					<li class="dropdown"><a href="#"><span>Lista</span> <i
-						class="bi bi-chevron-down toggle-dropdown"></i></a>
-				<ul>
-					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
-					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
-					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
-				</ul>
-			</li>
-				</ul>
-				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-			</nav>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
+                    <li class="dropdown"><a href="#"><span>Agregar</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="{{ url_for('user.area') }}">Área</a></li>
+                            <li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+                            <li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a href="#"><span>Lista</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="{{ url_for('user.areas') }}">Área</a></li>
+                            <li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+                            <li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
 
-			<a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
+            <a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
 
-		</div>
-	</header>
+        </div>
+    </header>
     <!-- End Header -->
 
     <!-- Main Content -->
@@ -79,34 +81,36 @@
                         <h1>Agregar Puesto</h1>
                     </div>
                     <div class="card-body text-center mt-2">
-						<!-- Flash Messages -->
-						{% with messages = get_flashed_messages() %}
-						{% if messages %}
-						<div class="alert-container">
-							{% for message in messages %}
-							<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
-								<p>{{ message }}</p>
-							</div>
-							{% endfor %}
-						</div>
-						{% endif %}
-						{% endwith %}		
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert-container">
+                            {% for message in messages %}
+                            <div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+                                <p>{{ message }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
                         <form method="post" action="{{ url_for('user.puesto') }}" enctype="multipart/form-data">
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="nombre_puesto" class="form-label">Nombre del puesto:</label>
-                                            <input type="text" class="form-control" id="nombre_puesto" name="nombre_puesto" required>
+                                            <input type="text" class="form-control" id="nombre_puesto"
+                                                name="nombre_puesto" required>
                                         </div>
                                     </div>
-                                
+
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="id_departamento" class="form-label">Departamento:</label>
-                                            <select class="form-control" id="id_departamento" name="id_departamento" required>
+                                            <select class="form-control" id="id_departamento" name="id_departamento"
+                                                required>
                                                 {% for departamento in departamentos %}
-                                                    <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
+                                                <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -130,14 +134,16 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="no_plazas" class="form-label">No. de Plazas:</label>
-                                            <input type="number" class="form-control" id="no_plazas" name="no_plazas" required>
+                                            <input type="number" class="form-control" id="no_plazas" name="no_plazas"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="col">
                                             <div class="form-group mt-3">
                                                 <label for="fecha" class="form-label">Fecha:</label>
-                                                <input type="date" class="form-control" id="fecha" name="fecha" required>
+                                                <input type="date" class="form-control" id="fecha" name="fecha"
+                                                    required>
                                             </div>
                                         </div>
                                     </div>
@@ -146,28 +152,32 @@
                                     <div class="col">
                                         <div class="form-group mt-5">
                                             <label for="ubicacion" class="form-label">Ubicación:</label>
-                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion" accept=".jpg" required>
+                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion"
+                                                accept=".jpg" required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="funciones" class="form-label">Funciones Específicas:</label>
-                                            <textarea class="form-control" id="funciones" name="funciones" required></textarea>
+                                            <textarea class="form-control" id="funciones" name="funciones"
+                                                required></textarea>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="objetivo" class="form-label">Objetivo:</label>
-                                            <textarea type="text" class="form-control" id="objetivo" name="objetivo" required></textarea>
+                                            <textarea type="text" class="form-control" id="objetivo" name="objetivo"
+                                                required></textarea>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="equipo_trabajo" class="form-label">Equipo de Trabajo:</label>
-                                            <textarea class="form-control" id="equipo_trabajo" name="equipo_trabajo" required></textarea>
+                                            <textarea class="form-control" id="equipo_trabajo" name="equipo_trabajo"
+                                                required></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +189,7 @@
                                                 <option value="No hay puestos">No hay puestos</option>
                                                 <option value="No reemplaza">No reemplaza</option>
                                                 {% for puesto in puestos %}
-                                                    <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -191,30 +201,19 @@
                                         </div>
                                     </div>
                                 </div>
-                        
+
                                 <div class="row">
                                     <div class="card-header text-center mt-4">
                                         <h2>Relaciones</h2>
                                     </div>
                                     <div class="col">
-                                        <div id="relaciones-container">
-                                            <div class="form-group mt-3 relacion">
-                                                <label for="nombre_relacion" class="form-label">Relación:</label>
-                                                <select class="form-control nombre_relacion" name="nombre_relacion[]">
-                                                    <option value="No hay relación">No hay relación</option>
-                                                    {% for puesto in puestos %}
-                                                        <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                                <label for="objetivo_relacion" class="form-label">Objetivo de Relación:</label>
-                                                <input type="text" class="form-control objetivo_relacion" name="objetivo_relacion[]">
-                                                <button type="button" class="btn btn-danger btn-remove-relacion mt-2">Eliminar</button>
-                                            </div>
+                                        <div class="form-group mt-3">
+                                            <small id="Relaciones" class="form-text text-muted">Escribe las relaciones separadas por comas.</small>
+                                            <textarea class="form-control" id="Relaciones" name="Relaciones"></textarea>
                                         </div>
-                                        <button type="button" id="add-relacion" class="btn btn-primary mt-3">Agregar Relación</button>
                                     </div>
-                                </div>
-                        
+                                </div>                          
+
                                 <div class="card-header text-center mt-4">
                                     <h3>Condiciones de trabajo</h3>
                                 </div>
@@ -223,7 +222,8 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="esfuerzo_fisico" class="form-label"> Esfuerzo Físico:</label>
-                                            <select id="esfuerzo_fisico" name="esfuerzo_fisico" class="form-select" required>
+                                            <select id="esfuerzo_fisico" name="esfuerzo_fisico" class="form-select"
+                                                required>
                                                 <option value="Normal">Normal</option>
                                                 <option value="Complejo">Complejo</option>
                                             </select>
@@ -232,7 +232,8 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="esfuerzo_mental" class="form-label"> Esfuerzo Mental:</label>
-                                            <select id="esfuerzo_mental" name="esfuerzo_mental" class="form-select" required>
+                                            <select id="esfuerzo_mental" name="esfuerzo_mental" class="form-select"
+                                                required>
                                                 <option value="Rutina">Rutina</option>
                                                 <option value="Mediana">Mediana</option>
                                                 <option value="Definido">Definido</option>
@@ -244,8 +245,10 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="riesgo_accidente" class="form-label"> Riesgo de accidente:</label>
-                                            <select id="riesgo_accidente" name="riesgo_accidente" class="form-select" required>
+                                            <label for="riesgo_accidente" class="form-label"> Riesgo de
+                                                accidente:</label>
+                                            <select id="riesgo_accidente" name="riesgo_accidente" class="form-select"
+                                                required>
                                                 <option value="Nulo">Nulo</option>
                                                 <option value="Poco">Poco</option>
                                                 <option value="Regular">Regular</option>
@@ -288,7 +291,8 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="estado_civil" class="form-label">Estado Civil:</label>
-                                            <input type="text" class="form-control" id="estado_civil" name="estado_civil">
+                                            <input type="text" class="form-control" id="estado_civil"
+                                                name="estado_civil">
                                         </div>
                                     </div>
 
@@ -310,128 +314,149 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="conocimientos" class="form-label">Conocimientos Específicos:</label>
-                                            <input type="text" class="form-control" id="conocimientos" name="conocimientos">
+                                            <label for="conocimientos" class="form-label">Conocimientos
+                                                Específicos:</label>
+                                            <input type="text" class="form-control" id="conocimientos"
+                                                name="conocimientos">
                                         </div>
                                     </div>
                                 </div>
 
-                                    <div class="card-header text-center mt-4">
-                                        <h2>Competencias Generales</h2>
-                                        <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group mt-4">
-                                                <div>
-                                                    <label for="responsabilidad" class="form-label">Responsabilidad:</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="A">
-                                                    <label class="form-check-label" for="responsabilidad">A</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="B">
-                                                    <label class="form-check-label" for="responsabilidad">B</label>
-                                                </div>  
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="responsabilidad" id="responsabilidad" value="C">
-                                                    <label class="form-check-label" for="responsabilidad">C</label>
-                                                </div>  
+                                <div class="card-header text-center mt-4">
+                                    <h2>Competencias Generales</h2>
+                                    <small id="emailHelp" class="form-text text-muted">A=Con alto dominio, B= Buen
+                                        dominio, C= Mínimo esperado.</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-4">
+                                            <div>
+                                                <label for="responsabilidad" class="form-label">Responsabilidad:</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="responsabilidad"
+                                                    id="responsabilidad" value="A">
+                                                <label class="form-check-label" for="responsabilidad">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="responsabilidad"
+                                                    id="responsabilidad" value="B">
+                                                <label class="form-check-label" for="responsabilidad">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="responsabilidad"
+                                                    id="responsabilidad" value="C">
+                                                <label class="form-check-label" for="responsabilidad">C</label>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="form-group mt-4">
-                                                <div>
-                                                    <label for="compromiso" class="form-label">Compromiso organizacional:</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="A">
-                                                    <label class="form-check-label" for="compromiso">A</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="B">
-                                                    <label class="form-check-label" for="compromiso">B</label>
-                                                </div>  
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="compromiso" id="compromiso" value="C">
-                                                    <label class="form-check-label" for="compromiso">C</label>
-                                                </div>
-                                            </div>  
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group mt-4">
-                                                <div>
-                                                    <label for="empatia" class="form-label">Empatía:</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="A">
-                                                    <label class="form-check-label" for="empatia">A</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="B">
-                                                    <label class="form-check-label" for="empatia">B</label>
-                                                </div>  
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="empatia" id="empatia" value="C">
-                                                    <label class="form-check-label" for="empatia">C</label>
-                                                </div>
-                                            </div>  
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-4">
+                                            <div>
+                                                <label for="compromiso" class="form-label">Compromiso
+                                                    organizacional:</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="compromiso"
+                                                    id="compromiso" value="A">
+                                                <label class="form-check-label" for="compromiso">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="compromiso"
+                                                    id="compromiso" value="B">
+                                                <label class="form-check-label" for="compromiso">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="compromiso"
+                                                    id="compromiso" value="C">
+                                                <label class="form-check-label" for="compromiso">C</label>
+                                            </div>
                                         </div>
                                     </div>
-
-                                    <div class="card-header text-center mt-4">
-                                        <h2>Competencias Específicas</h2>
-                                        <small id="emailHelp" class="form-text text-muted">A=Con alto dominio,  B= Buen dominio, C= Mínimo esperado.</small>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group mt-5">
-                                                <div>
-                                                    <label for="trabajo_equipo" class="form-label">Trabajo en equipo:</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="A">
-                                                    <label class="form-check-label" for="trabajo_equipo">A</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="B">
-                                                    <label class="form-check-label" for="trabajo_equipo">B</label>
-                                                </div>  
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="trabajo_equipo" id="trabajo_equipo" value="C">
-                                                    <label class="form-check-label" for="trabajo_equipo">C</label>
-                                                </div>
-                                            </div>  
+                                    <div class="col">
+                                        <div class="form-group mt-4">
+                                            <div>
+                                                <label for="empatia" class="form-label">Empatía:</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
+                                                    value="A">
+                                                <label class="form-check-label" for="empatia">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
+                                                    value="B">
+                                                <label class="form-check-label" for="empatia">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
+                                                    value="C">
+                                                <label class="form-check-label" for="empatia">C</label>
+                                            </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="form-group mt-5">
-                                                <div>
-                                                    <label for="energia" class="form-label">Dinamismo - Energía:</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="A">
-                                                    <label class="form-check-label" for="energia">A</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="B">
-                                                    <label class="form-check-label" for="energia">B</label>
-                                                </div>  
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="energia" id="energia" value="C">
-                                                    <label class="form-check-label" for="energia">C</label>
-                                                </div>
-                                            </div>  
-                                        </div>
-                                    </div>
-                                    <div class="card-header text-center mt-4">
-                                    <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>                  
+
+                                <div class="card-header text-center mt-4">
+                                    <h2>Competencias Específicas</h2>
+                                    <small id="emailHelp" class="form-text text-muted">A=Con alto dominio, B= Buen
+                                        dominio, C= Mínimo esperado.</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group mt-5">
+                                            <div>
+                                                <label for="trabajo_equipo" class="form-label">Trabajo en
+                                                    equipo:</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="trabajo_equipo"
+                                                    id="trabajo_equipo" value="A">
+                                                <label class="form-check-label" for="trabajo_equipo">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="trabajo_equipo"
+                                                    id="trabajo_equipo" value="B">
+                                                <label class="form-check-label" for="trabajo_equipo">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="trabajo_equipo"
+                                                    id="trabajo_equipo" value="C">
+                                                <label class="form-check-label" for="trabajo_equipo">C</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group mt-5">
+                                            <div>
+                                                <label for="energia" class="form-label">Dinamismo - Energía:</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="energia" id="energia"
+                                                    value="A">
+                                                <label class="form-check-label" for="energia">A</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="energia" id="energia"
+                                                    value="B">
+                                                <label class="form-check-label" for="energia">B</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="energia" id="energia"
+                                                    value="C">
+                                                <label class="form-check-label" for="energia">C</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-header text-center mt-4">
+                                    <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+            </div>
             </div>
         </section>
         <!-- End Hero Section -->
@@ -486,11 +511,12 @@
                 </div>
             </div>
 
-            
+
         </div>
 
         <div class="container text-center mt-4">
-            <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">Ninestars</strong> <span>Todos los derechos reservados</span></p>
+            <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">Ninestars</strong> <span>Todos los derechos
+                    reservados</span></p>
             <div class="credits">
                 Diseñado por <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
@@ -499,7 +525,8 @@
     <!-- End Footer -->
 
     <!-- Scroll Top -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
     <!-- Preloader -->
     <div id="preloader"></div>
@@ -515,25 +542,6 @@
 
     <!-- Main JS File -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addRelacionBtn = document.getElementById('add-relacion');
-            const relacionesContainer = document.getElementById('relaciones-container');
-            
-            addRelacionBtn.addEventListener('click', function() {
-                const relacionTemplate = document.querySelector('.relacion').cloneNode(true);
-                relacionTemplate.querySelector('.nombre_relacion').value = '';
-                relacionTemplate.querySelector('.objetivo_relacion').value = '';
-                relacionesContainer.appendChild(relacionTemplate);
-            });
-        
-            relacionesContainer.addEventListener('click', function(e) {
-                if (e.target.classList.contains('btn-remove-relacion')) {
-                    e.target.parentElement.remove();
-                }
-            });
-        });
-        </script>
 </body>
 
 </html>
