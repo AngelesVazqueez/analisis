@@ -42,21 +42,21 @@
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="" class="active">Home</a></li>
+					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
 					<li class="dropdown"><a href="#"><span>Agregar</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
-							<li><a href="{{ url_for('user.area') }}"">Área</a></li>
-							<li><a href="{{ url_for('user.departamento') }}"">Departamento</a></li>
-							<li><a href="{{ url_for('user.puesto') }}"">Puesto</a></li>
+							<li><a href="{{ url_for('user.area') }}">Área</a></li>
+							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
 						</ul>
 					</li>
 					<li class="dropdown"><a href="#"><span>Lista</span> <i
 						class="bi bi-chevron-down toggle-dropdown"></i></a>
 				<ul>
-					<li><a href="#">Área</a></li>
-					<li><a href="#">Departamento</a></li>
-					<li><a href="#">Puesto</a></li>
+					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
+					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
 				</ul>
 			</li>
 				</ul>
@@ -91,7 +91,7 @@
 						</div>
 						{% endif %}
 						{% endwith %}		
-                        <form method="post" action="{{ url_for('user.puesto') }}">
+                        <form method="post" action="{{ url_for('user.puesto') }}" enctype="multipart/form-data">
                             <div class="container">
                                 <div class="row">
                                     <div class="col">
@@ -146,7 +146,7 @@
                                     <div class="col">
                                         <div class="form-group mt-5">
                                             <label for="ubicacion" class="form-label">Ubicación:</label>
-                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion">
+                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion" accept=".jpg" required>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -176,8 +176,10 @@
                                         <div class="form-group mt-3">
                                             <label for="reemplaza" class="form-label">Reemplaza a:</label>
                                             <select class="form-control" id="reemplaza" name="reemplaza">
+                                                <option value="No hay puestos">No hay puestos</option>
+                                                <option value="No reemplaza">No reemplaza</option>
                                                 {% for puesto in puestos %}
-                                                    <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
+                                                    <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -195,20 +197,21 @@
                                         <h2>Relaciones</h2>
                                     </div>
                                     <div class="col">
-                                        <div class="form-group mt-3">
-                                            <label for="nombre_relacion" class="form-label">Relación:</label>
-                                            <select class="form-control" id="nombre_relacion" name="nombre_relacion">
-                                                {% for puesto in puestos %}
-                                                    <option value="{{ puesto[0] }}">{{ puesto[1] }}</option>
-                                                {% endfor %}
-                                            </select>
+                                        <div id="relaciones-container">
+                                            <div class="form-group mt-3 relacion">
+                                                <label for="nombre_relacion" class="form-label">Relación:</label>
+                                                <select class="form-control nombre_relacion" name="nombre_relacion[]">
+                                                    <option value="No hay relación">No hay relación</option>
+                                                    {% for puesto in puestos %}
+                                                        <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <label for="objetivo_relacion" class="form-label">Objetivo de Relación:</label>
+                                                <input type="text" class="form-control objetivo_relacion" name="objetivo_relacion[]">
+                                                <button type="button" class="btn btn-danger btn-remove-relacion mt-2">Eliminar</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group mt-3">
-                                            <label for="objetivo_relacion" class="form-label">Objetivo de Relación:</label>
-                                            <input type="text" class="form-control" id="objetivo_relacion" name="objetivo_relacion">
-                                        </div>
+                                        <button type="button" id="add-relacion" class="btn btn-primary mt-3">Agregar Relación</button>
                                     </div>
                                 </div>
                         
@@ -512,6 +515,25 @@
 
     <!-- Main JS File -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addRelacionBtn = document.getElementById('add-relacion');
+            const relacionesContainer = document.getElementById('relaciones-container');
+            
+            addRelacionBtn.addEventListener('click', function() {
+                const relacionTemplate = document.querySelector('.relacion').cloneNode(true);
+                relacionTemplate.querySelector('.nombre_relacion').value = '';
+                relacionTemplate.querySelector('.objetivo_relacion').value = '';
+                relacionesContainer.appendChild(relacionTemplate);
+            });
+        
+            relacionesContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn-remove-relacion')) {
+                    e.target.parentElement.remove();
+                }
+            });
+        });
+        </script>
 </body>
 
 </html>

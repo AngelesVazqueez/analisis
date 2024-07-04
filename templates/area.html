@@ -33,6 +33,7 @@
 <body class="index-page">
 	<header id="header" class="header d-flex align-items-center sticky-top">
 		<div class="container-fluid container-xl position-relative d-flex align-items-center">
+
 			<a href="{{ url_for('user.user') }}" class="logo d-flex align-items-center me-auto">
 				<!-- Uncomment the line below if you also wish to use an image logo -->
 				<!-- <img src="assets/img/logo.png" alt=""> -->
@@ -41,21 +42,21 @@
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="" class="active">Home</a></li>
+					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
 					<li class="dropdown"><a href="#"><span>Agregar</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
-							<li><a href="{{ url_for('user.area') }}"">Área</a></li>
-							<li><a href="{{ url_for('user.departamento') }}"">Departamento</a></li>
-							<li><a href="{{ url_for('user.puesto') }}"">Puesto</a></li>
+							<li><a href="{{ url_for('user.area') }}">Área</a></li>
+							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
 						</ul>
 					</li>
 					<li class="dropdown"><a href="#"><span>Lista</span> <i
 						class="bi bi-chevron-down toggle-dropdown"></i></a>
 				<ul>
 					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
-					<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
-					<li><a href="#">Puesto</a></li>
+					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
 				</ul>
 			</li>
 				</ul>

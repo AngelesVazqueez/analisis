@@ -42,21 +42,21 @@
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="" class="active">Home</a></li>
+					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
 					<li class="dropdown"><a href="#"><span>Agregar</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
-							<li><a href="{{ url_for('user.area') }}"">Área</a></li>
-							<li><a href="{{ url_for('user.departamento') }}"">Departamento</a></li>
-							<li><a href="{{ url_for('user.puesto') }}"">Puesto</a></li>
+							<li><a href="{{ url_for('user.area') }}">Área</a></li>
+							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
+							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
 						</ul>
 					</li>
 					<li class="dropdown"><a href="#"><span>Lista</span> <i
 						class="bi bi-chevron-down toggle-dropdown"></i></a>
 				<ul>
-					<li><a href="#">Área</a></li>
-					<li><a href="#">Departamento</a></li>
-					<li><a href="#">Puesto</a></li>
+					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
+					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
 				</ul>
 			</li>
 				</ul>
