@@ -95,6 +95,7 @@
                         {% endwith %}
                         <form method="post" action="{{ url_for('user.puesto') }}" enctype="multipart/form-data">
                             <div class="container">
+
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
@@ -107,7 +108,7 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="id_departamento" class="form-label">Departamento:</label>
-                                            <select class="form-control" id="id_departamento" name="id_departamento"
+                                            <select class="form-select" id="id_departamento" name="id_departamento"
                                                 required>
                                                 {% for departamento in departamentos %}
                                                 <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
@@ -116,11 +117,17 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="jefe" class="form-label">Jefe:</label>
-                                            <input type="text" class="form-control" id="jefe" name="jefe" required>
+                                            <select class="form-select" id="jefe" name="jefe" required>
+                                                <option value="No aplica">No aplica</option>
+                                                {% for puesto in puestos %}
+                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -130,6 +137,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
@@ -148,18 +156,27 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col">
-                                        <div class="form-group mt-5">
+                                        <div class="form-group mt-3">
                                             <label for="ubicacion" class="form-label">Ubicación:</label>
-                                            <input type="file" class="form-control-file" id="ubicacion" name="ubicacion"
+                                            <div>
+                                                <img id="previewImage" src="/static/img/ubicacion.jpg"
+                                                    class="img-fluid">
+                                            </div>
+                                            <input type="file" class="form-control mt-3" id="ubicacion" name="ubicacion"
                                                 accept=".jpg" required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="funciones" class="form-label">Funciones Específicas:</label>
-                                            <textarea class="form-control" id="funciones" name="funciones"
+                                            <label for="Funciones" class="form-label">Funciones Específicas:</label>
+                                            <div>
+                                                <small id="Funciones" class="form-text text-muted">Escribe las funciones
+                                                    específicas separadas por comas.</small>
+                                            </div>
+                                            <textarea class="form-control" id="Funciones" name="Funciones"
                                                 required></textarea>
                                         </div>
                                     </div>
@@ -185,9 +202,8 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="reemplaza" class="form-label">Reemplaza a:</label>
-                                            <select class="form-control" id="reemplaza" name="reemplaza">
-                                                <option value="No hay puestos">No hay puestos</option>
-                                                <option value="No reemplaza">No reemplaza</option>
+                                            <select class="form-select" id="reemplaza" name="reemplaza" required>
+                                                <option value="No aplica">No aplica</option>
                                                 {% for puesto in puestos %}
                                                 <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
                                                 {% endfor %}
@@ -197,7 +213,12 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="reemplazado" class="form-label">Es reemplazado por:</label>
-                                            <input type="text" class="form-control" id="reemplazado" name="reemplazado">
+                                            <select class="form-select" id="reemplazado" name="reemplazado" required>
+                                                <option value="No aplica">No aplica</option>
+                                                {% for puesto in puestos %}
+                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -207,12 +228,14 @@
                                         <h2>Relaciones</h2>
                                     </div>
                                     <div class="col">
-                                        <div class="form-group mt-3">
-                                            <small id="Relaciones" class="form-text text-muted">Escribe las relaciones separadas por comas.</small>
-                                            <textarea class="form-control" id="Relaciones" name="Relaciones"></textarea>
+                                        <div class="form-group">
+                                            <small id="Relaciones" class="form-text text-muted">Escribe las relaciones
+                                                separadas por comas.</small>
+                                            <textarea class="form-control" id="Relaciones" name="Relaciones"
+                                                required></textarea>
                                         </div>
                                     </div>
-                                </div>                          
+                                </div>
 
                                 <div class="card-header text-center mt-4">
                                     <h3>Condiciones de trabajo</h3>
@@ -245,7 +268,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="form-group mt-3">
-                                            <label for="riesgo_accidente" class="form-label"> Riesgo de
+                                            <label for="riesgo_accidente" class="form-label">Riesgo de
                                                 accidente:</label>
                                             <select id="riesgo_accidente" name="riesgo_accidente" class="form-select"
                                                 required>
@@ -276,13 +299,13 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="edad" class="form-label">Edad:</label>
-                                            <input type="text" class="form-control" id="edad" name="edad">
+                                            <input type="text" class="form-control" id="edad" name="edad" required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="sexo" class="form-label">Sexo:</label>
-                                            <input type="text" class="form-control" id="sexo" name="sexo">
+                                            <input type="text" class="form-control" id="sexo" name="sexo" required>
                                         </div>
                                     </div>
                                 </div>
@@ -292,14 +315,15 @@
                                         <div class="form-group mt-3">
                                             <label for="estado_civil" class="form-label">Estado Civil:</label>
                                             <input type="text" class="form-control" id="estado_civil"
-                                                name="estado_civil">
+                                                name="estado_civil" required>
                                         </div>
                                     </div>
 
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="experiencia" class="form-label">Experiencia:</label>
-                                            <input type="text" class="form-control" id="experiencia" name="experiencia">
+                                            <input type="text" class="form-control" id="experiencia" name="experiencia"
+                                                required>
                                         </div>
                                     </div>
                                 </div>
@@ -309,7 +333,8 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="escolaridad" class="form-label">Escolaridad:</label>
-                                            <input type="text" class="form-control" id="escolaridad" name="escolaridad">
+                                            <input type="text" class="form-control" id="escolaridad" name="escolaridad"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -317,7 +342,7 @@
                                             <label for="conocimientos" class="form-label">Conocimientos
                                                 Específicos:</label>
                                             <input type="text" class="form-control" id="conocimientos"
-                                                name="conocimientos">
+                                                name="conocimientos" required>
                                         </div>
                                     </div>
                                 </div>
@@ -331,67 +356,66 @@
                                     <div class="col">
                                         <div class="form-group mt-4">
                                             <div>
-                                                <label for="responsabilidad" class="form-label">Responsabilidad:</label>
+                                                <label class="form-label">Responsabilidad:</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="responsabilidad"
-                                                    id="responsabilidad" value="A">
-                                                <label class="form-check-label" for="responsabilidad">A</label>
+                                                    id="responsabilidadA" value="A" required>
+                                                <label class="form-check-label" for="responsabilidadA">A</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="responsabilidad"
-                                                    id="responsabilidad" value="B">
-                                                <label class="form-check-label" for="responsabilidad">B</label>
+                                                    id="responsabilidadB" value="B" required>
+                                                <label class="form-check-label" for="responsabilidadB">B</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="responsabilidad"
-                                                    id="responsabilidad" value="C">
-                                                <label class="form-check-label" for="responsabilidad">C</label>
+                                                    id="responsabilidadC" value="C" required>
+                                                <label class="form-check-label" for="responsabilidadC">C</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-4">
                                             <div>
-                                                <label for="compromiso" class="form-label">Compromiso
-                                                    organizacional:</label>
+                                                <label class="form-label">Compromiso organizacional:</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="compromiso"
-                                                    id="compromiso" value="A">
-                                                <label class="form-check-label" for="compromiso">A</label>
+                                                    id="compromisoA" value="A" required>
+                                                <label class="form-check-label" for="compromisoA">A</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="compromiso"
-                                                    id="compromiso" value="B">
-                                                <label class="form-check-label" for="compromiso">B</label>
+                                                    id="compromisoB" value="B" required>
+                                                <label class="form-check-label" for="compromisoB">B</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="compromiso"
-                                                    id="compromiso" value="C">
-                                                <label class="form-check-label" for="compromiso">C</label>
+                                                    id="compromisoC" value="C" required>
+                                                <label class="form-check-label" for="compromisoC">C</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-4">
                                             <div>
-                                                <label for="empatia" class="form-label">Empatía:</label>
+                                                <label class="form-label">Empatía:</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
-                                                    value="A">
-                                                <label class="form-check-label" for="empatia">A</label>
+                                                <input class="form-check-input" type="radio" name="empatia"
+                                                    id="empatiaA" value="A" required>
+                                                <label class="form-check-label" for="empatiaA">A</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
-                                                    value="B">
-                                                <label class="form-check-label" for="empatia">B</label>
+                                                <input class="form-check-input" type="radio" name="empatia"
+                                                    id="empatiaB" value="B" required>
+                                                <label class="form-check-label" for="empatiaB">B</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="empatia" id="empatia"
-                                                    value="C">
-                                                <label class="form-check-label" for="empatia">C</label>
+                                                <input class="form-check-input" type="radio" name="empatia"
+                                                    id="empatiaC" value="C" required>
+                                                <label class="form-check-label" for="empatiaC">C</label>
                                             </div>
                                         </div>
                                     </div>
@@ -406,49 +430,49 @@
                                     <div class="col">
                                         <div class="form-group mt-5">
                                             <div>
-                                                <label for="trabajo_equipo" class="form-label">Trabajo en
-                                                    equipo:</label>
+                                                <label class="form-label">Trabajo en equipo:</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="trabajo_equipo"
-                                                    id="trabajo_equipo" value="A">
-                                                <label class="form-check-label" for="trabajo_equipo">A</label>
+                                                    id="trabajo_equipoA" value="A" required>
+                                                <label class="form-check-label" for="trabajo_equipoA">A</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="trabajo_equipo"
-                                                    id="trabajo_equipo" value="B">
-                                                <label class="form-check-label" for="trabajo_equipo">B</label>
+                                                    id="trabajo_equipoB" value="B" required>
+                                                <label class="form-check-label" for="trabajo_equipoB">B</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="trabajo_equipo"
-                                                    id="trabajo_equipo" value="C">
-                                                <label class="form-check-label" for="trabajo_equipo">C</label>
+                                                    id="trabajo_equipoC" value="C" required>
+                                                <label class="form-check-label" for="trabajo_equipoC">C</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-5">
                                             <div>
-                                                <label for="energia" class="form-label">Dinamismo - Energía:</label>
+                                                <label class="form-label">Dinamismo - Energía:</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="energia" id="energia"
-                                                    value="A">
-                                                <label class="form-check-label" for="energia">A</label>
+                                                <input class="form-check-input" type="radio" name="energia"
+                                                    id="energiaA" value="A" required>
+                                                <label class="form-check-label" for="energiaA">A</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="energia" id="energia"
-                                                    value="B">
-                                                <label class="form-check-label" for="energia">B</label>
+                                                <input class="form-check-input" type="radio" name="energia"
+                                                    id="energiaB" value="B" required>
+                                                <label class="form-check-label" for="energiaB">B</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="energia" id="energia"
-                                                    value="C">
-                                                <label class="form-check-label" for="energia">C</label>
+                                                <input class="form-check-input" type="radio" name="energia"
+                                                    id="energiaC" value="C" required>
+                                                <label class="form-check-label" for="energiaC">C</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="card-header text-center mt-4">
                                     <button type="submit" class="btn btn-block text-center mt-4 boton">Agregar</button>
                                 </div>
@@ -542,6 +566,22 @@
 
     <!-- Main JS File -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputFotoPerfil = document.getElementById('ubicacion');
+            inputFotoPerfil.addEventListener('change', previewImage);
+
+            function previewImage(event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var preview = document.getElementById('previewImage');
+                    preview.src = reader.result;
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
+    </script>
 </body>
 
 </html>
