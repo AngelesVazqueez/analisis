@@ -74,19 +74,21 @@
         <!-- Hero Section -->
         <section id="hero" class="section hero">
             <div class="container">
-               <!-- Flash Messages -->
-				{% with messages = get_flashed_messages() %}
-				{% if messages %}
-				<div class="alert-container">
-					{% for message in messages %}
-					<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
-							<p>{{ message }}</p>
-					</div>
-					{% endfor %}
-				</div>
-				{% endif %}
-				{% endwith %}	
-                <div class="row gy-4">
+                <div class="card-header text-center">
+                    <h1>Lista de puestos</h1>
+                </div>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="alert-container mt-3">
+                    {% for message in messages %}
+                    <div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
+                        <p>{{ message }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+                <div class="row gy-4 mt-3">
                     {% for puesto in data %}
                     <div class="col-md-6 mb-3">
                         <div class="card">
@@ -107,9 +109,12 @@
                                     </div>
                                 </div>
                                 <a href="" class="btn btn-primary mt-3" id="btn-edit{{ puesto.IdPuesto }}"
-                                data-bs-toggle="modal" data-bs-target="#modal{{ puesto.IdPuesto }}">Mostrar mas información</a>
-                                <a href="{{ url_for('user.pdf', IdPuesto=puesto.IdPuesto) }}" class="btn btn-primary mt-3">Descargar</a>
-                                <a href="{{ url_for('user.eliminar_puesto', IdPuesto=puesto.IdPuesto) }}" class="btn btn-danger btn-delete mt-3">Eliminar</a>
+                                    data-bs-toggle="modal" data-bs-target="#modal{{ puesto.IdPuesto }}">Mostrar mas
+                                    información</a>
+                                <a href="{{ url_for('user.pdf', IdPuesto=puesto.IdPuesto) }}"
+                                    class="btn btn-success mt-3">Descargar</a>
+                                <a href="{{ url_for('user.eliminar_puesto', IdPuesto=puesto.IdPuesto) }}"
+                                    class="btn btn-danger btn-delete mt-3">Eliminar</a>
                             </div>
                         </div>
                     </div>
@@ -123,113 +128,247 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <input type="hidden" name="IdPuesto" value="{{ puesto.IdPuesto }}">
-                                    <small>Fecha</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Fecha }}"
-                                        name="Fecha" readonly>
-                                    <small>Jefe Directo</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Jefe }}" name="Jefe"
-                                        readonly>
-                                    <small>Clave</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Clave }}" name="Clave"
-                                        readonly>
-                                    <small>Número de Plazas</small>
-                                    <input type="text" class="form-control" value="{{ puesto.NoPlazas }}"
-                                        name="NoPlazas" readonly>
-                                    <small>Objetivo del Puesto</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Objetivo }}" name="Obejivo"
-                                        readonly>
+                                    <form action="/actualizar_datos/" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="IdPuesto" value="{{ puesto.IdPuesto }}">
 
-                                    <div>
-                                    <small>Ubicación</small>
-                                    {% if puesto.Ubicacion %}
-                                    <img id="previewImage" src="data:image/jpeg;base64,{{ puesto.Ubicacion }}"
-                                        style="width: 400px; height: 400px;">
-                                    {% else %}
-                                    <p>Sin imagen de Ubicación</p>
-                                    {% endif %}
-                                    </div>
-                                    <small>Se relaciona con:</small>
-                                    <ul class="list-group mb-3">
-                                        {% for relacion in puesto.Relaciones %}
-                                        <li class="list-group-item">{{ relacion }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
-                                    <small>Reemplaza a: </small>
-                                    <input type="text" class="form-control" value="{{ puesto.Reemplazar }}" name="Reemplazar"
-                                        readonly>
-                                    <small>Es reemplazado por: </small>
-                                    <input type="text" class="form-control" value="{{ puesto.Reemplazado }}"
-                                        name="Reemplazado" readonly>
-                                    <small>Funciones Específicas: </small>
-                                    <input type="text" class="form-control" value="{{ puesto.FuncionesEspecificas }}"
-                                        name="FuncionesEspecificas" readonly>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Condiciones de Trabajo</h1>
-                                    <small>Esfuerzo Físico </small>
-                                    <input type="text" class="form-control" value="{{ puesto.EsfuerzoFisico }}"
-                                        name="EsfuerzoFisico" readonly>
-                                    <small>Esfuerzo Mental</small>
-                                    <input type="text" class="form-control" value="{{ puesto.EsfuerzoMental }}"
-                                        name="EsfuerzoMental" readonly>
-                                    <small>Riesgo de Accidente</small>
-                                    <input type="text" class="form-control" value="{{ puesto.RiesgoAccidente }}"
-                                        name="RiesgoAccidente" readonly>
-                                    <small>Ambiente</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Ambiente }}"
-                                        name="Ambiente" readonly>
-                                    <small>Equipo de Trabajo</small>
-                                    <input type="text" class="form-control" value="{{ puesto.EquipoTrabajo }}"
-                                        name="EquipoTrabajo" readonly>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Perfil de Puesto</h1>
-                                    <small>Edad</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Edad }}"
-                                        name="Edad" readonly>
-                                    <small>Sexo</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Sexo }}"
-                                        name="Sexo" readonly>
-                                    <small>Estado Civil</small>
-                                    <input type="text" class="form-control" value="{{ puesto.EstadoCivil }}"
-                                        name="EstadoCivil" readonly>
-                                    <small>Experiencia</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Experiencia }}"
-                                        name="Experiencia" readonly>
-                                    <small>Escolaridad</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Escolaridad }}"
-                                        name="Escolaridad" readonly>
-                                    <small>Conocimientos Específicos</small>
-                                    <input type="text" class="form-control" value="{{ puesto.ConocimientosEspecificos }}"
-                                        name="ConocimientosEspecificos" readonly>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Competencias</h1>
-                                    <small>A=Con alto dominio       B= Buen Dominio        C= Mínimo esperado</small>
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Generales</h1>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-6">
-                                            <small>Responsabilidad</small>
-                                            <input type="text" class="form-control" value="{{ puesto.Responsabilidad }}"
-                                                name="Responsabilidad" readonly>
+                                        <small>Nombre del puesto</small>
+                                        <input type="text" class="form-control" value="{{ puesto.NombrePuesto }}" name="NombrePuesto">
+
+                                        <small>Departamento</small>
+                                        <select class="form-select" id="id_departamento" name="id_departamento"
+                                            required>
+                                            {% for departamento in departamentos %}
+                                            <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small>Jefe Directo</small>
+                                        <select class="form-select" id="Jefe" name="Jefe" class="form-select">
+                                            <option value="No aplica" {% if puesto.Jefe=='No aplica' %}selected{% endif
+                                                %}>No aplica</option>
+                                            {% for puesto in puestos %}
+                                            <option value="{{ puesto[1] }}" {% if puesto.Jefe=='{{ puesto[1] }}'
+                                                %}selected{% endif %}>{{ puesto[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small>Clave</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Clave }}" name="Clave">
+
+                                        <small>Número de Plazas</small>
+                                        <input type="number" class="form-control" value="{{ puesto.NoPlazas }}"
+                                            name="NoPlazas">
+
+                                        <small>Fecha</small>
+                                        <input type="date" class="form-control" value="{{ puesto.Fecha }}" name="Fecha">
+
+                                        <div>
+                                            <small>Ubicación</small>
+                                            {% if puesto.Ubicacion %}
+                                            <div>
+                                                <img id="previewImage"
+                                                    src="data:image/jpeg;base64,{{ puesto.Ubicacion }}"
+                                                    class="img-fluid">
+                                            </div>
+                                            {% else %}
+                                            <p>Sin imagen de Ubicación</p>
+                                            {% endif %}
+                                            <input type="file" id="nueva_foto" name="nueva_foto" accept=".jpg"
+                                                class="form-control mt-3 mb-3">
                                         </div>
-                                        <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
-                                            <small>Compromiso</small>
-                                            <input type="text" class="form-control" value="{{ puesto.Compromiso }}"
-                                                name="Compromiso" readonly>
+
+                                        <small class="mt-3">Funciones Específicas</small>
+                                        <ul class="list-group mb-3">
+                                            {% for funcion in puesto.FuncionesEspecificas %}
+                                            <li class="list-group-item">{{ funcion }}</li>
+                                            {% endfor %}
+                                        </ul>
+
+                                        <small>Objetivo del Puesto</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Objetivo }}"
+                                            name="Objetivo">
+
+                                        <small>Equipo de Trabajo</small>
+                                        <input type="text" class="form-control" value="{{ puesto.EquipoTrabajo }}"
+                                            name="EquipoTrabajo">
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
+
+                                        <small>Reemplaza a: </small>
+                                        <select class="form-select" id="Reemplazar" name="Reemplazar"
+                                            class="form-select">
+                                            <option value="No aplica" {% if puesto.Reemplazar=='No aplica' %}selected{%
+                                                endif %}>No aplica</option>
+                                            {% for puesto in puestos %}
+                                            <option value="{{ puesto[1] }}" {% if puesto.Reemplazar=='{{ puesto[1] }}'
+                                                %}selected{% endif %}>{{ puesto[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small>Es reemplazado por: </small>
+                                        <select class="form-select" id="Reemplazado" name="Reemplazado"
+                                            class="form-select">
+                                            <option value="No aplica" {% if puesto.Reemplazado=='No aplica' %}selected{%
+                                                endif %}>No aplica</option>
+                                            {% for puesto in puestos %}
+                                            <option value="{{ puesto[1] }}" {% if puesto.Reemplazado=='{{ puesto[1] }}'
+                                                %}selected{% endif %}>{{ puesto[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Relaciones</h1>
+
+                                        <ul class="list-group mb-3">
+                                            {% for relacion in puesto.Relaciones %}
+                                            <li class="list-group-item">{{ relacion }}</li>
+                                            {% endfor %}
+                                        </ul>
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Condiciones de Trabajo</h1>
+
+                                        <small>Esfuerzo Físico </small>
+                                        <select id="esfuerzo_fisico" name="EsfuerzoFisico" class="form-select" required>
+                                            <option value="Normal" {% if puesto.EsfuerzoFisico=='Normal' %}selected{%
+                                                endif %}>Normal</option>
+                                            <option value="Complejo" {% if puesto.EsfuerzoFisico=='Complejo'
+                                                %}selected{% endif %}>Complejo</option>
+                                        </select>
+
+                                        <small>Esfuerzo Mental</small>
+                                        <select id="esfuerzo_mental" name="EsfuerzoMental" class="form-select" required>
+                                            <option value="Rutina" {% if puesto.EsfuerzoMental=='Rutina' %}selected{%
+                                                endif %}>Rutina</option>
+                                            <option value="Mediana" {% if puesto.EsfuerzoMental=='Mediana' %}selected{%
+                                                endif %}>Mediana</option>
+                                            <option value="Definido" {% if puesto.EsfuerzoMental=='Definido'
+                                                %}selected{% endif %}>Definido</option>
+                                        </select>
+
+                                        <small>Riesgo de Accidente</small>
+                                        <select id="riesgo_accidente" name="RiesgoAccidente" class="form-select"
+                                            required>
+                                            <option value="Nulo" {% if puesto.RiesgoAccidente=='Nulo' %}selected{% endif
+                                                %}>
+                                                Nulo</option>
+                                            <option value="Poco" {% if puesto.RiesgoAccidente=='Poco' %}selected{% endif
+                                                %}>
+                                                Poco</option>
+                                            <option value="Regular" {% if puesto.RiesgoAccidente=='Regular' %}selected{%
+                                                endif %}>Regular</option>
+                                            <option value="Frecuente" {% if puesto.RiesgoAccidente=='Frecuente'
+                                                %}selected{% endif %}>Frecuente</option>
+                                        </select>
+
+                                        <small>Ambiente</small>
+                                        <select id="ambiente" name="Ambiente" class="form-select" required>
+                                            <option value="Normal Interno" {% if puesto.Ambiente=='Normal Interno'
+                                                %}selected{% endif %}>Normal Interno</option>
+                                            <option value="Normal Exterior" {% if puesto.Ambiente=='Normal Exterior'
+                                                %}selected{% endif %}>Normal Exterior</option>
+                                            <option value="C" {% if puesto.Ambiente=='C' %}selected{% endif %}>
+                                                Deficiente Interno</option>
+                                            <option value="Deficiente Exterior" {% if
+                                                puesto.Ambiente=='Deficiente Exterior' %}selected{% endif %}>Deficiente
+                                                Exterior</option>
+                                        </select>
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Perfil de Puesto</h1>
+                                        <small>Edad</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Edad }}" name="Edad">
+                                        <small>Sexo</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Sexo }}" name="Sexo">
+                                        <small>Estado Civil</small>
+                                        <input type="text" class="form-control" value="{{ puesto.EstadoCivil }}"
+                                            name="EstadoCivil">
+                                        <small>Experiencia</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Experiencia }}"
+                                            name="Experiencia">
+                                        <small>Escolaridad</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Escolaridad }}"
+                                            name="Escolaridad">
+                                        <small>Conocimientos Específicos</small>
+                                        <input type="text" class="form-control"
+                                            value="{{ puesto.ConocimientosEspecificos }}"
+                                            name="ConocimientosEspecificos">
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Competencias</h1>
+                                        <small>A=Con alto dominio B= Buen Dominio C= Mínimo esperado</small>
+
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Generales</h1>
+                                        <div class="row">
+                                            <div class="col-sm-5 col-md-6">
+                                                <small>Responsabilidad</small>
+                                                <select id="Responsabilidad" name="Responsabilidad" class="form-select"
+                                                    required>
+                                                    <option value="A" {% if puesto.Responsabilidad=='A' %}selected{%
+                                                        endif %}>A
+                                                    </option>
+                                                    <option value="B" {% if puesto.Responsabilidad=='B' %}selected{%
+                                                        endif %}>B
+                                                    </option>
+                                                    <option value="C" {% if puesto.Responsabilidad=='C' %}selected{%
+                                                        endif %}>C
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                                <small>Compromiso</small>
+                                                <select id="Compromiso" name="Compromiso" class="form-select" required>
+                                                    <option value="A" {% if puesto.Compromiso=='A' %}selected{% endif
+                                                        %}>A
+                                                    </option>
+                                                    <option value="B" {% if puesto.Compromiso=='B' %}selected{% endif
+                                                        %}>B
+                                                    </option>
+                                                    <option value="C" {% if puesto.Compromiso=='C' %}selected{% endif
+                                                        %}>C
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-5 col-md-6">
-                                            <small>Empatia</small>
-                                            <input type="text" class="form-control" value="{{ puesto.Empatia }}"
-                                                name="Empatia" readonly>
+                                        <div class="row">
+                                            <div class="col-sm-5 col-md-6">
+                                                <small>Empatia</small>
+                                                <select id="Empatia" name="Empatia" class="form-select" required>
+                                                    <option value="A" {% if puesto.Empatia=='A' %}selected{% endif %}>A
+                                                    </option>
+                                                    <option value="B" {% if puesto.Empatia=='B' %}selected{% endif %}>B
+                                                    </option>
+                                                    <option value="C" {% if puesto.Empatia=='C' %}selected{% endif %}>C
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
-                                            <small>Trabajo en Equipo</small>
-                                            <input type="text" class="form-control" value="{{ puesto.TrabajoEquipo }}"
-                                                name="TrabajoEquipo" readonly>
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Específicas</h1>
+                                        <div class="row">
+                                            <div class="col-sm-5 col-md-6">
+                                                <small>Trabajo en Equipo</small>
+                                                <select id="TrabajoEquipo" name="TrabajoEquipo" class="form-select"
+                                                    required>
+                                                    <option value="A" {% if puesto.TrabajoEquipo=='A' %}selected{% endif
+                                                        %}>A</option>
+                                                    <option value="B" {% if puesto.TrabajoEquipo=='B' %}selected{% endif
+                                                        %}>B</option>
+                                                    <option value="C" {% if puesto.TrabajoEquipo=='C' %}selected{% endif
+                                                        %}>C</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
+                                                <small>Energía</small>
+                                                <select id="Energia" name="Energia" class="form-select" required>
+                                                    <option value="A" {% if puesto.Energia=='A' %}selected{% endif %}>A
+                                                    </option>
+                                                    <option value="B" {% if puesto.Energia=='B' %}selected{% endif %}>B
+                                                    </option>
+                                                    <option value="C" {% if puesto.Energia=='C' %}selected{% endif %}>C
+                                                    </option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <small>Energía</small>
-                                    <input type="text" class="form-control" value="{{ puesto.Energia }}"
-                                        name="Energia" readonly>
+                                        <div class="modal-footer mt-3">
+                                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -325,6 +464,22 @@
     <!-- Main JS File -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var inputFotoPerfil = document.getElementById('nueva_foto');
+            inputFotoPerfil.addEventListener('change', previewImage);
+
+            function previewImage(event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var preview = document.getElementById('previewImage');
+                    preview.src = reader.result;
+                }
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        });
+    </script>
 
 </body>
 

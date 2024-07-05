@@ -189,7 +189,6 @@ def puesto():
         clave = request.form.get('clave')
         no_plazas = request.form.get('no_plazas')
         objetivo = request.form.get('objetivo')
-        funciones = request.form.get('funciones')
         reemplaza = request.form.get('reemplaza')
         reemplazado = request.form.get('reemplazado')
         equipo_trabajo = request.form.get('equipo_trabajo')
@@ -197,6 +196,9 @@ def puesto():
         relaciones = request.form.get('Relaciones')  # Captura del campo Relaciones
         relaciones_lista = [r.strip() for r in relaciones.split(',')] if relaciones else []  # Convertir a lista
         relaciones_str = ','.join(relaciones_lista)  # Convertir a cadena
+        funciones = request.form.get('Funciones')  # Captura del campo funciones
+        funciones_lista = [r.strip() for r in funciones.split(',')] if funciones else []  # Convertir a lista
+        funciones_str = ','.join(funciones_lista)  # Convertir a cadena
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')
         estado_civil = request.form.get('estado_civil')
@@ -248,7 +250,7 @@ def puesto():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str
                     ))
                     id_puesto = cursor.lastrowid
 
@@ -632,6 +634,12 @@ def mostrarPuestos():
                     else:
                         puesto['Relaciones'] = []
 
+                    # Convertir el campo FuncionesEspecificas a una lista
+                    if puesto['FuncionesEspecificas']:
+                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(',')
+                    else:
+                        puesto['FuncionesEspecificas'] = []
+
                     puestos_completos.append(puesto)
 
     except mysql.connector.Error as err:
@@ -642,7 +650,11 @@ def mostrarPuestos():
         if cursor is not None:
             cursor.close()
     
-    return render_template("puestos.html", data=puestos_completos)
+    usuario_id = user['id']
+    departamentos = obtener_departamentos(usuario_id)
+    puestos = obtener_puestos(usuario_id)
+    
+    return render_template("puestos.html", data=puestos_completos, departamentos=departamentos, puestos=puestos)
 
 #Ruta para eliminar puestos.
 @user_routes.route('/eliminar_puesto/<int:IdPuesto>/')
@@ -724,3 +736,180 @@ def actualizarDepa(IdDepartamento):
     return redirect(url_for('user.mostrarDepartamentos'))
 
 
+# Ruta para actulizar datos de un puesto
+@user_routes.route('/actualizar_datos/', methods=['POST'])
+def actualizar_datos():
+    if request.method == 'POST':
+        # Recoger datos del formulario
+        IdPuesto = request.form.get('IdPuesto')
+        Jefe = request.form.get('Jefe')
+        Clave = request.form.get('Clave')
+        NoPlazas = request.form.get('NoPlazas')
+        Fecha = request.form.get('Fecha')
+        nueva_ubicacion = request.files['nueva_foto']
+        Objetivo = request.form.get('Objetivo')
+        EquipoTrabajo = request.form.get('EquipoTrabajo')
+        Reemplazar = request.form.get('Reemplazar')
+        Reemplazado = request.form.get('Reemplazado')
+        EsfuerzoFisico = request.form.get('EsfuerzoFisico')
+        EsfuerzoMental = request.form.get('EsfuerzoMental')
+        RiesgoAccidente = request.form.get('RiesgoAccidente')
+        Ambiente = request.form.get('Ambiente')
+        Edad = request.form.get('Edad')
+        Sexo = request.form.get('Sexo')
+        EstadoCivil = request.form.get('EstadoCivil')
+        Experiencia = request.form.get('Experiencia')
+        Escolaridad = request.form.get('Escolaridad')
+        ConocimientosEspecificos = request.form.get('ConocimientosEspecificos')
+        Responsabilidad = request.form.get('Responsabilidad')
+        Compromiso = request.form.get('Compromiso')
+        Empatia = request.form.get('Empatia')
+        TrabajoEquipo = request.form.get('TrabajoEquipo')
+        Energia = request.form.get('Energia')
+
+        if nueva_ubicacion and nueva_ubicacion.filename.endswith('.jpg'):
+            nueva_ubicacion_data = nueva_ubicacion.read()
+            nueva_ubicacion_bin = nueva_ubicacion_data
+        elif nueva_ubicacion and not nueva_ubicacion.filename.endswith('.jpg'):
+            flash('El archivo debe ser JPG')
+            return redirect(url_for('user.mostrarPuestos'))
+        else:
+            nueva_ubicacion_bin = None
+
+        try:
+            cursor = db.cursor()
+            
+            # Actualización de la tabla Puestos
+            update_fields_puestos = []
+            update_values_puestos = []
+
+            if Jefe:
+                update_fields_puestos.append("Jefe = %s")
+                update_values_puestos.append(Jefe)
+            if Clave:
+                update_fields_puestos.append("Clave = %s")
+                update_values_puestos.append(Clave)
+            if NoPlazas:
+                update_fields_puestos.append("NoPlazas = %s")
+                update_values_puestos.append(NoPlazas)
+            if Fecha:
+                update_fields_puestos.append("Fecha = %s")
+                update_values_puestos.append(Fecha)
+            if nueva_ubicacion_bin:
+                update_fields_puestos.append("Ubicacion = %s")
+                update_values_puestos.append(nueva_ubicacion_bin)
+            if Objetivo:
+                update_fields_puestos.append("Objetivo = %s")
+                update_values_puestos.append(Objetivo)
+            if EquipoTrabajo:
+                update_fields_puestos.append("EquipoTrabajo = %s")
+                update_values_puestos.append(EquipoTrabajo)
+            if Reemplazar:
+                update_fields_puestos.append("Reemplazar = %s")
+                update_values_puestos.append(Reemplazar)
+            if Reemplazado:
+                update_fields_puestos.append("Reemplazado = %s")
+                update_values_puestos.append(Reemplazado)
+
+            update_values_puestos.append(IdPuesto)
+
+            if update_fields_puestos:
+                query_puestos = f"UPDATE Puestos SET {', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
+                cursor.execute(query_puestos, update_values_puestos)
+
+            # Obtener el IdPerfil relacionado con el IdPuesto
+            cursor.execute("SELECT IdPerfil FROM PerfilPuesto WHERE IdPuesto = %s", (IdPuesto,))
+            IdPerfil = cursor.fetchone()
+            if IdPerfil:
+                IdPerfil = IdPerfil[0]
+            else:
+                IdPerfil = None
+
+            if IdPerfil:
+                # Actualización de la tabla PerfilPuesto
+                update_fields_perfil = []
+                update_values_perfil = []
+
+                if Edad:
+                    update_fields_perfil.append("Edad = %s")
+                    update_values_perfil.append(Edad)
+                if Sexo:
+                    update_fields_perfil.append("Sexo = %s")
+                    update_values_perfil.append(Sexo)
+                if EstadoCivil:
+                    update_fields_perfil.append("EstadoCivil = %s")
+                    update_values_perfil.append(EstadoCivil)
+                if Experiencia:
+                    update_fields_perfil.append("Experiencia = %s")
+                    update_values_perfil.append(Experiencia)
+                if Escolaridad:
+                    update_fields_perfil.append("Escolaridad = %s")
+                    update_values_perfil.append(Escolaridad)
+                if ConocimientosEspecificos:
+                    update_fields_perfil.append("ConocimientosEspecificos = %s")
+                    update_values_perfil.append(ConocimientosEspecificos)
+
+                update_values_perfil.append(IdPerfil)
+
+                if update_fields_perfil:
+                    query_perfil = f"UPDATE PerfilPuesto SET {', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
+                    cursor.execute(query_perfil, update_values_perfil)
+
+                # Actualización de la tabla CondicionesTrabajo
+                update_fields_condiciones = []
+                update_values_condiciones = []
+
+                if EsfuerzoFisico:
+                    update_fields_condiciones.append("EsfuerzoFisico = %s")
+                    update_values_condiciones.append(EsfuerzoFisico)
+                if EsfuerzoMental:
+                    update_fields_condiciones.append("EsfuerzoMental = %s")
+                    update_values_condiciones.append(EsfuerzoMental)
+                if RiesgoAccidente:
+                    update_fields_condiciones.append("RiesgoAccidente = %s")
+                    update_values_condiciones.append(RiesgoAccidente)
+                if Ambiente:
+                    update_fields_condiciones.append("Ambiente = %s")
+                    update_values_condiciones.append(Ambiente)
+
+                update_values_condiciones.append(IdPerfil)
+
+                if update_fields_condiciones:
+                    query_condiciones = f"UPDATE CondicionesTrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
+                    cursor.execute(query_condiciones, update_values_condiciones)
+
+                # Actualización de la tabla Competencias
+                update_fields_competencias = []
+                update_values_competencias = []
+
+                if Responsabilidad:
+                    update_fields_competencias.append("Responsabilidad = %s")
+                    update_values_competencias.append(Responsabilidad)
+                if Compromiso:
+                    update_fields_competencias.append("Compromiso = %s")
+                    update_values_competencias.append(Compromiso)
+                if Empatia:
+                    update_fields_competencias.append("Empatia = %s")
+                    update_values_competencias.append(Empatia)
+                if TrabajoEquipo:
+                    update_fields_competencias.append("TrabajoEquipo = %s")
+                    update_values_competencias.append(TrabajoEquipo)
+                if Energia:
+                    update_fields_competencias.append("Energia = %s")
+                    update_values_competencias.append(Energia)
+
+                update_values_competencias.append(IdPerfil)
+
+                if update_fields_competencias:
+                    query_competencias = f"UPDATE Competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
+                    cursor.execute(query_competencias, update_values_competencias)
+
+            db.commit()
+            flash('Datos actualizados correctamente')
+        except mysql.connector.Error as err:
+            flash(f"Error al actualizar datos: {err}")
+            db.rollback()
+        finally:
+            cursor.close()
+
+    return redirect(url_for('user.mostrarPuestos'))
