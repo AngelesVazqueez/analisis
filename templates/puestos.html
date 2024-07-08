@@ -131,26 +131,19 @@
                                     <form action="/actualizar_datos/" method="POST" enctype="multipart/form-data">
                                         <input type="hidden" name="IdPuesto" value="{{ puesto.IdPuesto }}">
 
-                                        <small>Nombre del puesto</small>
+                                        <small>Lista de Puestos</small>
+                                        <select class="form-select" class="form-select">
+                                            <option value="No aplica">No aplica</option>   
+                                            {% for puesto in puestos %}
+                                            <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        <small>Cambiar Nombre del puesto</small>
                                         <input type="text" class="form-control" value="{{ puesto.NombrePuesto }}" name="NombrePuesto">
 
-                                        <small>Departamento</small>
-                                        <select class="form-select" id="id_departamento" name="id_departamento"
-                                            required>
-                                            {% for departamento in departamentos %}
-                                            <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
-                                            {% endfor %}
-                                        </select>
-
                                         <small>Jefe Directo</small>
-                                        <select class="form-select" id="Jefe{{ puesto.IdPuesto }}" name="Jefe" class="form-select">
-                                            <option value="No aplica" {% if puesto.Jefe=='No aplica' %}selected{% endif
-                                                %}>No aplica</option>   
-                                            {% for Jefe in puestos %}
-                                            <option value="{{ Jefe[1] }}" {% if puesto.Jefe=='{{ Jefe[1] }}'
-                                                %}selected{% endif %}>{{ Jefe[1] }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="text" class="form-control" value="{{ puesto.Jefe }}" name="Jefe">
 
                                         <small>Clave</small>
                                         <input type="text" class="form-control" value="{{ puesto.Clave }}" name="Clave">
@@ -194,27 +187,14 @@
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
 
-                                        <small>Reemplaza a: </small>
-                                        <select class="form-select" id="Reemplazar{{ puesto.IdPuesto }}" name="Reemplazar"
-                                            class="form-select">
-                                            <option value="No aplica" {% if puesto.Reemplazar=='No aplica' %}selected{%
-                                                endif %}>No aplica</option>
-                                            {% for Reemplazar in puestos %}
-                                            <option value="{{ Reemplazar[1] }}" {% if puesto.Reemplazar=='{{ Reemplazar[1] }}'
-                                                %}selected{% endif %}>{{ Reemplazar[1] }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <small>Reemplaza a:</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Reemplazar }}" name="Reemplazar">
 
                                         <small>Es reemplazado por: </small>
-                                        <select class="form-select" id="Reemplazado{{ puesto.IdPuesto }}" name="Reemplazado"
-                                            class="form-select">
-                                            <option value="No aplica" {% if puesto.Reemplazado=='No aplica' %}selected{%
-                                                endif %}>No aplica</option>
-                                            {% for Reemplazado in puestos %}
-                                            <option value="{{ Reemplazado[1] }}" {% if puesto.Reemplazado=='{{ Reemplazado[1] }}'
-                                                %}selected{% endif %}>{{ Reemplazado[1] }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <input type="text" class="form-control" value="{{ puesto.Reemplazado }}" name="Reemplazado">
+
+                                        <small>Nota:</small>
+                                        <input type="text" class="form-control" value="{{ puesto.Nota }}" name="Nota">
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Relaciones</h1>
 

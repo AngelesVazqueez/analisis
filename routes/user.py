@@ -190,6 +190,7 @@ def puesto():
         objetivo = request.form.get('objetivo')
         reemplaza = request.form.get('reemplaza')
         reemplazado = request.form.get('reemplazado')
+        nota = request.form.get('nota')
         equipo_trabajo = request.form.get('equipo_trabajo')
         fecha = request.form.get('fecha')
         relaciones = request.form.get('Relaciones')  # Captura del campo Relaciones
@@ -245,11 +246,11 @@ def puesto():
                     # Inserción del puesto
                     sql_puesto = """
                     INSERT INTO puestos 
-                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones, Nota) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str, nota
                     ))
                     id_puesto = cursor.lastrowid
 
@@ -781,6 +782,7 @@ def actualizar_datos():
         EquipoTrabajo = request.form.get('EquipoTrabajo')
         Reemplazar = request.form.get('Reemplazar')
         Reemplazado = request.form.get('Reemplazado')
+        Nota = request.form.get('Nota')
         EsfuerzoFisico = request.form.get('EsfuerzoFisico')
         EsfuerzoMental = request.form.get('EsfuerzoMental')
         RiesgoAccidente = request.form.get('RiesgoAccidente')
@@ -843,6 +845,9 @@ def actualizar_datos():
             if Reemplazado:
                 update_fields_puestos.append("Reemplazado = %s")
                 update_values_puestos.append(Reemplazado)
+            if Nota:
+                update_fields_puestos.append("Nota = %s")
+                update_values_puestos.append(Nota)
 
             update_values_puestos.append(IdPuesto)
 
