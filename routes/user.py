@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template, url_for, redirect, session, request, flash, make_response
+from flask import Blueprint, render_template, url_for, redirect, session, request, flash, make_response, jsonify
 from func.func import get_user, obtener_areas
 from database.database import dbConnection
 import mysql.connector
-from datetime import datetime
 from bson.binary import Binary
 import base64
 from io import  BytesIO
@@ -305,6 +304,27 @@ def puesto():
     return render_template('puesto.html', departamentos=departamentos, puestos=puestos, user=user)
 
 
+@user_routes.route('/api/puestos/<int:departamento_id>', methods=['GET'])
+def obtener_puestos_por_departamento(departamento_id):
+    try:
+        with db.cursor() as cursor:
+            # Consulta para obtener los puestos por departamento
+            cursor.execute("""
+                SELECT id, NombrePuesto FROM puestos
+                WHERE DepartamentoId = %s
+            """, (departamento_id,))
+            puestos = cursor.fetchall()
+
+            # Formatear los resultados para devolverlos como JSON
+            puestos_json = [{'id': puesto[0], 'nombre': puesto[1]} for puesto in puestos]
+
+            return jsonify(puestos_json)
+
+    except mysql.connector.Error as err:
+        # Manejo de errores
+        return jsonify({'error': f'Error al obtener puestos por departamento: {err}'}), 500
+
+
 @user_routes.route('/pdf/<int:IdPuesto>')
 def pdf(IdPuesto):
     try:
@@ -356,7 +376,7 @@ def pdf(IdPuesto):
                 LEFT JOIN 
                     Areas ON Departamento.IdArea = Areas.IdArea
                 WHERE 
-                    p1.id = %s;
+                    p1.IdPuesto = %s;
                     """, (IdPuesto,))
         puesto = cursor.fetchone()
 
@@ -365,6 +385,15 @@ def pdf(IdPuesto):
                 if ubicacion_bin:
                     # Convertir la ubicación binaria a base64
                     puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
+        
+        # Convertir el campo Relaciones a una lista
+                    if puesto['Relaciones']:
+                        puesto['Relaciones'] = puesto['Relaciones'].split(',')
+                   
+
+                    # Convertir el campo FuncionesEspecificas a una lista
+                    if puesto['FuncionesEspecificas']:
+                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(',')
 
         cursor.close()
 
@@ -742,6 +771,7 @@ def actualizar_datos():
     if request.method == 'POST':
         # Recoger datos del formulario
         IdPuesto = request.form.get('IdPuesto')
+        NombrePuesto = request.form.get('NombrePuesto')
         Jefe = request.form.get('Jefe')
         Clave = request.form.get('Clave')
         NoPlazas = request.form.get('NoPlazas')
@@ -783,6 +813,9 @@ def actualizar_datos():
             update_fields_puestos = []
             update_values_puestos = []
 
+            if NombrePuesto:
+                update_fields_puestos.append("NombrePuesto = %s")
+                update_values_puestos.append(NombrePuesto)
             if Jefe:
                 update_fields_puestos.append("Jefe = %s")
                 update_values_puestos.append(Jefe)
