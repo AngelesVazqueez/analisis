@@ -1,48 +1,300 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>PDF</title>
-</head>
-<body>
-    <h1>Datos del Puesto</h1>
-    <p>Id: {{ puesto['IdPuesto'] }}</p>
-    <p>Nombre: {{ puesto['NombrePuesto'] }}</p>
-    <p>Departamento: {{ puesto['Departamento'] }}</p>
-    <p>Jefe: {{ puesto['Jefe'] }}</p>
-    <p>Clave: {{ puesto['Clave'] }}</p>
-    <p>Número de plazas: {{ puesto['NoPlazas'] }}</p>
-    <p>Objetivo: {{ puesto['Objetivo'] }}</p>
-    
-    {% if puesto['Ubicacion'] %}
-    <p>Ubicacion:</p>
-    <img style="width: 400px; height: 400px" src="data:image/jpeg;base64,{{ puesto['Ubicacion'] }}" alt="Ubicación">
-    {% endif %}
-    
-    <p>Funciones Específicas: {{ puesto['FuncionesEspecificas'] }}</p>
-    <p>Equipo de Trabajo: {{ puesto['EquipoTrabajo'] }}</p>
-    <p>Fecha: {{ puesto['Fecha'] }}</p>
-    <p>Reemplaza a: {{ puesto['Reemplazar'] }}</p>
-    <p>Reemplazado por: {{ puesto['Reemplazado'] }}</p>
-    <p>Relaciones: {{ puesto['RelacionesNombre'] }}</p>
-    <p>Objetivo de la relación: {{ puesto['RelacionesObjetivo'] }}</p>
-    <p>Puesto relacionado: {{ puesto['PuestoRelacionadoNombre'] }}</p>
-    <p>Edad: {{ puesto['Edad'] }}</p>
-    <p>Sexo: {{ puesto['Sexo'] }}</p>
-    <p>Estado Civil: {{ puesto['EstadoCivil'] }}</p>
-    <p>Experiencia: {{ puesto['Experiencia'] }}</p>
-    <p>Escolaridad: {{ puesto['Escolaridad'] }}</p>
-    <p>Conocimientos Especificos: {{ puesto['ConocimientosEspecificos'] }}</p>
-    <p>Esfuerzo Físico: {{ puesto['EsfuerzoFisico'] }}</p>
-    <p>Esfuerzo Mental: {{ puesto['EsfuerzoMental'] }}</p>
-    <p>Riesgo de accidente: {{ puesto['RiesgoAccidente'] }}</p>
-    <p>Ambiente: {{ puesto['Ambiente'] }}</p>
-    <p>Responsabilidad: {{ puesto['Responsabilidad'] }}</p>
-    <p>Compromiso: {{ puesto['Compromiso'] }}</p>
-    <p>Empatía: {{ puesto['Empatia'] }}</p>
-    <p>Trabajo en equipo: {{ puesto['TrabajoEquipo'] }}</p>
-    <p>Energía: {{ puesto['Energia'] }}</p>
-    <p>Departamento: {{ puesto['NombreDepartamento'] }}</p>
-    <p>Área: {{ puesto['NombreArea'] }}</p>
+<html lang="es">
 
+<head>
+    <meta charset="utf-8">
+    <title>Análisis de Puestos</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .header {
+            color: #2c3e50;
+            font-size: 29px;
+            font-weight: bold;
+        }
+
+        .subtitulos{
+            color: #2c3e50;
+            font-size: 29px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            page-break-inside: avoid;
+            /* Prevent page breaks within the container */
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+            /* Prevent page breaks within the card */
+        }
+
+        .card h5 {
+            font-size: 19px;
+            margin: 0 0 10px;
+            text-align: center;
+        }
+        .card h4 {
+            font-size: 15px;
+            margin: 0 0 10px;
+            text-align: center;
+        }
+
+        .card small {
+            font-size: 16px;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .card table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .card th,
+        .card td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .card th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            text-align: center;
+            font-size: 14px;
+            /* Adjust button font size */
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .nota{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Ánalisis de Puestos</div>
+    <div class="container">
+        <div class="card">
+            <h5>Nombre del Puesto: {{ puesto.NombrePuesto }}</h5>
+
+            <table>
+                <tr>
+                    <th>Departamento</th>
+                    <th>Área</th>
+                </tr>
+                <tr>
+                    <td>{{ puesto.NombreDepartamento }}</td>
+                    <td>{{ puesto.NombreArea }}</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <th>Elaborado el: </th>
+                    <th>Clave: </th>
+                    <th>No. de Plazas</th>
+                </tr>
+                <tr>
+                    <td>{{ puesto.Fecha }}</td>
+                    <td>{{ puesto.Clave }}</td>
+                    <td>{{ puesto.NoPlazas }}</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <th>Jefe Inmediato</th>
+                    <td>{{ puesto.Jefe }}</td>
+                </tr>
+                <tr>
+                    <th>Objetivo del Puesto</th>
+                    <td>{{ puesto.Objetivo }}</td>
+                </tr>
+
+                <tr>
+                    <th>Ubicación</th>
+                    <td>
+                        {% if puesto['Ubicacion'] %}
+                        <img style="width: 400px; height: 400px" src="data:image/jpeg;base64,{{ puesto['Ubicacion'] }}"
+                            alt="Ubicación">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Relaciones</th>
+                    <td>
+                        {% for relacion in puesto.Relaciones %}
+                        <li class="list-group-item">{{ relacion }}</li>
+                        {% endfor %}
+                    </td>
+                </tr>
+            </table>
+
+            <table>
+                <h5>En caso de ausencia</h5>
+                <tr>
+                    <th>Reemplaza a: </th>
+                    <th>Es reemplazado por: </th>
+                </tr>
+                <tr>
+                    <td>{{ puesto.Reemplazar }}</td>
+                    <td>{{ puesto.Reemplazado }}</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <th>Nota: </th>
+                </tr>
+                <tr>
+                    <td>Nota</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <th>Funciones Especificas: </th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="list-group mb-3">
+                            {% for funcion in puesto.FuncionesEspecificas %}
+                            <li class="list-group-item">{{ funcion }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+
+            <table>
+                <h5>Condiciones de Trabajo </h5>
+                <tr>
+                    <th>Esfuerzo Físico</th>
+                    <td>{{ puesto.EsfuerzoFisico }}</td>
+                </tr>
+                <tr>
+                    <th>Esfuerzo Mental</th>
+                    <td>{{ puesto.EsfuerzoMental }}</td>
+                </tr>
+                <tr>
+                    <th>Riesgo de Accidente</th>
+                    <td>{{ puesto.RiesgoAccidente }}</td>
+                </tr>
+                <tr>
+                    <th>Ambiente</th>
+                    <td>{{ puesto.Ambiente }}</td>
+                </tr>
+            </table>
+
+            <table>
+                <tr>
+                    <th>Equipo de Trabajo: </th>
+                </tr>
+                <tr>
+                    <td>{{ puesto.EquipoTrabajo }}</td>
+                </tr>
+            </table>
+                
+            <table>
+                <h5>Perfil de Trabajo: </h5>
+                <tr>
+                    <th>Edad </th>
+                    <td>{{ puesto.Edad }}</td>
+                </tr>
+                <tr>
+                    <th>Sexo </th>
+                    <td>{{ puesto.Sexo }}</td>
+                </tr>
+                <tr>
+                    <th>Estado Civil</th>
+                    <td>{{ puesto.EstadoCivil }}</td>
+                </tr>
+                <tr>
+                    <th>Escolaridad</th>
+                    <td>{{ puesto.Escolaridad }}</td>
+                </tr>
+                <tr>
+                    <th>Experiencia</th>
+                    <td>{{ puesto.Experiencia }}</td>
+                </tr>
+                <tr>
+                    <th>Conocimientos Especificos</th>
+                    <td>{{ puesto.ConocimientosEspecificos }}</td>
+                </tr>
+            </table>
+
+            <table>
+                    <h5>Competencias: </h5>
+                    <h4>A=Con alto dominio,   B= Buen dominio,   C= Mínimo esperado.</h4>
+                </tr>
+                <tr>
+                    <small>Competencias Generales: </small>
+                    <th>Responsabilidad: </th>
+                    <th>Compromiso organizacional: </th>
+                    <th>Empatía</th>
+                </tr>
+                <tr>
+                    <td>{{ puesto.Responsabilidad }}</td>
+                    <td>{{ puesto.Compromiso }}</td>
+                    <td>{{ puesto.Empatia }}</td>
+                </tr>
+            </table>
+
+            <table>
+            <tr>
+                <small>Competencias Específicas: </small>
+                <th>Trabajo en equipo: </th>
+                <th>Dinamismo – Energía</th>
+            </tr>
+            <tr>
+                <td>{{ puesto.TrabajoEquipo }}</td>
+                <td>{{ puesto.Energia }}</td>
+            </tr>
+        </table>
+
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 - Empresa. Todos los derechos reservados.
+    </div>
 </body>
+
 </html>

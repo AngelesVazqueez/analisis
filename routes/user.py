@@ -356,7 +356,7 @@ def pdf(IdPuesto):
                 LEFT JOIN 
                     Areas ON Departamento.IdArea = Areas.IdArea
                 WHERE 
-                    p1.id = %s;
+                    p1.IdPuesto = %s;
                     """, (IdPuesto,))
         puesto = cursor.fetchone()
 
@@ -365,6 +365,15 @@ def pdf(IdPuesto):
                 if ubicacion_bin:
                     # Convertir la ubicación binaria a base64
                     puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
+        
+        # Convertir el campo Relaciones a una lista
+                    if puesto['Relaciones']:
+                        puesto['Relaciones'] = puesto['Relaciones'].split(',')
+                   
+
+                    # Convertir el campo FuncionesEspecificas a una lista
+                    if puesto['FuncionesEspecificas']:
+                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(',')
 
         cursor.close()
 
