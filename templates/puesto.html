@@ -124,9 +124,6 @@
                                             <label for="jefe" class="form-label">Jefe:</label>
                                             <select class="form-select" id="jefe" name="jefe" required>
                                                 <option value="No aplica">No aplica</option>
-                                                {% for puesto in puestos %}
-                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
-                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
@@ -580,6 +577,33 @@
                 }
                 reader.readAsDataURL(event.target.files[0]);
             }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Cuando cambie la selección del departamento
+            $('#id_departamento').change(function () {
+                var departamentoId = $(this).val();
+
+                // Hacer una solicitud AJAX para obtener los puestos del departamento seleccionado
+                $.ajax({
+                    url: '/api/puestos/' + departamentoId,  // URL de tu endpoint para obtener puestos por departamento
+                    method: 'GET',
+                    success: function (data) {
+                        // Limpiar y actualizar las opciones del select de jefe
+                        $('#jefe').empty();
+                        $('#jefe').append('<option value="No aplica">No aplica</option>');
+                        data.forEach(function (puesto) {
+                            $('#jefe').append('<option value="' + puesto[1] + '">' + puesto[1] + '</option>');
+                        });
+                    },
+                    error: function (err) {
+                        console.error('Error al obtener puestos:', err);
+                    }
+                });
+            });
         });
     </script>
 </body>
