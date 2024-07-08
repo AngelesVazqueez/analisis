@@ -124,6 +124,9 @@
                                             <label for="jefe" class="form-label">Jefe:</label>
                                             <select class="form-select" id="jefe" name="jefe" required>
                                                 <option value="No aplica">No aplica</option>
+                                                {% for puesto in puestos %}
+                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
@@ -171,7 +174,7 @@
                                             <label for="Funciones" class="form-label">Funciones Específicas:</label>
                                             <div>
                                                 <small id="Funciones" class="form-text text-muted">Escribe las funciones
-                                                    específicas separadas por comas.</small>
+                                                    específicas separadas por puntos.</small>
                                             </div>
                                             <textarea class="form-control" id="Funciones" name="Funciones"
                                                 required></textarea>
@@ -233,7 +236,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <small id="Relaciones" class="form-text text-muted">Escribe las relaciones
-                                                separadas por comas.</small>
+                                                separadas por puntos.</small>
                                             <textarea class="form-control" id="Relaciones" name="Relaciones"
                                                 required></textarea>
                                         </div>
@@ -302,7 +305,7 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="edad" class="form-label">Edad:</label>
-                                            <input type="text" class="form-control" id="edad" name="edad" required>
+                                            <input type="number" class="form-control" id="edad" name="edad" required>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -583,33 +586,6 @@
                 }
                 reader.readAsDataURL(event.target.files[0]);
             }
-        });
-    </script>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Cuando cambie la selección del departamento
-            $('#id_departamento').change(function () {
-                var departamentoId = $(this).val();
-
-                // Hacer una solicitud AJAX para obtener los puestos del departamento seleccionado
-                $.ajax({
-                    url: '/api/puestos/' + departamentoId,  // URL de tu endpoint para obtener puestos por departamento
-                    method: 'GET',
-                    success: function (data) {
-                        // Limpiar y actualizar las opciones del select de jefe
-                        $('#jefe').empty();
-                        $('#jefe').append('<option value="No aplica">No aplica</option>');
-                        data.forEach(function (puesto) {
-                            $('#jefe').append('<option value="' + puesto[1] + '">' + puesto[1] + '</option>');
-                        });
-                    },
-                    error: function (err) {
-                        console.error('Error al obtener puestos:', err);
-                    }
-                });
-            });
         });
     </script>
 </body>

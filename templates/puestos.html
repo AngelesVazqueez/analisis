@@ -123,7 +123,8 @@
                         <div class="modal-dialog text-center">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modalLabel{{ puesto.IdPuesto }}">{{ puesto.NombrePuesto }}</h1>
+                                    <h1 class="modal-title fs-5" id="modalLabel{{ puesto.IdPuesto }}">{{
+                                        puesto.NombrePuesto }}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
@@ -132,15 +133,15 @@
                                         <input type="hidden" name="IdPuesto" value="{{ puesto.IdPuesto }}">
 
                                         <small>Lista de Puestos</small>
-                                        <select class="form-select" class="form-select">
-                                            <option value="No aplica">No aplica</option>   
+                                        <select class="form-select">
                                             {% for puesto in puestos %}
                                             <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
                                             {% endfor %}
                                         </select>
 
                                         <small>Cambiar Nombre del puesto</small>
-                                        <input type="text" class="form-control" value="{{ puesto.NombrePuesto }}" name="NombrePuesto">
+                                        <input type="text" class="form-control" value="{{ puesto.NombrePuesto }}"
+                                            name="NombrePuesto">
 
                                         <small>Jefe Directo</small>
                                         <input type="text" class="form-control" value="{{ puesto.Jefe }}" name="Jefe">
@@ -178,23 +179,27 @@
                                         </ul>
 
                                         <small>Objetivo del Puesto</small>
-                                        <input type="text" class="form-control" value="{{ puesto.Objetivo }}"
-                                            name="Objetivo">
+                                        <textarea class="form-control" name="Objetivo" rows="3"
+                                            cols="50">{{ puesto.Objetivo }}</textarea>
 
                                         <small>Equipo de Trabajo</small>
-                                        <input type="text" class="form-control" value="{{ puesto.EquipoTrabajo }}"
-                                            name="EquipoTrabajo">
+                                        <textarea class="form-control" name="EquipoTrabajo" rows="3"
+                                            cols="50">{{ puesto.EquipoTrabajo }}</textarea>
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
 
                                         <small>Reemplaza a:</small>
-                                        <input type="text" class="form-control" value="{{ puesto.Reemplazar }}" name="Reemplazar">
+                                        <input type="text" class="form-control" value="{{ puesto.Reemplazar }}"
+                                            name="Reemplazar">
 
                                         <small>Es reemplazado por: </small>
-                                        <input type="text" class="form-control" value="{{ puesto.Reemplazado }}" name="Reemplazado">
+                                        <input type="text" class="form-control" value="{{ puesto.Reemplazado }}"
+                                            name="Reemplazado">
 
                                         <small>Nota:</small>
-                                        <input type="text" class="form-control" value="{{ puesto.Nota }}" name="Nota">
+                                        <textarea class="form-control" name="Nota" rows="3"
+                                            cols="50">{{ puesto.Nota }}</textarea>
+
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Relaciones</h1>
 

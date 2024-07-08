@@ -194,11 +194,11 @@ def puesto():
         equipo_trabajo = request.form.get('equipo_trabajo')
         fecha = request.form.get('fecha')
         relaciones = request.form.get('Relaciones')  # Captura del campo Relaciones
-        relaciones_lista = [r.strip() for r in relaciones.split(',')] if relaciones else []  # Convertir a lista
-        relaciones_str = ','.join(relaciones_lista)  # Convertir a cadena
+        relaciones_lista = [r.strip() for r in relaciones.split('.')] if relaciones else []  # Convertir a lista
+        relaciones_str = '.'.join(relaciones_lista)  # Convertir a cadena
         funciones = request.form.get('Funciones')  # Captura del campo funciones
-        funciones_lista = [r.strip() for r in funciones.split(',')] if funciones else []  # Convertir a lista
-        funciones_str = ','.join(funciones_lista)  # Convertir a cadena
+        funciones_lista = [r.strip() for r in funciones.split('.')] if funciones else []  # Convertir a lista
+        funciones_str = '.'.join(funciones_lista)  # Convertir a cadena
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')
         estado_civil = request.form.get('estado_civil')
@@ -611,7 +611,8 @@ def mostrarPuestos():
                     p1.EquipoTrabajo, 
                     p1.Fecha, 
                     p1.Reemplazar, 
-                    p1.Reemplazado, 
+                    p1.Reemplazado,
+                    p1.Nota, 
                     p1.Relaciones,
                     PerfilPuesto.Edad, 
                     PerfilPuesto.Sexo, 
@@ -660,13 +661,13 @@ def mostrarPuestos():
 
                     # Convertir el campo Relaciones a una lista
                     if puesto['Relaciones']:
-                        puesto['Relaciones'] = puesto['Relaciones'].split(',')
+                        puesto['Relaciones'] = puesto['Relaciones'].split('.')
                     else:
                         puesto['Relaciones'] = []
 
                     # Convertir el campo FuncionesEspecificas a una lista
                     if puesto['FuncionesEspecificas']:
-                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(',')
+                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split('.')
                     else:
                         puesto['FuncionesEspecificas'] = []
 
