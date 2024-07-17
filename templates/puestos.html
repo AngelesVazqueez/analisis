@@ -101,6 +101,8 @@
                                         <small>Departamento:</small>
                                         <input type="text" class="form-control" value="{{ puesto.NombreDepartamento }}"
                                             readonly>
+                                        <input type="hidden" class="form-control" value="{{ puesto.DepartamentoId }}" name="DepartamentoId"
+                                            readonly>
                                     </div>
                                     <div class="col">
                                         <small>Area:</small>
@@ -182,9 +184,13 @@
                                         <textarea class="form-control" name="Objetivo" rows="3"
                                             cols="50">{{ puesto.Objetivo }}</textarea>
 
-                                        <small>Equipo de Trabajo</small>
-                                        <textarea class="form-control" name="EquipoTrabajo" rows="3"
-                                            cols="50">{{ puesto.EquipoTrabajo }}</textarea>
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Equipo de trabajo</h1>
+                                        <ul class="list-group mb-3">
+                                            {% for equipo in puesto.EquipoTrabajo %}
+                                            <li class="list-group-item">{{ equipo }}</li>
+                                            {% endfor %}
+                                        </ul>
+
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">En caso de ausencia</h1>
 
@@ -271,10 +277,12 @@
                                         <small>Escolaridad</small>
                                         <input type="text" class="form-control" value="{{ puesto.Escolaridad }}"
                                             name="Escolaridad">
-                                        <small>Conocimientos Específicos</small>
-                                        <input type="text" class="form-control"
-                                            value="{{ puesto.ConocimientosEspecificos }}"
-                                            name="ConocimientosEspecificos">
+                                        <small>Conocimientos Especificos</small>
+                                        <ul class="list-group mb-3">
+                                            {% for conocimientos in puesto.ConocimientosEspecificos %}
+                                            <li class="list-group-item">{{ conocimientos }}</li>
+                                            {% endfor %}
+                                        </ul>
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Competencias</h1>
                                         <small>A=Con alto dominio B= Buen Dominio C= Mínimo esperado</small>
@@ -370,72 +378,45 @@
     <footer id="footer" class="footer position-relative">
         <div class="container footer-top">
             <div class="row gy-4">
-                <div class="col-lg-4 col-md-6 footer-about">
+                <div class="col-lg-4 col-md-4 footer-about">
                     <a href="index.html" class="d-flex align-items-center">
-                        <span class="sitename">Ninestars</span>
+                        <span class="sitename">Universidad Tecnológica de Acapulco</span>
                     </a>
                     <div class="footer-contact pt-3">
-                        <p>A108 Adam Street</p>
-                        <p>New York, NY 535022</p>
-                        <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-                        <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        <p>Av. Comandante Bouganville L5</p>
+                        <p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Useful Links</h4>
+                <div class="col-lg-4 col-md-4 footer-links">
+                    <h4>Links útiles</h4>
                     <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">About us</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Services</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Terms of service</a></li>
+                        <li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
+                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a></li>
+						<p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
+                        <p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
                     </ul>
                 </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Web Design</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Web Development</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Product Management</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Marketing</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-12">
-                    <h4>Follow Us</h4>
-                    <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
+                <div class="col-lg-4 col-md-4">
+                    <h4>Síguenos</h4>
+                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate con nosotros en Facebook e Instagram </p>
                     <div class="social-links d-flex">
-                        <a href=""><i class="bi bi-twitter-x"></i></a>
-                        <a href=""><i class="bi bi-facebook"></i></a>
-                        <a href=""><i class="bi bi-instagram"></i></a>
-                        <a href=""><i class="bi bi-linkedin"></i></a>
+                        <a href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
-
             </div>
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">Ninestars</strong> <span>All Rights
-                    Reserved</span></p>
-            <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you've purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos reservados</span></p>
         </div>
-
     </footer>
 
-    <!-- Scroll Top -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Preloader -->
-    <div id="preloader"></div>
+	<!-- Scroll Top -->
+	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+			class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

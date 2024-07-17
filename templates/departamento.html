@@ -121,65 +121,46 @@
     <footer id="footer" class="footer position-relative">
         <div class="container footer-top">
             <div class="row gy-4">
-                <div class="col-lg-4 col-md-6 footer-about">
+                <div class="col-lg-4 col-md-4 footer-about">
                     <a href="index.html" class="d-flex align-items-center">
-                        <span class="sitename">Ninestars</span>
+                        <span class="sitename">Universidad Tecnológica de Acapulco</span>
                     </a>
                     <div class="footer-contact pt-3">
-                        <p>A108 Adam Street</p>
-                        <p>New York, NY 535022</p>
-                        <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
-                        <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        <p>Av. Comandante Bouganville L5</p>
+                        <p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Enlaces Útiles</h4>
+                <div class="col-lg-4 col-md-4 footer-links">
+                    <h4>Links útiles</h4>
                     <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Inicio</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Sobre nosotros</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Servicios</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Términos de servicio</a></li>
+                        <li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
+                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a></li>
+						<p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
+                        <p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
                     </ul>
                 </div>
 
-                <div class="col-lg-2 col-md-3 footer-links">
-                    <h4>Nuestros Servicios</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Diseño Web</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Desarrollo Web</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Gestión de Producto</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="#">Marketing</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-12">
+                <div class="col-lg-4 col-md-4">
                     <h4>Síguenos</h4>
-                    <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p>
+                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate con nosotros en Facebook e Instagram </p>
                     <div class="social-links d-flex">
-                        <a href="#"><i class="bi bi-twitter"></i></a>
-                        <a href="#"><i class="bi bi-facebook"></i></a>
-                        <a href="#"><i class="bi bi-instagram"></i></a>
-                        <a href="#"><i class="bi bi-linkedin"></i></a>
+                        <a href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i class="bi bi-facebook"></i></a>
+                        <a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="container text-center mt-4">
-            <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">Ninestars</strong> <span>Todos los derechos reservados</span></p>
-            <div class="credits">
-                Diseñado por <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
+        <div class="container copyright text-center mt-4">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos reservados</span></p>
         </div>
     </footer>
-    <!-- End Footer -->
 
-    <!-- Scroll Top -->
-    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+	<!-- Scroll Top -->
+	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+			class="bi bi-arrow-up-short"></i></a>
 
-    <!-- Preloader -->
-    <div id="preloader"></div>
 
     <!-- Vendor JS Files -->
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

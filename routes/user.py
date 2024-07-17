@@ -191,20 +191,31 @@ def puesto():
         reemplaza = request.form.get('reemplaza')
         reemplazado = request.form.get('reemplazado')
         nota = request.form.get('nota')
-        equipo_trabajo = request.form.get('equipo_trabajo')
+
+        equipo_trabajo = request.form.get('equipo_trabajo')  # Captura del campo funciones
+        equipo_lista = [r.strip() for r in equipo_trabajo.split(',')] if equipo_trabajo else []  # Convertir a lista
+        equipo_str = ','.join(equipo_lista)  # Convertir a cadena
+
         fecha = request.form.get('fecha')
+
         relaciones = request.form.get('Relaciones')  # Captura del campo Relaciones
         relaciones_lista = [r.strip() for r in relaciones.split('.')] if relaciones else []  # Convertir a lista
         relaciones_str = '.'.join(relaciones_lista)  # Convertir a cadena
+
         funciones = request.form.get('Funciones')  # Captura del campo funciones
         funciones_lista = [r.strip() for r in funciones.split('.')] if funciones else []  # Convertir a lista
         funciones_str = '.'.join(funciones_lista)  # Convertir a cadena
+
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')
         estado_civil = request.form.get('estado_civil')
         experiencia = request.form.get('experiencia')
         escolaridad = request.form.get('escolaridad')
-        conocimientos = request.form.get('conocimientos')
+
+        conocimientos = request.form.get('conocimientos')  # Captura del campo conocimientos
+        conocimientos_lista = [r.strip() for r in conocimientos.split(',')] if conocimientos else []  # Convertir a lista
+        conocimientos_str = ','.join(conocimientos_lista)  # Convertir a cadena
+
         esfuerzo_fisico = request.form.get('esfuerzo_fisico')
         esfuerzo_mental = request.form.get('esfuerzo_mental')
         riesgo_accidente = request.form.get('riesgo_accidente')
@@ -223,50 +234,40 @@ def puesto():
 
         try:
             with db.cursor() as cursor:
+                # Verificar si el puesto ya existe en este departamento para este usuario
                 cursor.execute("""
                     SELECT * FROM puestos 
-                    WHERE NombrePuesto = %s AND DepartamentoId = %s
-                """, (nombre_puesto, id_departamento))
+                    WHERE NombrePuesto = %s AND DepartamentoId = %s AND id = %s
+                """, (nombre_puesto, id_departamento, user['id']))
                 existe_puesto = cursor.fetchone()
 
-                if ubicacion:
-                    if ubicacion.filename.endswith('.jpg'):
-                        ubicacion_data = ubicacion.read()
-                        ubicacion_bin = Binary(ubicacion_data)
-                    else:
-                        flash('El archivo debe ser JPG')
-                        return redirect(url_for('user.puesto'))
-                else: 
-                    ubicacion_bin = None
-
-                if existe_puesto is None:
+                if not existe_puesto:
                     # Comenzar transacción
                     cursor.execute("START TRANSACTION")
 
-                    # Inserción del puesto
+                    # Insertar el puesto
                     sql_puesto = """
                     INSERT INTO puestos 
                     (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones, Nota) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_trabajo, fecha, reemplaza, reemplazado, ubicacion_bin, user['id'], relaciones_str, nota
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_str, fecha, reemplaza, reemplazado, ubicacion.read() if ubicacion else None, user['id'], relaciones_str, nota
                     ))
                     id_puesto = cursor.lastrowid
 
-                    # Inserción del perfil del puesto
+                    # Insertar el perfil del puesto
                     sql_perfil = """
                     INSERT INTO perfilpuesto 
                     (Edad, Sexo, EstadoCivil, Experiencia, Escolaridad, ConocimientosEspecificos, IdPuesto) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_perfil, (
-                        edad, sexo, estado_civil, experiencia, escolaridad, conocimientos, id_puesto
+                        edad, sexo, estado_civil, experiencia, escolaridad, conocimientos_str, id_puesto
                     ))
                     id_perfil = cursor.lastrowid
 
-
-                    # Inserción de condiciones de trabajo
+                    # Insertar condiciones de trabajo
                     sql_condiciones = """
                     INSERT INTO condicionestrabajo
                     (EsfuerzoFisico, EsfuerzoMental, RiesgoAccidente, Ambiente, IdPerfil)
@@ -276,7 +277,7 @@ def puesto():
                         esfuerzo_fisico, esfuerzo_mental, riesgo_accidente, ambiente, id_perfil
                     ))
 
-                    # Inserción de competencias
+                    # Insertar competencias
                     sql_competencias = """
                     INSERT INTO competencias
                     (Responsabilidad, Compromiso, Empatia, TrabajoEquipo, Energia, IdPerfil)
@@ -301,6 +302,7 @@ def puesto():
     usuario_id = user['id']
     departamentos = obtener_departamentos(usuario_id)
     puestos = obtener_puestos(usuario_id)
+
 
     return render_template('puesto.html', departamentos=departamentos, puestos=puestos, user=user)
 
@@ -347,6 +349,7 @@ def pdf(IdPuesto):
                     p1.Reemplazar, 
                     p1.Reemplazado, 
                     p1.Relaciones,
+                    p1.Nota,
                     PerfilPuesto.Edad, 
                     PerfilPuesto.Sexo, 
                     PerfilPuesto.EstadoCivil, 
@@ -389,12 +392,20 @@ def pdf(IdPuesto):
         
         # Convertir el campo Relaciones a una lista
                     if puesto['Relaciones']:
-                        puesto['Relaciones'] = puesto['Relaciones'].split(',')
+                        puesto['Relaciones'] = puesto['Relaciones'].split('.')
                    
 
-                    # Convertir el campo FuncionesEspecificas a una lista
+        # Convertir el campo FuncionesEspecificas a una lista
                     if puesto['FuncionesEspecificas']:
-                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(',')
+                        puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split('.')
+
+        # Convertir el campo EquipoTrabajo a una lista
+                    if puesto['EquipoTrabajo']:
+                        puesto['EquipoTrabajo'] = puesto['EquipoTrabajo'].split(',')
+
+        # Convertir el campo ConocimientosEspecificos a una lista
+                    if puesto['ConocimientosEspecificos']:
+                        puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(',')           
 
         cursor.close()
 
@@ -576,7 +587,7 @@ def eliminar_depa(IdDepartamento):
         # Eliminar departamentos relacionados con el área
         cursor.execute("DELETE FROM Departamento WHERE IdDepartamento = %s", (IdDepartamento,))
         db.commit()
-        flash('Departamento eliminada correctamente', 'success')
+        flash('Departamento eliminado correctamente', 'success')
     except mysql.connector.Error as err:
         print("Error al eliminar departamento:", err)
         db.rollback()
@@ -602,6 +613,7 @@ def mostrarPuestos():
                     p1.IdPuesto, 
                     p1.NombrePuesto, 
                     p1.Departamento, 
+                    p1.DepartamentoId,
                     p1.Jefe, 
                     p1.Clave, 
                     p1.NoPlazas, 
@@ -658,6 +670,18 @@ def mostrarPuestos():
                         puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
                     else:
                         puesto['Ubicacion'] = None
+
+                    # Convertir el campo equipo de trabajo a una lista
+                    if puesto['EquipoTrabajo']:
+                        puesto['EquipoTrabajo'] = puesto['EquipoTrabajo'].split(',')
+                    else:
+                        puesto['EquipoTrabajo'] = []
+
+                    # Convertir el campo equipo de ConocimientosEspecificos a una lista
+                    if puesto['ConocimientosEspecificos']:
+                        puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(',')
+                    else:
+                        puesto['ConocimientosEspecificos'] = []
 
                     # Convertir el campo Relaciones a una lista
                     if puesto['Relaciones']:
@@ -724,231 +748,280 @@ def eliminar_puesto(IdPuesto):
         cursor.close()
     return redirect(url_for('user.mostrarPuestos'))
 
-#Ruta para actualizar Área
-@user_routes.route('/actualizarArea/<string:IdArea>', methods=['POST'])
+# Ruta para actualizar Área
+@user_routes.route('/actualizarArea/<string:IdArea>', methods=['GET', 'POST'])
 def actualizarArea(IdArea):
-    try:
-        NombreArea=request.form["NombreArea"]
-        if IdArea and NombreArea:
-            cursor = db.cursor()
-            sql="UPDATE Areas SET NombreArea=%s WHERE IdArea=%s"
-            datos=(NombreArea, IdArea)
-            cursor.execute(sql, datos)
-            db.commit()
-            flash('Área actualizada correctamente', 'success')
-    except mysql.connector.Error as err:
-        print("Error al editar área:", err)
-        db.rollback()
-        flash('Error al editar área', 'error')
+    if 'email' in session:
+        email = session['email']
+        user = get_user(email)
+        if user:
+            if request.method == 'POST':
+                NombreArea = request.form["NombreArea"]
+                try:
+                    with db.cursor() as cursor:
+                        # Verificar si el nombre del área ya existe para este usuario, excluyendo el área actual
+                        cursor.execute(
+                            "SELECT * FROM Areas WHERE NombreArea = %s AND id = %s AND IdArea != %s",
+                            (NombreArea, user['id'], IdArea)
+                        )
+                        existearea = cursor.fetchone()
+
+                        if existearea is None:
+                            # Proceder con la actualización si no se repite el nombre
+                            sql_update = "UPDATE Areas SET NombreArea = %s WHERE IdArea = %s"
+                            cursor.execute(sql_update, (NombreArea, IdArea))
+                            db.commit()
+                            flash('Área actualizada correctamente', 'success')
+                        else:
+                            flash('El nombre del área ya existe', 'error')
+                        return redirect(url_for('user.areas'))
+                except mysql.connector.Error as err:
+                    print("Error al editar área:", err)
+                    db.rollback()
+                    flash('Error al editar área', 'error')
+        else:
+            return redirect(url_for('main.index'))
     return redirect(url_for('user.areas'))
 
-#Ruta para actualizar Departamento
-@user_routes.route('/actualizarDepa/<string:IdDepartamento>', methods=['POST'])
+
+# Ruta para actualizar Departamento
+@user_routes.route('/actualizarDepa/<string:IdDepartamento>', methods=['GET', 'POST'])
 def actualizarDepa(IdDepartamento):
-    print(request.form)
-    try:
-        NombreDepartamento = request.form["NombreDepartamento"]
-        Area = request.form["Area"]
-        if IdDepartamento and NombreDepartamento:
-            cursor = db.cursor()
-            sql = "UPDATE Departamento SET NombreDepartamento=%s, IdArea=%s WHERE IdDepartamento=%s"
-            datos = (NombreDepartamento, Area, IdDepartamento)
-            cursor.execute(sql, datos)
-            db.commit()
-            flash('Departamento actualizado correctamente', 'success')
+    if 'email' in session:
+        email = session['email']
+        user = get_user(email)
+        if user:
+            if request.method == 'POST':
+                print(request.form)
+                try:
+                    NombreDepartamento = request.form["NombreDepartamento"]
+                    Area = request.form["Area"]
+                    if IdDepartamento and NombreDepartamento and Area:
+                        with db.cursor() as cursor:
+                            # Verificar si el nombre del departamento ya existe en esta área para este usuario, excluyendo el departamento actual
+                            cursor.execute(
+                                "SELECT * FROM Departamento WHERE NombreDepartamento = %s AND IdArea = %s AND id = %s AND IdDepartamento != %s",
+                                (NombreDepartamento, Area, user['id'], IdDepartamento)
+                            )
+                            existeDepartamento = cursor.fetchone()
+
+                            if existeDepartamento is None:
+                                # Proceder con la actualización si no se repite el nombre en la misma área
+                                sql_update = "UPDATE Departamento SET NombreDepartamento = %s, IdArea = %s WHERE IdDepartamento = %s"
+                                cursor.execute(sql_update, (NombreDepartamento, Area, IdDepartamento))
+                                db.commit()
+                                flash('Departamento actualizado correctamente', 'success')
+                            else:
+                                flash('El nombre del departamento ya existe en esta área', 'error')
+                            return redirect(url_for('user.mostrarDepartamentos'))
+                    else:
+                        flash('Todos los campos son requeridos', 'error')
+                except KeyError as e:
+                    flash(f'Error: campo requerido {e} no encontrado', 'error')
+                except mysql.connector.Error as err:
+                    print("Error al editar Departamento:", err)
+                    db.rollback()
+                    flash('Error al editar Departamento', 'error')
         else:
-            flash('Todos los campos son requeridos', 'error')
-    except KeyError as e:
-        flash(f'Error: campo requerido {e} no encontrado', 'error')
-    except mysql.connector.Error as err:
-        print("Error al editar Departamento:", err)
-        db.rollback()
-        flash('Error al editar Departamento', 'error')
+            return redirect(url_for('main.index'))
     return redirect(url_for('user.mostrarDepartamentos'))
 
 
-# Ruta para actulizar datos de un puesto
 @user_routes.route('/actualizar_datos/', methods=['POST'])
 def actualizar_datos():
-    if request.method == 'POST':
-        # Recoger datos del formulario
-        IdPuesto = request.form.get('IdPuesto')
-        NombrePuesto = request.form.get('NombrePuesto')
-        Jefe = request.form.get('Jefe')
-        Clave = request.form.get('Clave')
-        NoPlazas = request.form.get('NoPlazas')
-        Fecha = request.form.get('Fecha')
-        nueva_ubicacion = request.files['nueva_foto']
-        Objetivo = request.form.get('Objetivo')
-        EquipoTrabajo = request.form.get('EquipoTrabajo')
-        Reemplazar = request.form.get('Reemplazar')
-        Reemplazado = request.form.get('Reemplazado')
-        Nota = request.form.get('Nota')
-        EsfuerzoFisico = request.form.get('EsfuerzoFisico')
-        EsfuerzoMental = request.form.get('EsfuerzoMental')
-        RiesgoAccidente = request.form.get('RiesgoAccidente')
-        Ambiente = request.form.get('Ambiente')
-        Edad = request.form.get('Edad')
-        Sexo = request.form.get('Sexo')
-        EstadoCivil = request.form.get('EstadoCivil')
-        Experiencia = request.form.get('Experiencia')
-        Escolaridad = request.form.get('Escolaridad')
-        ConocimientosEspecificos = request.form.get('ConocimientosEspecificos')
-        Responsabilidad = request.form.get('Responsabilidad')
-        Compromiso = request.form.get('Compromiso')
-        Empatia = request.form.get('Empatia')
-        TrabajoEquipo = request.form.get('TrabajoEquipo')
-        Energia = request.form.get('Energia')
+    if 'email' in session:
+        email = session['email']
+        user = get_user(email)
+        if user:
+            if request.method == 'POST':
+                # Recoger datos del formulario
+                IdPuesto = request.form.get('IdPuesto')
+                NombrePuesto = request.form.get('NombrePuesto')
+                Jefe = request.form.get('Jefe')
+                Clave = request.form.get('Clave')
+                NoPlazas = request.form.get('NoPlazas')
+                Fecha = request.form.get('Fecha')
+                nueva_ubicacion = request.files['nueva_foto']
+                Objetivo = request.form.get('Objetivo')
+                EquipoTrabajo = request.form.get('EquipoTrabajo')
+                Reemplazar = request.form.get('Reemplazar')
+                Reemplazado = request.form.get('Reemplazado')
+                Nota = request.form.get('Nota')
+                EsfuerzoFisico = request.form.get('EsfuerzoFisico')
+                EsfuerzoMental = request.form.get('EsfuerzoMental')
+                RiesgoAccidente = request.form.get('RiesgoAccidente')
+                Ambiente = request.form.get('Ambiente')
+                Edad = request.form.get('Edad')
+                Sexo = request.form.get('Sexo')
+                EstadoCivil = request.form.get('EstadoCivil')
+                Experiencia = request.form.get('Experiencia')
+                Escolaridad = request.form.get('Escolaridad')
+                ConocimientosEspecificos = request.form.get('ConocimientosEspecificos')
+                Responsabilidad = request.form.get('Responsabilidad')
+                Compromiso = request.form.get('Compromiso')
+                Empatia = request.form.get('Empatia')
+                TrabajoEquipo = request.form.get('TrabajoEquipo')
+                Energia = request.form.get('Energia')
 
-        if nueva_ubicacion and nueva_ubicacion.filename.endswith('.jpg'):
-            nueva_ubicacion_data = nueva_ubicacion.read()
-            nueva_ubicacion_bin = nueva_ubicacion_data
-        elif nueva_ubicacion and not nueva_ubicacion.filename.endswith('.jpg'):
-            flash('El archivo debe ser JPG')
-            return redirect(url_for('user.mostrarPuestos'))
-        else:
-            nueva_ubicacion_bin = None
+                if nueva_ubicacion and nueva_ubicacion.filename.endswith('.jpg'):
+                    nueva_ubicacion_data = nueva_ubicacion.read()
+                    nueva_ubicacion_bin = nueva_ubicacion_data
+                elif nueva_ubicacion and not nueva_ubicacion.filename.endswith('.jpg'):
+                    flash('El archivo debe ser JPG')
+                    return redirect(url_for('user.mostrarPuestos'))
+                else:
+                    nueva_ubicacion_bin = None
 
-        try:
-            cursor = db.cursor()
-            
-            # Actualización de la tabla Puestos
-            update_fields_puestos = []
-            update_values_puestos = []
+                try:
+                    cursor = db.cursor()
 
-            if NombrePuesto:
-                update_fields_puestos.append("NombrePuesto = %s")
-                update_values_puestos.append(NombrePuesto)
-            if Jefe:
-                update_fields_puestos.append("Jefe = %s")
-                update_values_puestos.append(Jefe)
-            if Clave:
-                update_fields_puestos.append("Clave = %s")
-                update_values_puestos.append(Clave)
-            if NoPlazas:
-                update_fields_puestos.append("NoPlazas = %s")
-                update_values_puestos.append(NoPlazas)
-            if Fecha:
-                update_fields_puestos.append("Fecha = %s")
-                update_values_puestos.append(Fecha)
-            if nueva_ubicacion_bin:
-                update_fields_puestos.append("Ubicacion = %s")
-                update_values_puestos.append(nueva_ubicacion_bin)
-            if Objetivo:
-                update_fields_puestos.append("Objetivo = %s")
-                update_values_puestos.append(Objetivo)
-            if EquipoTrabajo:
-                update_fields_puestos.append("EquipoTrabajo = %s")
-                update_values_puestos.append(EquipoTrabajo)
-            if Reemplazar:
-                update_fields_puestos.append("Reemplazar = %s")
-                update_values_puestos.append(Reemplazar)
-            if Reemplazado:
-                update_fields_puestos.append("Reemplazado = %s")
-                update_values_puestos.append(Reemplazado)
-            if Nota:
-                update_fields_puestos.append("Nota = %s")
-                update_values_puestos.append(Nota)
+                    # Verificar si el nombre del puesto ya existe para este usuario
+                    cursor.execute(
+                        "SELECT * FROM Puestos WHERE NombrePuesto = %s AND id = %s",
+                        (NombrePuesto, user['id'])
+                    )
+                    existe_puesto = cursor.fetchone()
 
-            update_values_puestos.append(IdPuesto)
+                    if existe_puesto:
+                        flash('El nombre del puesto ya existe para este usuario', 'error')
+                    else:
+                        # Actualización de la tabla Puestos
+                        update_fields_puestos = []
+                        update_values_puestos = []
 
-            if update_fields_puestos:
-                query_puestos = f"UPDATE Puestos SET {', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
-                cursor.execute(query_puestos, update_values_puestos)
+                        if NombrePuesto:
+                            update_fields_puestos.append("NombrePuesto = %s")
+                            update_values_puestos.append(NombrePuesto)
+                        if Jefe:
+                            update_fields_puestos.append("Jefe = %s")
+                            update_values_puestos.append(Jefe)
+                        if Clave:
+                            update_fields_puestos.append("Clave = %s")
+                            update_values_puestos.append(Clave)
+                        if NoPlazas:
+                            update_fields_puestos.append("NoPlazas = %s")
+                            update_values_puestos.append(NoPlazas)
+                        if Fecha:
+                            update_fields_puestos.append("Fecha = %s")
+                            update_values_puestos.append(Fecha)
+                        if nueva_ubicacion_bin:
+                            update_fields_puestos.append("Ubicacion = %s")
+                            update_values_puestos.append(nueva_ubicacion_bin)
+                        if Objetivo:
+                            update_fields_puestos.append("Objetivo = %s")
+                            update_values_puestos.append(Objetivo)
+                        if EquipoTrabajo:
+                            update_fields_puestos.append("EquipoTrabajo = %s")
+                            update_values_puestos.append(EquipoTrabajo)
+                        if Reemplazar:
+                            update_fields_puestos.append("Reemplazar = %s")
+                            update_values_puestos.append(Reemplazar)
+                        if Reemplazado:
+                            update_fields_puestos.append("Reemplazado = %s")
+                            update_values_puestos.append(Reemplazado)
+                        if Nota:
+                            update_fields_puestos.append("Nota = %s")
+                            update_values_puestos.append(Nota)
 
-            # Obtener el IdPerfil relacionado con el IdPuesto
-            cursor.execute("SELECT IdPerfil FROM PerfilPuesto WHERE IdPuesto = %s", (IdPuesto,))
-            IdPerfil = cursor.fetchone()
-            if IdPerfil:
-                IdPerfil = IdPerfil[0]
-            else:
-                IdPerfil = None
+                        update_values_puestos.append(IdPuesto)
 
-            if IdPerfil:
-                # Actualización de la tabla PerfilPuesto
-                update_fields_perfil = []
-                update_values_perfil = []
+                        if update_fields_puestos:
+                            query_puestos = f"UPDATE Puestos SET {', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
+                            cursor.execute(query_puestos, update_values_puestos)
 
-                if Edad:
-                    update_fields_perfil.append("Edad = %s")
-                    update_values_perfil.append(Edad)
-                if Sexo:
-                    update_fields_perfil.append("Sexo = %s")
-                    update_values_perfil.append(Sexo)
-                if EstadoCivil:
-                    update_fields_perfil.append("EstadoCivil = %s")
-                    update_values_perfil.append(EstadoCivil)
-                if Experiencia:
-                    update_fields_perfil.append("Experiencia = %s")
-                    update_values_perfil.append(Experiencia)
-                if Escolaridad:
-                    update_fields_perfil.append("Escolaridad = %s")
-                    update_values_perfil.append(Escolaridad)
-                if ConocimientosEspecificos:
-                    update_fields_perfil.append("ConocimientosEspecificos = %s")
-                    update_values_perfil.append(ConocimientosEspecificos)
+                        # Obtener el IdPerfil relacionado con el IdPuesto
+                        cursor.execute("SELECT IdPerfil FROM PerfilPuesto WHERE IdPuesto = %s", (IdPuesto,))
+                        IdPerfil = cursor.fetchone()
+                        if IdPerfil:
+                            IdPerfil = IdPerfil[0]
+                        else:
+                            IdPerfil = None
 
-                update_values_perfil.append(IdPerfil)
+                        if IdPerfil:
+                            # Actualización de la tabla PerfilPuesto
+                            update_fields_perfil = []
+                            update_values_perfil = []
 
-                if update_fields_perfil:
-                    query_perfil = f"UPDATE PerfilPuesto SET {', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
-                    cursor.execute(query_perfil, update_values_perfil)
+                            if Edad:
+                                update_fields_perfil.append("Edad = %s")
+                                update_values_perfil.append(Edad)
+                            if Sexo:
+                                update_fields_perfil.append("Sexo = %s")
+                                update_values_perfil.append(Sexo)
+                            if EstadoCivil:
+                                update_fields_perfil.append("EstadoCivil = %s")
+                                update_values_perfil.append(EstadoCivil)
+                            if Experiencia:
+                                update_fields_perfil.append("Experiencia = %s")
+                                update_values_perfil.append(Experiencia)
+                            if Escolaridad:
+                                update_fields_perfil.append("Escolaridad = %s")
+                                update_values_perfil.append(Escolaridad)
+                            if ConocimientosEspecificos:
+                                update_fields_perfil.append("ConocimientosEspecificos = %s")
+                                update_values_perfil.append(ConocimientosEspecificos)
 
-                # Actualización de la tabla CondicionesTrabajo
-                update_fields_condiciones = []
-                update_values_condiciones = []
+                            update_values_perfil.append(IdPerfil)
 
-                if EsfuerzoFisico:
-                    update_fields_condiciones.append("EsfuerzoFisico = %s")
-                    update_values_condiciones.append(EsfuerzoFisico)
-                if EsfuerzoMental:
-                    update_fields_condiciones.append("EsfuerzoMental = %s")
-                    update_values_condiciones.append(EsfuerzoMental)
-                if RiesgoAccidente:
-                    update_fields_condiciones.append("RiesgoAccidente = %s")
-                    update_values_condiciones.append(RiesgoAccidente)
-                if Ambiente:
-                    update_fields_condiciones.append("Ambiente = %s")
-                    update_values_condiciones.append(Ambiente)
+                            if update_fields_perfil:
+                                query_perfil = f"UPDATE PerfilPuesto SET {', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
+                                cursor.execute(query_perfil, update_values_perfil)
 
-                update_values_condiciones.append(IdPerfil)
+                            # Actualización de la tabla CondicionesTrabajo
+                            update_fields_condiciones = []
+                            update_values_condiciones = []
 
-                if update_fields_condiciones:
-                    query_condiciones = f"UPDATE CondicionesTrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
-                    cursor.execute(query_condiciones, update_values_condiciones)
+                            if EsfuerzoFisico:
+                                update_fields_condiciones.append("EsfuerzoFisico = %s")
+                                update_values_condiciones.append(EsfuerzoFisico)
+                            if EsfuerzoMental:
+                                update_fields_condiciones.append("EsfuerzoMental = %s")
+                                update_values_condiciones.append(EsfuerzoMental)
+                            if RiesgoAccidente:
+                                update_fields_condiciones.append("RiesgoAccidente = %s")
+                                update_values_condiciones.append(RiesgoAccidente)
+                            if Ambiente:
+                                update_fields_condiciones.append("Ambiente = %s")
+                                update_values_condiciones.append(Ambiente)
 
-                # Actualización de la tabla Competencias
-                update_fields_competencias = []
-                update_values_competencias = []
+                            update_values_condiciones.append(IdPerfil)
 
-                if Responsabilidad:
-                    update_fields_competencias.append("Responsabilidad = %s")
-                    update_values_competencias.append(Responsabilidad)
-                if Compromiso:
-                    update_fields_competencias.append("Compromiso = %s")
-                    update_values_competencias.append(Compromiso)
-                if Empatia:
-                    update_fields_competencias.append("Empatia = %s")
-                    update_values_competencias.append(Empatia)
-                if TrabajoEquipo:
-                    update_fields_competencias.append("TrabajoEquipo = %s")
-                    update_values_competencias.append(TrabajoEquipo)
-                if Energia:
-                    update_fields_competencias.append("Energia = %s")
-                    update_values_competencias.append(Energia)
+                            if update_fields_condiciones:
+                                query_condiciones = f"UPDATE CondicionesTrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
+                                cursor.execute(query_condiciones, update_values_condiciones)
 
-                update_values_competencias.append(IdPerfil)
+                            # Actualización de la tabla Competencias
+                            update_fields_competencias = []
+                            update_values_competencias = []
 
-                if update_fields_competencias:
-                    query_competencias = f"UPDATE Competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
-                    cursor.execute(query_competencias, update_values_competencias)
+                            if Responsabilidad:
+                                update_fields_competencias.append("Responsabilidad = %s")
+                                update_values_competencias.append(Responsabilidad)
+                            if Compromiso:
+                                update_fields_competencias.append("Compromiso = %s")
+                                update_values_competencias.append(Compromiso)
+                            if Empatia:
+                                update_fields_competencias.append("Empatia = %s")
+                                update_values_competencias.append(Empatia)
+                            if TrabajoEquipo:
+                                update_fields_competencias.append("TrabajoEquipo = %s")
+                                update_values_competencias.append(TrabajoEquipo)
+                            if Energia:
+                                update_fields_competencias.append("Energia = %s")
+                                update_values_competencias.append(Energia)
 
-            db.commit()
-            flash('Datos actualizados correctamente')
-        except mysql.connector.Error as err:
-            flash(f"Error al actualizar datos: {err}")
-            db.rollback()
-        finally:
-            cursor.close()
+                            update_values_competencias.append(IdPerfil)
+
+                            if update_fields_competencias:
+                                query_competencias = f"UPDATE Competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
+                                cursor.execute(query_competencias, update_values_competencias)
+
+                        db.commit()
+                        flash('Datos actualizados correctamente')
+                except mysql.connector.Error as err:
+                    flash(f"Error al actualizar datos: {err}")
+                    db.rollback()
+                finally:
+                    cursor.close()
 
     return redirect(url_for('user.mostrarPuestos'))

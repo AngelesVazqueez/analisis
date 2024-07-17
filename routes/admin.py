@@ -165,12 +165,102 @@ def users():
 
 
 # Ruta para eliminar un usuario
-@admin_routes.route('/delete/<int:user_id>/')
+@admin_routes.route('/delete/user/<int:user_id>/')
 def delete_user(user_id):
     cursor = connection.cursor()
     try:
-        # Consulta para eliminar el usuario por ID
+        # Eliminar CondicionesTrabajo relacionados con el usuario
+        cursor.execute("""
+            DELETE FROM CondicionesTrabajo 
+            WHERE IdPerfil IN (
+                SELECT IdPerfil 
+                FROM PerfilPuesto 
+                WHERE IdPuesto IN (
+                    SELECT IdPuesto 
+                    FROM Puestos 
+                    WHERE DepartamentoId IN (
+                        SELECT IdDepartamento 
+                        FROM Departamento 
+                        WHERE IdArea IN (
+                            SELECT IdArea 
+                            FROM Areas 
+                            WHERE id = %s
+                        )
+                    )
+                )
+            )
+        """, (user_id,))
+        
+        # Eliminar Competencias de perfiles relacionados con el usuario
+        cursor.execute("""
+            DELETE FROM Competencias 
+            WHERE IdPerfil IN (
+                SELECT IdPerfil 
+                FROM PerfilPuesto 
+                WHERE IdPuesto IN (
+                    SELECT IdPuesto 
+                    FROM Puestos 
+                    WHERE DepartamentoId IN (
+                        SELECT IdDepartamento 
+                        FROM Departamento 
+                        WHERE IdArea IN (
+                            SELECT IdArea 
+                            FROM Areas 
+                            WHERE id = %s
+                        )
+                    )
+                )
+            )
+        """, (user_id,))
+        
+        # Eliminar perfiles de puesto relacionados con el usuario
+        cursor.execute("""
+            DELETE FROM PerfilPuesto 
+            WHERE IdPuesto IN (
+                SELECT IdPuesto 
+                FROM Puestos 
+                WHERE DepartamentoId IN (
+                    SELECT IdDepartamento 
+                    FROM Departamento 
+                    WHERE IdArea IN (
+                        SELECT IdArea 
+                        FROM Areas 
+                        WHERE id = %s
+                    )
+                )
+            )
+        """, (user_id,))
+        
+        # Eliminar puestos relacionados con el usuario
+        cursor.execute("""
+            DELETE FROM Puestos 
+            WHERE DepartamentoId IN (
+                SELECT IdDepartamento 
+                FROM Departamento 
+                WHERE IdArea IN (
+                    SELECT IdArea 
+                    FROM Areas 
+                    WHERE id = %s
+                )
+            )
+        """, (user_id,))
+        
+        # Eliminar departamentos relacionados con el usuario
+        cursor.execute("""
+            DELETE FROM Departamento 
+            WHERE IdArea IN (
+                SELECT IdArea 
+                FROM Areas 
+                WHERE id = %s
+            )
+        """, (user_id,))
+        
+        # Eliminar el área
+        cursor.execute("DELETE FROM Areas WHERE id = %s", (user_id,))
+        
+        # Eliminar el usuario
         cursor.execute("DELETE FROM user WHERE id = %s", (user_id,))
+        
         connection.commit()
         flash('Usuario eliminado correctamente', 'success')
     except mysql.connector.Error as err:
@@ -214,10 +304,11 @@ def admins():
 
 
 # Ruta para eliminar un administrador
-@admin_routes.route('/delete/<int:admin_id>/')
+@admin_routes.route('/delete/admin/<int:admin_id>/')
 def delete_admin(admin_id):
     cursor = connection.cursor()
     try:
+        print('tonte')
         # Consulta para eliminar el administrador por ID
         cursor.execute("DELETE FROM admin WHERE id = %s", (admin_id,))
         connection.commit()

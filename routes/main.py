@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
 import database.database as dbase
 import mysql.connector
+import bcrypt
 
 
 # Obtener la conexión a la base de datos
@@ -26,14 +27,14 @@ def iniciar():
         # Buscar en la tabla de users
         cursor.execute("SELECT * FROM user WHERE email = %s", (email,))
         login_user = cursor.fetchone()
-        if login_user and login_user['password'] == password:
+        if login_user and bcrypt.checkpw(password.encode('utf-8'), login_user['password'].encode('utf-8') if isinstance(login_user['password'], str) else login_user['password']):
             session['email'] = email
             return redirect(url_for('user.user'))
 
         # Buscar en la tabla de admin
         cursor.execute("SELECT * FROM admin WHERE email = %s", (email,))
         login_admin = cursor.fetchone()
-        if login_admin and login_admin['password'] == password:
+        if login_admin and bcrypt.checkpw(password.encode('utf-8'), login_admin['password'].encode('utf-8') if isinstance(login_admin['password'], str) else login_admin['password']):
             session['email'] = email
             return redirect(url_for('admin.admin'))
 
@@ -41,6 +42,8 @@ def iniciar():
         return redirect(url_for('main.index'))
     except mysql.connector.Error as err:
         print("Error al iniciar sesión:", err)
+        flash('Hubo un error al iniciar sesión. Inténtalo de nuevo.')
+        return redirect(url_for('main.index'))
     finally:
         cursor.close()
 

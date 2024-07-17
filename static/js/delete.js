@@ -5,7 +5,7 @@ if (btnDelete) {
     btnArray.forEach((btn) => {
         // <-- Agrega paréntesis aquí
         btn.addEventListener('click', (e) => {
-            if (!confirm('¿Estás seguro de eliminar el usuario?')) {
+            if (!confirm('¿Estás seguro de eliminar el administrador?')) {
                 e.preventDefault();
             }
         });

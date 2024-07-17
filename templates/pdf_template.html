@@ -185,7 +185,7 @@
                     <th>Nota: </th>
                 </tr>
                 <tr>
-                    <td>Nota</td>
+                    <td>{{ puesto.Nota }}</td>
                 </tr>
             </table>
 
@@ -229,7 +229,13 @@
                     <th>Equipo de Trabajo: </th>
                 </tr>
                 <tr>
-                    <td>{{ puesto.EquipoTrabajo }}</td>
+                    <td>
+                        <ul class="list-group mb-3">
+                            {% for equipo in puesto.EquipoTrabajo %}
+                            <li class="list-group-item">{{ equipo }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
                 </tr>
             </table>
                 
@@ -257,7 +263,13 @@
                 </tr>
                 <tr>
                     <th>Conocimientos Especificos</th>
-                    <td>{{ puesto.ConocimientosEspecificos }}</td>
+                    <td>
+                        <ul class="list-group mb-3">
+                            {% for conocimientos in puesto.ConocimientosEspecificos %}
+                            <li class="list-group-item">{{ conocimientos }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
                 </tr>
             </table>
 
@@ -293,7 +305,7 @@
         </div>
     </div>
     <div class="footer">
-        &copy; 2024 - Empresa. Todos los derechos reservados.
+        &copy; 2024 - UTA. Todos los derechos reservados.
     </div>
 </body>
 
