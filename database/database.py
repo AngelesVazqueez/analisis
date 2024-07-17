@@ -11,10 +11,10 @@ def dbConnection():
     try:
         # Crear la conexión a la base de datos MySQL
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='12345',
-            database='analisis'
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            database=MYSQL_DATABASE
         )
         print("Conexión exitosa a la base de datos MySQL")
         return connection
