@@ -1062,10 +1062,8 @@ def actualizar_datos():
                             update_values_perfil.append(IdPerfil)
 
                             if update_fields_perfil:
-                                query_perfil = f"UPDATE perfilpuesto SET {
-                                    ', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
-                                cursor.execute(
-                                    query_perfil, update_values_perfil)
+                                query_perfil = f"UPDATE perfilpuesto SET {', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
+                                cursor.execute(query_perfil, update_values_perfil)
 
                             # Actualización de la tabla CondicionesTrabajo
                             update_fields_condiciones = []
@@ -1094,10 +1092,8 @@ def actualizar_datos():
                             update_values_condiciones.append(IdPerfil)
 
                             if update_fields_condiciones:
-                                query_condiciones = f"UPDATE condicionestrabajo SET {
-                                    ', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
-                                cursor.execute(query_condiciones,
-                                               update_values_condiciones)
+                                query_condiciones = f"UPDATE condicionestrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
+                                cursor.execute(query_condiciones, update_values_condiciones)
 
                             # Actualización de la tabla Competencias
                             update_fields_competencias = []
@@ -1129,10 +1125,8 @@ def actualizar_datos():
                             update_values_competencias.append(IdPerfil)
 
                             if update_fields_competencias:
-                                query_competencias = f"UPDATE competencias SET {
-                                    ', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
-                                cursor.execute(
-                                    query_competencias, update_values_competencias)
+                                query_competencias = f"UPDATE competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
+                                cursor.execute(query_competencias, update_values_competencias)
 
                         db.commit()
                         flash('Datos actualizados correctamente')
