@@ -141,9 +141,7 @@
                                             {% endfor %}
                                         </select>
 
-                                        <small>Cambiar Nombre del puesto</small>
-                                        <input type="text" class="form-control" value="{{ puesto.NombrePuesto }}"
-                                            name="NombrePuesto">
+                                        
 
                                         <small>Jefe Directo</small>
                                         <input type="text" class="form-control" value="{{ puesto.Jefe }}" name="Jefe">
@@ -429,7 +427,7 @@
 
     <!-- Main JS File -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/borrar.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/delete-puesto.js') }}"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {

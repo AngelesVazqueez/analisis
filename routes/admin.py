@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, session, request
 import database.database as dbase
 import mysql.connector
-from func.func import get_admin
 import bcrypt
 
 
@@ -9,6 +8,19 @@ import bcrypt
 connection = dbase.dbConnection()
 
 admin_routes = Blueprint('admin', __name__)
+
+
+# Función para obtener un administrador por su correo electrónico
+def get_admin(email):
+    if connection:
+        try:
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM admin WHERE email = %s", (email,))
+            admin = cursor.fetchone()
+            return admin
+        except mysql.connector.Error as err:
+            print("Error al obtener administrador:", err)
+    return None
 
 
 # Ruta para el administrador
@@ -60,10 +72,15 @@ def register_user():
                     existing_user = cursor.fetchone()
 
                     if existing_user is None:
+                        # Hash de la contraseña
+                        hashpass = bcrypt.hashpw(
+                            password.encode('utf-8'), bcrypt.gensalt())
 
                         # Insertar el nuevo Usuario en la base de datos
                         cursor.execute(
-                            "INSERT INTO user (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, password, phone))
+                            "INSERT INTO user (name, email, password, phone) VALUES (%s, %s, %s, %s)",
+                            (name, email, hashpass, phone)
+                        )
                         connection.commit()
 
                         flash('Se registró el Usuario correctamente')
@@ -105,10 +122,15 @@ def register_admin():
                     existing_admin = cursor.fetchone()
 
                     if existing_admin is None:
+                        # Hash de la contraseña
+                        hashpass = bcrypt.hashpw(
+                            password.encode('utf-8'), bcrypt.gensalt())
 
                         # Insertar el nuevo administrador en la base de datos
                         cursor.execute(
-                            "INSERT INTO admin (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, password, phone))
+                            "INSERT INTO admin (name, email, password, phone) VALUES (%s, %s, %s, %s)",
+                            (name, email, hashpass, phone)
+                        )
                         connection.commit()
 
                         flash('Se registró el administrador correctamente')
@@ -184,7 +206,7 @@ def delete_user(user_id):
                 )
             )
         """, (user_id,))
-        
+
         # Eliminar Competencias de perfiles relacionados con el usuario
         cursor.execute("""
             DELETE FROM competencias 
@@ -206,7 +228,7 @@ def delete_user(user_id):
                 )
             )
         """, (user_id,))
-        
+
         # Eliminar perfiles de puesto relacionados con el usuario
         cursor.execute("""
             DELETE FROM perfilpuesto 
@@ -224,7 +246,7 @@ def delete_user(user_id):
                 )
             )
         """, (user_id,))
-        
+
         # Eliminar puestos relacionados con el usuario
         cursor.execute("""
             DELETE FROM puestos 
@@ -238,7 +260,7 @@ def delete_user(user_id):
                 )
             )
         """, (user_id,))
-        
+
         # Eliminar departamentos relacionados con el usuario
         cursor.execute("""
             DELETE FROM departamento 
@@ -248,13 +270,13 @@ def delete_user(user_id):
                 WHERE id = %s
             )
         """, (user_id,))
-        
+
         # Eliminar el área
         cursor.execute("DELETE FROM areas WHERE id = %s", (user_id,))
-        
+
         # Eliminar el usuario
         cursor.execute("DELETE FROM user WHERE id = %s", (user_id,))
-        
+
         connection.commit()
         flash('Usuario eliminado correctamente', 'success')
     except mysql.connector.Error as err:
