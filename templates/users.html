@@ -83,21 +83,19 @@
 								<h5 class="text-center">{{ user.name }}</h5>
 							</div>
 							<div class="card-body">
-								<form>
-									<div class="row">
-										<input type="hidden" class="form-control" value="{{ user.id }}" name="id">
-										<div class="col">
-											<small>Correo</small>
-											<input type="text" class="form-control" value="{{ user.email }}" readonly>
-										</div>
-										<div class="col">
-											<small>Número Telefónico</small>
-											<input type="text" class="form-control" value="{{ user.phone }}" readonly>
-										</div>
+								<div class="row">
+									<input type="hidden" class="form-control" value="{{ user.id }}" name="id">
+									<div class="col">
+										<small>Correo</small>
+										<input type="text" class="form-control" value="{{ user.email }}" readonly>
 									</div>
-									<!-- Botón para eliminar el usuario -->
-									<a href="{{ url_for('admin.delete_user', user_id=user.id) }}"
-										class="btn btn-danger btn-delete mt-3">Eliminar</a>
+									<div class="col">
+										<small>Número Telefónico</small>
+										<input type="text" class="form-control" value="{{ user.phone }}" readonly>
+									</div>
+								</div>
+								<form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="post">
+									<button type="submit" class="btn btn-danger mt-3">Eliminar Usuario</button>
 								</form>
 							</div>
 						</div>

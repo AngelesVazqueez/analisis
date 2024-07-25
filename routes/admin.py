@@ -60,13 +60,10 @@ def register_user():
                     existing_user = cursor.fetchone()
 
                     if existing_user is None:
-                        # Hash de la contraseña
-                        hashpass = bcrypt.hashpw(
-                            password.encode('utf-8'), bcrypt.gensalt())
 
                         # Insertar el nuevo Usuario en la base de datos
                         cursor.execute(
-                            "INSERT INTO user (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, hashpass, phone))
+                            "INSERT INTO user (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, password, phone))
                         connection.commit()
 
                         flash('Se registró el Usuario correctamente')
@@ -108,13 +105,10 @@ def register_admin():
                     existing_admin = cursor.fetchone()
 
                     if existing_admin is None:
-                        # Hash de la contraseña
-                        hashpass = bcrypt.hashpw(
-                            password.encode('utf-8'), bcrypt.gensalt())
 
                         # Insertar el nuevo administrador en la base de datos
                         cursor.execute(
-                            "INSERT INTO admin (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, hashpass, phone))
+                            "INSERT INTO admin (name, email, password, phone) VALUES (%s, %s, %s, %s)", (name, email, password, phone))
                         connection.commit()
 
                         flash('Se registró el administrador correctamente')
@@ -165,25 +159,25 @@ def users():
 
 
 # Ruta para eliminar un usuario
-@admin_routes.route('/delete/user/<int:user_id>/')
+@admin_routes.route('/delete/user/<int:user_id>/', methods=['POST'])
 def delete_user(user_id):
     cursor = connection.cursor()
     try:
         # Eliminar CondicionesTrabajo relacionados con el usuario
         cursor.execute("""
-            DELETE FROM CondicionesTrabajo 
+            DELETE FROM condicionestrabajo 
             WHERE IdPerfil IN (
                 SELECT IdPerfil 
-                FROM PerfilPuesto 
+                FROM perfilpuesto 
                 WHERE IdPuesto IN (
                     SELECT IdPuesto 
-                    FROM Puestos 
+                    FROM puestos 
                     WHERE DepartamentoId IN (
                         SELECT IdDepartamento 
-                        FROM Departamento 
+                        FROM departamento 
                         WHERE IdArea IN (
                             SELECT IdArea 
-                            FROM Areas 
+                            FROM areas 
                             WHERE id = %s
                         )
                     )
@@ -193,19 +187,19 @@ def delete_user(user_id):
         
         # Eliminar Competencias de perfiles relacionados con el usuario
         cursor.execute("""
-            DELETE FROM Competencias 
+            DELETE FROM competencias 
             WHERE IdPerfil IN (
                 SELECT IdPerfil 
-                FROM PerfilPuesto 
+                FROM perfilpuesto 
                 WHERE IdPuesto IN (
                     SELECT IdPuesto 
-                    FROM Puestos 
+                    FROM puestos 
                     WHERE DepartamentoId IN (
                         SELECT IdDepartamento 
-                        FROM Departamento 
+                        FROM departamento 
                         WHERE IdArea IN (
                             SELECT IdArea 
-                            FROM Areas 
+                            FROM areas 
                             WHERE id = %s
                         )
                     )
@@ -215,16 +209,16 @@ def delete_user(user_id):
         
         # Eliminar perfiles de puesto relacionados con el usuario
         cursor.execute("""
-            DELETE FROM PerfilPuesto 
+            DELETE FROM perfilpuesto 
             WHERE IdPuesto IN (
                 SELECT IdPuesto 
-                FROM Puestos 
+                FROM puestos 
                 WHERE DepartamentoId IN (
                     SELECT IdDepartamento 
-                    FROM Departamento 
+                    FROM departamento 
                     WHERE IdArea IN (
                         SELECT IdArea 
-                        FROM Areas 
+                        FROM areas 
                         WHERE id = %s
                     )
                 )
@@ -233,13 +227,13 @@ def delete_user(user_id):
         
         # Eliminar puestos relacionados con el usuario
         cursor.execute("""
-            DELETE FROM Puestos 
+            DELETE FROM puestos 
             WHERE DepartamentoId IN (
                 SELECT IdDepartamento 
-                FROM Departamento 
+                FROM departamento 
                 WHERE IdArea IN (
                     SELECT IdArea 
-                    FROM Areas 
+                    FROM areas 
                     WHERE id = %s
                 )
             )
@@ -247,16 +241,16 @@ def delete_user(user_id):
         
         # Eliminar departamentos relacionados con el usuario
         cursor.execute("""
-            DELETE FROM Departamento 
+            DELETE FROM departamento 
             WHERE IdArea IN (
                 SELECT IdArea 
-                FROM Areas 
+                FROM areas 
                 WHERE id = %s
             )
         """, (user_id,))
         
         # Eliminar el área
-        cursor.execute("DELETE FROM Areas WHERE id = %s", (user_id,))
+        cursor.execute("DELETE FROM areas WHERE id = %s", (user_id,))
         
         # Eliminar el usuario
         cursor.execute("DELETE FROM user WHERE id = %s", (user_id,))
