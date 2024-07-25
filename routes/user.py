@@ -1021,10 +1021,8 @@ def actualizar_datos():
                         update_values_puestos.append(IdPuesto)
 
                         if update_fields_puestos:
-                            query_puestos = f"UPDATE puestos SET {
-                                ', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
-                            cursor.execute(
-                                query_puestos, update_values_puestos)
+                            query_puestos = f"UPDATE puestos SET {', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
+                            cursor.execute(query_puestos, update_values_puestos)
 
                         # Obtener el IdPerfil relacionado con el IdPuesto
                         cursor.execute(
