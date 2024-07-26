@@ -95,8 +95,9 @@
 									</div>
 								</div>
 								<!-- Botón para eliminar el admin -->
-								<a href="{{ url_for('admin.delete_admin', admin_id=admin.id) }}"
-								class="btn btn-danger btn-delete mt-3">Eliminar</a>
+								<form action="{{ url_for('admin.delete_admin', admin_id=admin.id) }}" method="post">
+									<button type="submit" class="btn btn-danger btn-delete mt-3">Eliminar</button>
+								</form>
 							</div>
 						</div>
 					</div>
