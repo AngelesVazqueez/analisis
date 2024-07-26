@@ -720,21 +720,74 @@ def mostrarPuestos():
                         p1.id = %s;
                     """
                     cursor.execute(query, (user['id'],))
-                    puesto = cursor.fetchall()
+                    puesto = cursor.fetchone()
+
+                    # Convertir la ubicación binaria a base64 si es necesario
+                    ubicacion_bin = puesto.get('Ubicacion')
+                    if ubicacion_bin:
+                        if isinstance(ubicacion_bin, bytes):
+                            puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
+                        else:
+                            print("Ubicacion no es de tipo bytes")
+                            puesto['Ubicacion'] = ubicacion_bin
+                    else:
+                        puesto['Ubicacion'] = None
+
+                    # Convertir el campo equipo de trabajo a una lista
+                    if puesto['EquipoTrabajo']:
+                        if isinstance(puesto['EquipoTrabajo'], str):
+                            puesto['EquipoTrabajo'] = puesto['EquipoTrabajo'].split(',')
+                        else:
+                            print("EquipoTrabajo no es de tipo str")
+                            puesto['EquipoTrabajo'] = []
+                    else:
+                        puesto['EquipoTrabajo'] = []
+
+                    # Convertir el campo ConocimientosEspecificos a una lista
+                    if puesto['ConocimientosEspecificos']:
+                        if isinstance(puesto['ConocimientosEspecificos'], str):
+                            puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(',')
+                        else:
+                            print("ConocimientosEspecificos no es de tipo str")
+                            puesto['ConocimientosEspecificos'] = []
+                    else:
+                        puesto['ConocimientosEspecificos'] = []
+
+                    # Convertir el campo Relaciones a una lista
+                    if puesto['Relaciones']:
+                        if isinstance(puesto['Relaciones'], str):
+                            puesto['Relaciones'] = puesto['Relaciones'].split('.')
+                        else:
+                            print("Relaciones no es de tipo str")
+                            puesto['Relaciones'] = []
+                    else:
+                        puesto['Relaciones'] = []
+
+                    # Convertir el campo FuncionesEspecificas a una lista
+                    if puesto['FuncionesEspecificas']:
+                        if isinstance(puesto['FuncionesEspecificas'], str):
+                            puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split('.')
+                        else:
+                            print("FuncionesEspecificas no es de tipo str")
+                            puesto['FuncionesEspecificas'] = []
+                    else:
+                        puesto['FuncionesEspecificas'] = []
+
+                    puestos_completos.append(puesto)
 
     except pymysql.MySQLError as err:
         print(f"Error al obtener puestos completos: {err}")
         return "Error en la consulta a la base de datos", 500
 
     finally:
-        if cursor is not None:
+        if cursor:
             cursor.close()
 
     usuario_id = user['id']
     departamentos = obtener_departamentos(usuario_id)
     puestos = obtener_puestos(usuario_id)
 
-    return render_template("puestos.html", data=puesto, departamentos=departamentos, puestos=puestos)
+    return render_template("puestos.html", data=puestos_completos, departamentos=departamentos, puestos=puestos)
 
 
 # Ruta para eliminar puestos.
