@@ -94,7 +94,9 @@
 										<input type="text" class="form-control" value="{{ admin.phone }}" readonly>
 									</div>
 								</div>
-								<!-- Botón para eliminar el usuario -->
+								<!-- Botón para eliminar el admin -->
+								<a href="{{ url_for('admin.delete_admin', admin_id=admin.id) }}"
+								class="btn btn-danger btn-delete mt-3">Eliminar</a>
 							</div>
 						</div>
 					</div>

@@ -156,23 +156,17 @@ def users():
             connection = current_app.get_db_connection()
             try:
                 with connection.cursor() as cursor:
+
                     cursor.execute("SELECT * FROM user")
+
                     users = cursor.fetchall()
-
-                    # Convertir los datos a diccionario
-                    columnNames = [column[0] for column in cursor.description]
-                    insertObjeto = [dict(zip(columnNames, user)) for user in users]
-
-                    # Verificar los datos convertidos
-                    print(f"InsertObjeto: {insertObjeto}")  # Depuración
 
             except pymysql.MySQLError as err:
                 print(f"Error al obtener usuarios: {err}")
-                insertObjeto = []
             finally:
-                connection.close()
+                cursor.close()
             
-            return render_template('users.html', users=insertObjeto)
+            return render_template('users.html', users=users)
     else:
         return redirect(url_for('main.index'))
 
@@ -305,20 +299,12 @@ def admins():
                     # Obtener todos los resultados de la consulta
                     admins = cursor.fetchall()
 
-                    # Convertir los datos a diccionario
-                    columnName = [column[0] for column in cursor.description]
-                    insertObjeto = [dict(zip(columnName, registro)) for registro in admins]
-
-                    # Verificar los datos convertidos
-                    print(f"InsertObjeto: {insertObjeto}")
-
             except pymysql.MySQLError as err:
                 print(f"Error al obtener administradores: {err}")
-                insertObjeto = []
             finally:
                 connection.close()
             
-            return render_template('admins.html', admins=insertObjeto)
+            return render_template('admins.html', admins=admins)
     else:
         return redirect(url_for('main.index'))
 
