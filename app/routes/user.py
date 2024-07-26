@@ -573,7 +573,6 @@ def eliminar_area(IdArea):
 
 @user_routes.route('/mostrarDepartamentos/', methods=['GET', 'POST'])
 def mostrarDepartamentos():
-    insertObjeto = []
     cursor = None
 
     try:
@@ -721,48 +720,7 @@ def mostrarPuestos():
                         p1.id = %s;
                     """
                     cursor.execute(query, (user['id'],))
-                    datosDB = cursor.fetchall()
-                    columName = [column[0] for column in cursor.description]
-                    for registro in datosDB:
-                        puesto = dict(zip(columName, registro))
-
-                        # Convertir la ubicación binaria a base64 si es necesario
-                        ubicacion_bin = puesto.get('Ubicacion')
-                        if ubicacion_bin:
-                            puesto['Ubicacion'] = base64.b64encode(
-                                ubicacion_bin).decode('utf-8')
-                        else:
-                            puesto['Ubicacion'] = None
-
-                        # Convertir el campo equipo de trabajo a una lista
-                        if puesto['EquipoTrabajo']:
-                            puesto['EquipoTrabajo'] = puesto['EquipoTrabajo'].split(
-                                ',')
-                        else:
-                            puesto['EquipoTrabajo'] = []
-
-                        # Convertir el campo equipo de ConocimientosEspecificos a una lista
-                        if puesto['ConocimientosEspecificos']:
-                            puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(
-                                ',')
-                        else:
-                            puesto['ConocimientosEspecificos'] = []
-
-                        # Convertir el campo Relaciones a una lista
-                        if puesto['Relaciones']:
-                            puesto['Relaciones'] = puesto['Relaciones'].split(
-                                '.')
-                        else:
-                            puesto['Relaciones'] = []
-
-                        # Convertir el campo FuncionesEspecificas a una lista
-                        if puesto['FuncionesEspecificas']:
-                            puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(
-                                '.')
-                        else:
-                            puesto['FuncionesEspecificas'] = []
-
-                        puestos_completos.append(puesto)
+                    puesto = cursor.fetchall()
 
     except pymysql.MySQLError as err:
         print(f"Error al obtener puestos completos: {err}")
@@ -776,11 +734,10 @@ def mostrarPuestos():
     departamentos = obtener_departamentos(usuario_id)
     puestos = obtener_puestos(usuario_id)
 
-    return render_template("puestos.html", data=puestos_completos, departamentos=departamentos, puestos=puestos)
+    return render_template("puestos.html", data=puesto, departamentos=departamentos, puestos=puestos)
+
 
 # Ruta para eliminar puestos.
-
-
 @user_routes.route('/eliminar_puesto/<int:IdPuesto>/')
 def eliminar_puesto(IdPuesto):
     connection = current_app.get_db_connection()
@@ -820,9 +777,8 @@ def eliminar_puesto(IdPuesto):
         cursor.close()
     return redirect(url_for('user.mostrarPuestos'))
 
+
 # Ruta para actualizar Área
-
-
 @user_routes.route('/actualizarArea/<string:IdArea>', methods=['GET', 'POST'])
 def actualizarArea(IdArea):
     if 'email' in session:

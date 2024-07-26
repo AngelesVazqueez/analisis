@@ -113,10 +113,6 @@
                                 <a href="" class="btn btn-primary mt-3" id="btn-edit{{ puesto.IdPuesto }}"
                                     data-bs-toggle="modal" data-bs-target="#modal{{ puesto.IdPuesto }}">Mostrar mas
                                     información</a>
-                                <a href="{{ url_for('user.pdf', IdPuesto=puesto.IdPuesto) }}"
-                                    class="btn btn-success mt-3">Descargar</a>
-                                <a href="{{ url_for('user.eliminar_puesto', IdPuesto=puesto.IdPuesto) }}"
-                                    class="btn btn-danger btn-delete mt-3">Eliminar</a>
                             </div>
                         </div>
                     </div>
@@ -137,11 +133,9 @@
                                         <small>Lista de Puestos</small>
                                         <select class="form-select">
                                             {% for puesto in puestos %}
-                                            <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
+                                            <option value="{{ puesto.IdPuesto }}">{{ puesto.NombrePuesto }}</option>
                                             {% endfor %}
                                         </select>
-
-                                        
 
                                         <small>Jefe Directo</small>
                                         <input type="text" class="form-control" value="{{ puesto.Jefe }}" name="Jefe">
