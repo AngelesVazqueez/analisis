@@ -136,11 +136,9 @@ def departamento():
                             cursor.execute(
                                 sql, (nombre_departamento, id_area, user['id']))
                             connection.commit()
-                            flash(
-                                'Se registró el departamento correctamente', 'success')
+                            flash('Se registró el departamento correctamente', 'success')
                         else:
-                            flash(
-                                'El departamento ya existe en esta área', 'warning')
+                            flash('El departamento ya existe en esta área', 'warning')
 
                         return redirect(url_for('user.departamento'))
 
@@ -148,12 +146,12 @@ def departamento():
                     print("Error al registrar departamento:", err)
                     connection.rollback()
                 finally:
-                    connection.close()
+                    cursor.close()
 
             usuario_id = user['id']
 
             # Obtener áreas disponibles utilizando la función obtener_areas()
-            areas = obtener_areas(user['id'])
+            areas = obtener_areas(usuario_id)
 
             return render_template('departamento.html', areas=areas, user=user)
         else:
