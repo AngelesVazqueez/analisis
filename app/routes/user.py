@@ -495,7 +495,7 @@ def areas():
 
     try:
         connection = current_app.get_db_connection()
-        
+
         if 'email' in session:
             email = session['email']
             # Función para obtener detalles del usuario desde la base de datos
@@ -510,10 +510,7 @@ def areas():
                         WHERE areas.id = %s  
                         GROUP BY areas.IdArea;
                         """, (user['id'],))
-                    datosDB = cursor.fetchall()
-                    columName = [column[0] for column in cursor.description]
-                    for registro in datosDB:
-                        insertObjeto.append(dict(zip(columName, registro)))
+                    data = cursor.fetchall()
 
     except pymysql.MySQLError as err:
         print(f"Error al ejecutar la consulta: {err}")
@@ -523,7 +520,7 @@ def areas():
         if cursor is not None:
             cursor.close()  # Asegúrate de cerrar el cursor
 
-    return render_template("mostrar.html", data=insertObjeto)
+    return render_template("mostrar.html", data=data)
 
 
 # Ruta para eliminar áreas.
