@@ -105,7 +105,7 @@
                                 <label for="id_area" class="form-label">Área:</label>
                                 <select id="id_area" name="id_area" class="form-select" required>
                                     {% for area in areas %}
-                                    <option value="{{ area[0] }}">{{ area[0] }}</option>
+                                    <option value="{{ area.IdArea }}">{{ area.NombreArea }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

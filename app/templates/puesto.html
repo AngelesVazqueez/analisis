@@ -111,7 +111,7 @@
                                             <select class="form-select" id="id_departamento" name="id_departamento"
                                                 required>
                                                 {% for departamento in departamentos %}
-                                                <option value="{{ departamento[0] }}">{{ departamento[1] }}</option>
+                                                <option value="{{ departamento.IdDepartamento }}">{{ departamento.NombreDepartamento }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>

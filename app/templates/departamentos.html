@@ -147,7 +147,7 @@
 													<label for="Area" class="form-label">Área:</label>
 													<select id="Area" name="Area" class="form-select" required>
 														{% for area in areas %}
-														<option value="{{ area[0] }}" {% if area[0] == departamento.IdArea %} selected {% endif %}>{{ area[1] }}</option>
+														<option value="{{ area.IdArea }}">{{ area.NombreArea }}</option>
 														{% endfor %}
 													</select>
 													<div class="modal-footer">

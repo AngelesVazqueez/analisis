@@ -97,13 +97,14 @@ def obtener_areas(usuario_id):
             FROM areas
             WHERE id = %s
             """
-            cursor.execute(query, (usuario_id))
+            cursor.execute(query, (usuario_id,))
             areas = cursor.fetchall()
             return areas
     except pymysql.MySQLError as err:
         print(f"Error al obtener áreas desde la base de datos: {err}")
         return []
-
+    finally:
+        connection.close()
 
 # Ruta para ingresar un departamento en un área
 @user_routes.route('/departamento/', methods=['GET', 'POST'])
@@ -594,10 +595,7 @@ def mostrarDepartamentos():
                         WHERE areas.id = %s
                         GROUP BY departamento.IdDepartamento;
                     """, (user['id'],))
-                datosDB = cursor.fetchall()
-                columName = [column[0] for column in cursor.description]
-                for registro in datosDB:
-                    insertObjeto.append(dict(zip(columName, registro)))
+                data = cursor.fetchall()
 
     except Exception as e:
         print(f"Error al ejecutar la consulta: {e}")
@@ -608,7 +606,7 @@ def mostrarDepartamentos():
             cursor.close()  # Asegúrate de cerrar el cursor
 
     areas = obtener_areas(user['id'],)
-    return render_template("departamentos.html", data=insertObjeto, areas=areas)
+    return render_template("departamentos.html", data=data, areas=areas)
 
 
 # Ruta para eliminar departamentos.
