@@ -54,7 +54,7 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
+            <a class="btn-getstarted" href="{{ url_for('session.logout') }}">Cerrar Sesión</a>
 
         </div>
     </header>
@@ -79,9 +79,9 @@
                         </ul>
                         {% endif %}
                         {% endwith %}
-                        <button class="btn btn-primary user-button" data-toggle="collapse" data-target="#info_user"
+                        <button class="btn boton user-button" data-toggle="collapse" data-target="#info_user"
                             aria-expanded="false" aria-controls="info_user" name="tipo_registro">Usuario</button>
-                        <button class="btn btn-primary admin-button" data-toggle="collapse" data-target="#info_admin"
+                        <button class="btn boton admin-button" data-toggle="collapse" data-target="#info_admin"
                             aria-expanded="false" aria-controls="info_admin" name="tipo_registro">Administrador</button>
                     </div>
                     <div id="info_user" class="collapse">
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="col-md-4">
-                                        <button class="btn btn-primary">Registrar Usuario</button>
+                                        <button class="btn boton">Registrar Usuario</button>
                                     </div>
                                 </div>
                             </form>
@@ -154,7 +154,7 @@
                                 </div>
                                 <div class="form-row">
                                     <div class="col-md-4">
-                                        <button class="btn btn-primary">Registrar Administrador</button>
+                                        <button class="btn boton">Registrar Administrador</button>
                                     </div>
                                 </div>
                             </form>
@@ -215,6 +215,12 @@
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
+    
+    <style>
+        .boton {
+            background: #eb5d1e;
+        }
+    </style>
 
     <!-- Vendor JS Files -->
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

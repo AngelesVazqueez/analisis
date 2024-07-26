@@ -1,65 +1,28 @@
-from flask import Blueprint, render_template, url_for, redirect, session, request, flash, make_response, jsonify
-from func.func import obtener_areas
-from database.database import dbConnection
+from flask import Blueprint, current_app, render_template, url_for, redirect, session, request, flash, make_response, jsonify
+from app.func.func import obtener_areas
 import mysql.connector
-from bson.binary import Binary
+import pymysql
 import base64
 from io import BytesIO
 from xhtml2pdf import pisa
-import bcrypt
 
 user_routes = Blueprint('user', __name__)
-# Obtener la conexión a la base de datos
-db = dbConnection()
 
+# Obtener la conexión a la base de datos
+db = current_app.get_db_connection()
 
 def get_user(email):
-    if db:
+    connection = current_app.get_db_connection()
+    if connection:
         try:
-            cursor = db.cursor(dictionary=True)
-            cursor.execute("SELECT * FROM user WHERE email = %s", (email,))
-            user = cursor.fetchone()
-            return user
-        except mysql.connector.Error as err:
-            print("Error al obtener usuario:", err)
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT * FROM user WHERE email = %s", (email,))
+                user = cursor.fetchone()
+                return user
+        except pymysql.MySQLError as err:
+            print(f"Error al obtener administrador: {err.args[0]}, {err.args[1]}")
     return None
-
-
-@user_routes.route('/login/', methods=['POST'])
-def iniciar():
-    connection = mysql.connector.connect(
-        host='sql5.freemysqlhosting.net',
-        user='sql5720463',
-        password='EUTLx1IP9A',
-        database='sql5720463'
-    )
-    cursor = connection.cursor(dictionary=True)
-    try:
-        email = request.form['email']
-        password = request.form['password']
-
-        # Buscar en la tabla de admin
-        cursor.execute("SELECT * FROM admin WHERE email = %s", (email,))
-        login_admin = cursor.fetchone()
-        if login_admin and bcrypt.checkpw(password.encode('utf-8'), login_admin['password']):
-            session['email'] = email
-            return redirect(url_for('admin.admin'))
-
-        # Buscar en la tabla de users
-        cursor.execute("SELECT * FROM user WHERE email = %s", (email,))
-        login_user = cursor.fetchone()
-        if login_user and bcrypt.checkpw(password.encode('utf-8'), login_user['password']):
-            session['email'] = email
-            return redirect(url_for('user.user'))
-
-        flash('Correo o contraseña incorrectos')
-        return redirect(url_for('main.index'))
-    except mysql.connector.Error as err:
-        print("Error al iniciar sesión:", err)
-        flash('Hubo un error al iniciar sesión. Inténtalo de nuevo.')
-        return redirect(url_for('main.index'))
-    finally:
-        cursor.close()
 
 
 # Ruta para inicio de usuarios

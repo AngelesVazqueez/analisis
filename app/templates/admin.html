@@ -41,9 +41,9 @@
 
 			<nav id="navmenu" class="navmenu">
 				<ul>
-					<li><a href="{{ url_for('admin.admin') }}">Inicio</a></li>
+					<li><a href="{{ url_for('admin.admin') }}" class="active">Inicio</a></li>
 					<li><a href="{{ url_for('admin.registro') }}">Registro</a></li>
-					<li class="dropdown"><a href="#" class="active"><span>Listas</span> <i
+					<li class="dropdown"><a href="#"><span>Listas</span> <i
 								class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
 							<li><a href="{{ url_for('admin.users') }}">Usuarios</a></li>
@@ -54,7 +54,7 @@
 				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 			</nav>
 
-			<a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
+			<a class="btn-getstarted" href="{{ url_for('session.logout') }}">Cerrar Sesión</a>
 
 		</div>
 	</header>
@@ -65,50 +65,76 @@
 		<section id="hero" class="section hero">
 
 			<div class="container">
-				<div class="card-header text-center mb-5">
-					<h1>Lista de administradores</h1>
-				</div>
-				{% with messages = get_flashed_messages() %}
-				{% if messages %}
-				<div class="alert alert-info" role="alert">
-					{{ messages[0] }}
-				</div>
-				{% endif %}
-				{% endwith %}
-				<div class="row gy-4">	
-					{% for admin in admins %}
-					<div class="col-md-6 mb-3">
-						<div class="card">
-							<div class="card-header">
-								<h5 class="text-center">{{ admin.name }}</h5>
-							</div>
-							<div class="card-body">
-								<form>
-									<div class="row">
-										<input type="hidden" class="form-control" value="{{ admin.id }}" name="id">
-										<div class="col">
-											<small>Correo</small>
-											<input type="text" class="form-control" value="{{ admin.email }}" readonly>
-										</div>
-										<div class="col">
-											<small>Número Telefónico</small>
-											<input type="text" class="form-control" value="{{ admin.phone }}" readonly>
-										</div>
-									</div>
-									<!-- Botón para eliminar el usuario -->
-									<a href="{{ url_for('admin.delete_admin', admin_id=admin.id) }}"
-										class="btn btn-danger btn-delete mt-3">Eliminar</a>
-								</form>
-							</div>
-						</div>
+				<div class="row gy-4">
+					<div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
+						<h1>¡Bienvenido Administrador {{ admin.name }}!</h1>
 					</div>
-					{% endfor %}
+					<div class="col-lg-6 order-1 order-lg-2 hero-img">
+						<img src="{{ url_for('static', filename='img/hero-img.svg') }}" class="img-fluid animated"
+							alt="">
+					</div>
 				</div>
 			</div>
 
-		</section>
-		<!-- /Hero Section -->
+		</section><!-- /Hero Section -->
 
+		<!-- About Section -->
+		<section id="about" class="section about">
+
+			<div class="container">
+
+				<div class="row gy-3">
+
+					<div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+						<img src="{{ url_for('static', filename='img/about-img.svg') }}" alt="" class="img-fluid">
+					</div>
+
+					<div class="col-lg-6 d-flex flex-column justify-content-center" data-aos="fade-up"
+						data-aos-delay="200">
+						<div class="about-content ps-0 ps-lg-3">
+							<h3>¡Bienvenido al Panel de Administración de la Aplicación de Análisis de Puestos!</h3>
+							<p class="fst-italic">
+								En este panel, los administradores tienen la capacidad de gestionar usuarios y 
+								administradores de manera eficiente. Aquí puedes:
+							</p>
+							<ul>
+								<li>
+									<i class="bi bi-diagram-3"></i>
+									<div>
+										<h4>Crear usuarios y administradores</h4>
+										<p>Permite a los administradores crear nuevos usuarios para que puedan realizar sus análisis de puestos, 
+											además de crear usuarios, también puedes crear futuros administradores que ayudarán en la gestión y supervisión de la aplicación.
+										</p>
+									</div>
+								</li>
+								<li>
+									<i class="bi bi-fullscreen-exit"></i>
+									<div>
+										<h4>Ver Listas de Usuarios y Administradores</h4>
+										<p>Accede a la lista completa de usuarios y administradores registrados en el sistema y visualiza sus detalles.</p>
+									</div>
+								</li>
+								<li>
+									<i class="bi bi-person-dash-fill"></i>
+									<div>
+										<h4>Eliminar Usuarios y Administradores</h4>
+										<p>Si es necesario, puedes eliminar usuarios o administradores del sistema para mantener la base de datos actualizada y segura.
+										</p>
+									</div>
+								</li>
+							</ul>
+							<p>
+								Navega por el panel y utiliza las herramientas disponibles para asegurar que la aplicación funcione de manera óptima y eficiente. 
+								¡Gracias por tu dedicación y esfuerzo en la gestión del análisis de puestos!
+							</p>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+
+		</section><!-- /About Section -->
 	</main>
 
 	<footer id="footer" class="footer position-relative">
@@ -148,6 +174,9 @@
 
         <div class="container copyright text-center mt-4">
             <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>All Rights Reserved</span></p>
+            <div class="credits">
+				Diseñado por <a >Angeles Natividad</a>
+            </div>
         </div>
     </footer>
 
@@ -166,7 +195,6 @@
 
 	<!-- Main JS File -->
 	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/delete.js') }}"></script>
 
 </body>
 

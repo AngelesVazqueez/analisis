@@ -64,7 +64,7 @@
 				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 			</nav>
 
-			<a class="btn-getstarted" href="{{ url_for('main.logout') }}">Cerrar Sesión</a>
+			<a class="btn-getstarted" href="{{ url_for('session.logout') }}">Cerrar Sesión</a>
 
 		</div>
 	</header>
@@ -75,77 +75,91 @@
 		<section id="hero" class="section hero">
 			<div class="container">
 				<div class="card-header text-center">
-					<h1>Lista de áreas</h1>
+					<h1>Lista de departamentos</h1>
 				</div>
 				{% with messages = get_flashed_messages() %}
 				{% if messages %}
 				<div class="alert-container mt-3">
 					{% for message in messages %}
 					<div class="alert alert-info alert-dismissible fade show  text-center" role="alert">
-						<p>{{ message }}</p>
+							<p>{{ message }}</p>
 					</div>
 					{% endfor %}
 				</div>
 				{% endif %}
 				{% endwith %}	
 				<div class="row gy-4 mt-3">
-					{% for area in data %}
+					{% for departamento in data %}
 					<div class="col-md-6 mb-3">
 						<div class="card">
 							<div class="card-header">
-								<h5 class="text-center">{{ area.NombreArea }}</h5>
+								<h5 class="text-center">{{ departamento.NombreDepartamento }}</h5>
 							</div>
 							<div class="card-body">
 								<form>
-									{% if area.Departamentos %}
 									<div class="row">
 										<div class="col">
-											<h5 name="IdArea" class="text-center">Id del área: {{ area.IdArea }}</h5>
+											<h5 name="IdDepartamento" class="text-center">Id del Departamento: {{ departamento.IdDepartamento }}</h5>
 										</div>
 									</div>
-									{% for departamento in area.Departamentos.split(', ') %}
 									<div class="row">
 										<div class="col">
-											<small>Departamento:</small>
-											<input type="text" class="form-control" value="{{ departamento }}" readonly>
+											<small>Área del Departamento :</small>
+											<input type="text" class="form-control" value="{{ departamento.NombreArea }}" readonly>
+										</div>
+									</div>
+									{% if departamento.Puestos %}
+									{% for puesto in departamento.Puestos.split(', ') %}
+									<div class="row">
+										<div class="col">
+											<small>Puesto:</small>
+											<input type="text" class="form-control" value="{{ puesto }}" readonly>
 										</div>
 									</div>
 									{% endfor %}
 		
 									{% else %}
-									<p>No hay departamentos registrados en esta área.</p>
+									<p class="text-center">No hay puestos registrados en este departamento.</p>
 									{% endif %}
-									<!-- Botón para eliminar el área -->
-									<a href="{{ url_for('user.eliminar_area', IdArea=area.IdArea) }}"
+									<a href="{{ url_for('user.eliminar_depa', IdDepartamento=departamento.IdDepartamento) }}"
 									class="btn btn-danger btn-delete mt-3">Eliminar</a>
-									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ area.IdArea }}"
-                                data-bs-toggle="modal" data-bs-target="#modal{{ area.IdArea }}">Editar Área</a>
-								</form>
-							</div> 
-						</div>
-						 <!--MODAL -->
-						<div class="modal fade" id="modal{{area.IdArea}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-						aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="exampleModalLabel">{{ area.NombreArea }}</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body">
-									<form action="/actualizarArea/{{area.IdArea}}" method="post">
-										<h4 class="text-center">Editar Área</h4>
-										<label>Nombre del Área:</label>
-										<input type="text" class="form-control mb-3" name="NombreArea"
-											value="{{area.NombreArea}}">
-								</div>
-								<div class="modal-footer">
-									<button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
-								</div>
+									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ departamento.IdDepartamento }}"
+                                data-bs-toggle="modal" data-bs-target="#modal{{ departamento.IdDepartamento }}">Editar Departamento</a>
 								</form>
 							</div>
+
+							 <!--MODAL -->
+							<div class="modal-dialog">
+								<div class="modal fade" id="modal{{departamento.IdDepartamento}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h1 class="modal-title fs-5" id="exampleModalLabel">{{ departamento.NombreDepartamento }}</h1>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form action="/actualizarDepa/{{ departamento.IdDepartamento }}" method="post">
+													<h4 class="text-center">Editar Departamento</h4>
+													<label>Nombre del Departamento:</label>
+													<input type="text" class="form-control mb-3" name="NombreDepartamento"
+														value="{{departamento.NombreDepartamento}}">
+								
+													<label for="Area" class="form-label">Área:</label>
+													<select id="Area" name="Area" class="form-select" required>
+														{% for area in areas %}
+														<option value="{{ area[0] }}" {% if area[0] == departamento.IdArea %} selected {% endif %}>{{ area[1] }}</option>
+														{% endfor %}
+													</select>
+													<div class="modal-footer">
+														<button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>								
+							</div>
 						</div>
-					</div>
 					</div>
 					{% endfor %}
 				</div>
@@ -198,7 +212,7 @@
 	<!-- Scroll Top -->
 	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
 			class="bi bi-arrow-up-short"></i></a>
-
+			
 	<!-- Vendor JS Files -->
 	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='vendor/php-email-form/validate.js') }}"></script>
@@ -210,7 +224,7 @@
 
 	<!-- Main JS File -->
 	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/delete-area.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/delete-depa.js') }}"></script>
 
 </body>
 
