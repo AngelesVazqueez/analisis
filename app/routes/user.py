@@ -20,8 +20,7 @@ def get_user(email):
                 user = cursor.fetchone()
                 return user
         except pymysql.MySQLError as err:
-            print(f"Error al obtener administrador: {
-                  err.args[0]}, {err.args[1]}")
+            print(f"Error al obtener administrador: {err.args[0]}, {err.args[1]}")
     return None
 
 
@@ -1021,8 +1020,7 @@ def actualizar_datos():
                             update_values_puestos.append(IdPuesto)
 
                             if update_fields_puestos:
-                                query_puestos = f"UPDATE puestos SET {
-                                    ', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
+                                query_puestos = f"UPDATE puestos SET {', '.join(update_fields_puestos)} WHERE IdPuesto = %s"
                                 cursor.execute(
                                     query_puestos, update_values_puestos)
 
@@ -1067,8 +1065,7 @@ def actualizar_datos():
                                 update_values_perfil.append(IdPerfil)
 
                                 if update_fields_perfil:
-                                    query_perfil = f"UPDATE perfilpuesto SET {
-                                        ', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
+                                    query_perfil = f"UPDATE perfilpuesto SET {', '.join(update_fields_perfil)} WHERE IdPerfil = %s"
                                     cursor.execute(
                                         query_perfil, update_values_perfil)
 
@@ -1099,8 +1096,7 @@ def actualizar_datos():
                                 update_values_condiciones.append(IdPerfil)
 
                                 if update_fields_condiciones:
-                                    query_condiciones = f"UPDATE condicionestrabajo SET {
-                                        ', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
+                                    query_condiciones = f"UPDATE condicionestrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
                                     cursor.execute(
                                         query_condiciones, update_values_condiciones)
 
@@ -1135,8 +1131,7 @@ def actualizar_datos():
                                 update_values_competencias.append(IdPerfil)
 
                                 if update_fields_competencias:
-                                    query_competencias = f"UPDATE competencias SET {
-                                        ', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
+                                    query_competencias = f"UPDATE competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
                                     cursor.execute(
                                         query_competencias, update_values_competencias)
 
