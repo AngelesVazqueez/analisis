@@ -28,6 +28,7 @@ pycparser==2.22
 pyHanko==0.25.0
 pyhanko-certvalidator==0.26.3
 pymongo==4.8.0
+PyMySQL==1.1.1
 pypdf==4.2.0
 pypng==0.20220715.0
 python-bidi==0.4.2
