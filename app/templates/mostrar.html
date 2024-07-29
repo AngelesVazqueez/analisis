@@ -44,22 +44,20 @@
 			<nav id="navmenu" class="navmenu">
 				<ul>
 					<li><a href="{{ url_for('user.user') }}" class="active">Home</a></li>
-					<li class="dropdown"><a href="#"><span>Agregar</span> <i
-								class="bi bi-chevron-down toggle-dropdown"></i></a>
+					<li class="dropdown"><a href="#"><span>Agregar</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
 						<ul>
 							<li><a href="{{ url_for('user.area') }}">Área</a></li>
 							<li><a href="{{ url_for('user.departamento') }}">Departamento</a></li>
 							<li><a href="{{ url_for('user.puesto') }}">Puesto</a></li>
 						</ul>
 					</li>
-					<li class="dropdown"><a href="#"><span>Lista</span> <i
-						class="bi bi-chevron-down toggle-dropdown"></i></a>
-				<ul>
-					<li><a href="{{ url_for('user.areas') }}">Área</a></li>
-					<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
-					<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
-				</ul>
-			</li>
+					<li class="dropdown"><a href="#"><span>Lista</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+						<ul>
+							<li><a href="{{ url_for('user.areas') }}">Área</a></li>
+							<li><a href="{{ url_for('user.mostrarDepartamentos') }}">Departamento</a></li>
+							<li><a href="{{ url_for('user.mostrarPuestos') }}">Puesto</a></li>
+						</ul>
+					</li>
 				</ul>
 				<i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
 			</nav>
@@ -87,7 +85,7 @@
 					{% endfor %}
 				</div>
 				{% endif %}
-				{% endwith %}	
+				{% endwith %}
 				<div class="row gy-4 mt-3">
 					{% for area in data %}
 					<div class="col-md-6 mb-3">
@@ -111,93 +109,102 @@
 										</div>
 									</div>
 									{% endfor %}
-		
+
 									{% else %}
 									<p>No hay departamentos registrados en esta área.</p>
 									{% endif %}
 									<!-- Botón para eliminar el área -->
 									<a href="{{ url_for('user.eliminar_area', IdArea=area.IdArea) }}"
-									class="btn btn-danger btn-delete mt-3">Eliminar</a>
-									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ area.IdArea }}"
-                                data-bs-toggle="modal" data-bs-target="#modal{{ area.IdArea }}">Editar Área</a>
-								</form>
-							</div> 
-						</div>
-						 <!--MODAL -->
-						<div class="modal fade" id="modal{{area.IdArea}}" tabindex="-1" aria-labelledby="exampleModalLabel"
-						aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h1 class="modal-title fs-5" id="exampleModalLabel">{{ area.NombreArea }}</h1>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body">
-									<form action="/actualizarArea/{{area.IdArea}}" method="post">
-										<h4 class="text-center">Editar Área</h4>
-										<label>Nombre del Área:</label>
-										<input type="text" class="form-control mb-3" name="NombreArea"
-											value="{{area.NombreArea}}">
-								</div>
-								<div class="modal-footer">
-									<button type="submit" class="btn btn-primary mt-3">Guardar cambios</button>
-								</div>
+										class="btn btn-danger btn-delete mt-3">Eliminar</a>
+									<a href="" class="btn btn-primary mt-3" id="btn-edit{{ area.IdArea }}" data-bs-toggle="modal"
+										data-bs-target="#modal{{ area.IdArea }}">Editar Área</a>
 								</form>
 							</div>
 						</div>
-					</div>
+						<!--MODAL -->
+						<div class="modal fade" id="modal{{area.IdArea}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+							aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="exampleModalLabel">{{ area.NombreArea }}</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<form action="/actualizarArea/{{area.IdArea}}" method="post">
+											<h4 class="text-center">Editar Área</h4>
+											<label>Nombre del Área:</label>
+											<input type="text" class="form-control mb-3" name="NombreArea" value="{{area.NombreArea}}">
+									</div>
+									<div class="modal-footer">
+										<button type="submit" class="btn boton mt-3">Guardar cambios</button>
+									</div>
+									</form>
+								</div>
+							</div>
+						</div>
 					</div>
 					{% endfor %}
 				</div>
 			</div>
 		</section>
-		
+
 		<!-- /Hero Section -->
 
 	</main>
 
 	<footer id="footer" class="footer position-relative">
-        <div class="container footer-top">
-            <div class="row gy-4">
-                <div class="col-lg-4 col-md-4 footer-about">
-                    <a href="index.html" class="d-flex align-items-center">
-                        <span class="sitename">Universidad Tecnológica de Acapulco</span>
-                    </a>
-                    <div class="footer-contact pt-3">
-                        <p>Av. Comandante Bouganville L5</p>
-                        <p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
-                    </div>
-                </div>
+		<div class="container footer-top">
+			<div class="row gy-4">
+				<div class="col-lg-4 col-md-4 footer-about">
+					<a href="index.html" class="d-flex align-items-center">
+						<span class="sitename">Universidad Tecnológica de Acapulco</span>
+					</a>
+					<div class="footer-contact pt-3">
+						<p>Av. Comandante Bouganville L5</p>
+						<p>Fracc. Lomas de Costa Azul C.P. 39830, Acapulco de Juarez, GRO</p>
+					</div>
+				</div>
 
-                <div class="col-lg-4 col-md-4 footer-links">
-                    <h4>Links útiles</h4>
-                    <ul>
-                        <li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a></li>
+				<div class="col-lg-4 col-md-4 footer-links">
+					<h4>Links útiles</h4>
+					<ul>
+						<li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
+						<li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a></li>
 						<p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
-                        <p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
-                    </ul>
-                </div>
+						<p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
+					</ul>
+				</div>
 
-                <div class="col-lg-4 col-md-4">
-                    <h4>Síguenos</h4>
-                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate con nosotros en Facebook e Instagram </p>
-                    <div class="social-links d-flex">
-                        <a href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i class="bi bi-facebook"></i></a>
-                        <a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<div class="col-lg-4 col-md-4">
+					<h4>Síguenos</h4>
+					<p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate con nosotros
+						en Facebook e Instagram </p>
+					<div class="social-links d-flex">
+						<a
+							href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i
+								class="bi bi-facebook"></i></a>
+						<a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos reservados</span></p>
-        </div>
-    </footer>
+		<div class="container copyright text-center mt-4">
+			<p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos reservados</span>
+			</p>
+		</div>
+	</footer>
 
 	<!-- Scroll Top -->
 	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
 			class="bi bi-arrow-up-short"></i></a>
+
+	<style>
+		.boton {
+			background: #eb5d1e;
+		}
+	</style>
 
 	<!-- Vendor JS Files -->
 	<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

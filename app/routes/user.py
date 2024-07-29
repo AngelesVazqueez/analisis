@@ -979,8 +979,7 @@ def actualizar_datos():
                         existe_puesto = cursor.fetchone()
 
                         if existe_puesto:
-                            flash(
-                                'El nombre del puesto ya existe para este usuario', 'error')
+                            flash('El nombre del puesto ya existe para este usuario', 'error')
                         else:
                             # Actualización de la tabla Puestos
                             update_fields_puestos = []
@@ -1034,11 +1033,8 @@ def actualizar_datos():
                             # Obtener el IdPerfil relacionado con el IdPuesto
                             cursor.execute(
                                 "SELECT IdPerfil FROM perfilpuesto WHERE IdPuesto = %s", (IdPuesto,))
-                            IdPerfil = cursor.fetchone()
-                            if IdPerfil:
-                                IdPerfil = IdPerfil[0]
-                            else:
-                                IdPerfil = None
+                            result = cursor.fetchone()
+                            IdPerfil = result['IdPerfil'] if result else None
 
                             if IdPerfil:
                                 # Actualización de la tabla PerfilPuesto
