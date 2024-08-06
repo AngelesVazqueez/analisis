@@ -236,14 +236,14 @@ def puesto():
         # Captura del campo Relaciones
         relaciones = request.form.get('Relaciones')
         relaciones_lista = [r.strip() for r in relaciones.split(
-            '.')] if relaciones else []  # Convertir a lista
-        relaciones_str = '.'.join(relaciones_lista)  # Convertir a cadena
+            ',')] if relaciones else []  # Convertir a lista
+        relaciones_str = ','.join(relaciones_lista)  # Convertir a cadena
 
         # Captura del campo funciones
         funciones = request.form.get('Funciones')
         funciones_lista = [r.strip() for r in funciones.split(
-            '.')] if funciones else []  # Convertir a lista
-        funciones_str = '.'.join(funciones_lista)  # Convertir a cadena
+            ',')] if funciones else []  # Convertir a lista
+        funciones_str = ','.join(funciones_lista)  # Convertir a cadena
 
         edad = request.form.get('edad')
         sexo = request.form.get('sexo')

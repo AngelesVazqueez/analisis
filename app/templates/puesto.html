@@ -111,7 +111,8 @@
                                             <select class="form-select" id="id_departamento" name="id_departamento"
                                                 required>
                                                 {% for departamento in departamentos %}
-                                                <option value="{{ departamento.IdDepartamento }}">{{ departamento.NombreDepartamento }}</option>
+                                                <option value="{{ departamento.IdDepartamento }}">{{
+                                                    departamento.NombreDepartamento }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -122,12 +123,7 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="jefe" class="form-label">Jefe:</label>
-                                            <select class="form-select" id="jefe" name="jefe" required>
-                                                <option value="No aplica">No aplica</option>
-                                                {% for puesto in puestos %}
-                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
-                                                {% endfor %}
-                                            </select>
+                                            <input type="text" class="form-control" id="jefe" name="jefe" required>
                                         </div>
                                     </div>
                                     <div class="col">
@@ -162,7 +158,8 @@
                                         <div class="form-group mt-3">
                                             <label for="ubicacion" class="form-label">Ubicación:</label>
                                             <div>
-                                            <small id="ubicacion" class="form-text text-muted">Subir imagen en JPG.</small>
+                                                <small id="ubicacion" class="form-text text-muted">Subir imagen en
+                                                    JPG.</small>
                                             </div>
                                             <div>
                                                 <img id="previewImage" src="/static/img/ubicacion.jpg"
@@ -177,7 +174,7 @@
                                             <label for="Funciones" class="form-label">Funciones Específicas:</label>
                                             <div>
                                                 <small id="Funciones" class="form-text text-muted">Escribe las funciones
-                                                    específicas separadas por puntos.</small>
+                                                    específicas separadas por comas.</small>
                                             </div>
                                             <textarea class="form-control" id="Funciones" name="Funciones"
                                                 required></textarea>
@@ -207,29 +204,21 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="reemplaza" class="form-label">Reemplaza a:</label>
-                                            <select class="form-select" id="reemplaza" name="reemplaza" required>
-                                                <option value="No aplica">No aplica</option>
-                                                {% for puesto in puestos %}
-                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
-                                                {% endfor %}
-                                            </select>
+                                            <input type="text" class="form-control" id="reemplaza" name="reemplaza"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="reemplazado" class="form-label">Es reemplazado por:</label>
-                                            <select class="form-select" id="reemplazado" name="reemplazado" required>
-                                                <option value="No aplica">No aplica</option>
-                                                {% for puesto in puestos %}
-                                                <option value="{{ puesto[1] }}">{{ puesto[1] }}</option>
-                                                {% endfor %}
-                                            </select>
+                                            <input type="text" class="form-control" id="reemplazado" name="reemplazado"
+                                                required>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="nota" class="form-label">Nota:</label>
-                                            <textarea class="form-control" id="nota" name="nota" required></textarea>
+                                            <textarea class="form-control" id="nota" name="nota"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -241,7 +230,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <small id="Relaciones" class="form-text text-muted">Escribe las relaciones
-                                                separadas por puntos.</small>
+                                                separadas por comas.</small>
                                             <textarea class="form-control" id="Relaciones" name="Relaciones"
                                                 required></textarea>
                                         </div>
@@ -316,7 +305,11 @@
                                     <div class="col">
                                         <div class="form-group mt-3">
                                             <label for="sexo" class="form-label">Sexo:</label>
-                                            <input type="text" class="form-control" id="sexo" name="sexo" required>
+                                            <select id="sexo" name="sexo" class="form-select" required>
+                                                <option value="Femenino">Femenino</option>
+                                                <option value="Masculino">Masculino</option>
+                                                <option value="Indefinido">Indefinido</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -352,8 +345,8 @@
                                         <div class="form-group mt-3">
                                             <label for="conocimientos" class="form-label">Conocimientos
                                                 Específicos:</label>
-                                            <small id="conocimientos" class="form-text text-muted">Escribe los conocimientos
-                                                separados por comas.</small>
+                                            <small id="conocimientos" class="form-text text-muted">Escribe los
+                                                conocimientos separados por comas.</small>
                                             <input type="text" class="form-control" id="conocimientos"
                                                 name="conocimientos" required>
                                         </div>
@@ -517,17 +510,21 @@
                     <h4>Links útiles</h4>
                     <ul>
                         <li><i class="bi bi-chevron-right"></i> <a href="{{ url_for('user.user') }}">Home</a></li>
-                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a></li>
-						<p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
+                        <li><i class="bi bi-chevron-right"></i> <a href="https://utacapulco.edu.mx/">Universidad</a>
+                        </li>
+                        <p class="mt-3"><strong>Phone:</strong> <span>7446886416</span></p>
                         <p><strong>Email:</strong> <span>universidad@utacapulco.edu.mx</span></p>
                     </ul>
                 </div>
 
                 <div class="col-lg-4 col-md-4">
                     <h4>Síguenos</h4>
-                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate con nosotros en Facebook e Instagram </p>
+                    <p>Sigue nuestras redes sociales para estar al tanto de las últimas noticias y eventos. Conéctate
+                        con nosotros en Facebook e Instagram </p>
                     <div class="social-links d-flex">
-                        <a href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i class="bi bi-facebook"></i></a>
+                        <a
+                            href="https://www.facebook.com/p/Oficial-Universidad-Tecnol%C3%B3gica-de-Acapulco-100063862541593/?locale=es_LA"><i
+                                class="bi bi-facebook"></i></a>
                         <a href="https://www.instagram.com/utacapulco/"><i class="bi bi-instagram"></i></a>
                     </div>
                 </div>
@@ -535,13 +532,14 @@
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos reservados</span></p>
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">UTA</strong> <span>Todos los derechos
+                    reservados</span></p>
         </div>
     </footer>
 
-	<!-- Scroll Top -->
-	<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
-			class="bi bi-arrow-up-short"></i></a>
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
 
     <!-- Vendor JS Files -->
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
