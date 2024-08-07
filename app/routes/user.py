@@ -225,8 +225,7 @@ def puesto():
         reemplazado = request.form.get('reemplazado')
         nota = request.form.get('nota')
 
-        equipo_trabajo = request.form.get(
-            'equipo_trabajo')  # Captura del campo funciones
+        equipo_trabajo = request.form.get('equipo_trabajo')
         equipo_lista = [r.strip() for r in equipo_trabajo.split(
             ',')] if equipo_trabajo else []  # Convertir a lista
         equipo_str = ','.join(equipo_lista)  # Convertir a cadena
@@ -293,8 +292,7 @@ def puesto():
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_str, fecha, reemplaza, reemplazado, ubicacion.read(
-                        ) if ubicacion else None, user['id'], relaciones_str, nota
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_str, fecha, reemplaza, reemplazado, ubicacion.read() if ubicacion else None, user['id'], relaciones_str, nota
                     ))
                     id_puesto = cursor.lastrowid
 
@@ -439,12 +437,12 @@ def pdf(IdPuesto):
 
         # Convertir el campo Relaciones a una lista
                 if puesto['Relaciones']:
-                    puesto['Relaciones'] = puesto['Relaciones'].split('.')
+                    puesto['Relaciones'] = puesto['Relaciones'].split(',')
 
         # Convertir el campo FuncionesEspecificas a una lista
                 if puesto['FuncionesEspecificas']:
                     puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split(
-                        '.')
+                        ',')
 
         # Convertir el campo EquipoTrabajo a una lista
                 if puesto['EquipoTrabajo']:
@@ -734,45 +732,7 @@ def mostrarPuestos():
                         else:
                             puesto['Ubicacion'] = None
 
-                        # Convertir el campo equipo de trabajo a una lista
-                        if puesto['EquipoTrabajo']:
-                            if isinstance(puesto['EquipoTrabajo'], str):
-                                puesto['EquipoTrabajo'] = puesto['EquipoTrabajo'].split(',')
-                            else:
-                                print("EquipoTrabajo no es de tipo str")
-                                puesto['EquipoTrabajo'] = []
-                        else:
-                            puesto['EquipoTrabajo'] = []
-
-                        # Convertir el campo ConocimientosEspecificos a una lista
-                        if puesto['ConocimientosEspecificos']:
-                            if isinstance(puesto['ConocimientosEspecificos'], str):
-                                puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(',')
-                            else:
-                                print("ConocimientosEspecificos no es de tipo str")
-                                puesto['ConocimientosEspecificos'] = []
-                        else:
-                            puesto['ConocimientosEspecificos'] = []
-
-                        # Convertir el campo Relaciones a una lista
-                        if puesto['Relaciones']:
-                            if isinstance(puesto['Relaciones'], str):
-                                puesto['Relaciones'] = puesto['Relaciones'].split('.')
-                            else:
-                                print("Relaciones no es de tipo str")
-                                puesto['Relaciones'] = []
-                        else:
-                            puesto['Relaciones'] = []
-
-                        # Convertir el campo FuncionesEspecificas a una lista
-                        if puesto['FuncionesEspecificas']:
-                            if isinstance(puesto['FuncionesEspecificas'], str):
-                                puesto['FuncionesEspecificas'] = puesto['FuncionesEspecificas'].split('.')
-                            else:
-                                print("FuncionesEspecificas no es de tipo str")
-                                puesto['FuncionesEspecificas'] = []
-                        else:
-                            puesto['FuncionesEspecificas'] = []
+                        
 
                         puestos_completos.append(puesto)
 
@@ -942,6 +902,8 @@ def actualizar_datos():
                 Reemplazar = request.form.get('Reemplazar')
                 Reemplazado = request.form.get('Reemplazado')
                 Nota = request.form.get('Nota')
+                FuncionesEspecificas = request.form.get('FuncionesEspecificas')
+                Relaciones = request.form.get('Relaciones')
                 EsfuerzoFisico = request.form.get('EsfuerzoFisico')
                 EsfuerzoMental = request.form.get('EsfuerzoMental')
                 RiesgoAccidente = request.form.get('RiesgoAccidente')
@@ -1022,6 +984,12 @@ def actualizar_datos():
                             if Nota:
                                 update_fields_puestos.append("Nota = %s")
                                 update_values_puestos.append(Nota)
+                            if FuncionesEspecificas:
+                                update_fields_puestos.append("FuncionesEspecificas = %s")
+                                update_values_puestos.append(FuncionesEspecificas)
+                            if Relaciones:
+                                update_fields_puestos.append("Relaciones = %s")
+                                update_values_puestos.append(Relaciones)
 
                             update_values_puestos.append(IdPuesto)
 
