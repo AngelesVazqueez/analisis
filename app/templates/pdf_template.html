@@ -12,7 +12,12 @@
             font-size: 14px;
         }
 
-        .header,
+        h6 {
+            text-align: right;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
         .footer {
             text-align: center;
             padding: 10px 0;
@@ -22,6 +27,10 @@
             color: #2c3e50;
             font-size: 29px;
             font-weight: bold;
+            margin-top: 0;
+            padding-top: 0;
+            text-align: center;
+            padding: 10px 0;
         }
 
         .subtitulos{
@@ -92,7 +101,6 @@
             border-radius: 3px;
             text-align: center;
             font-size: 14px;
-            /* Adjust button font size */
         }
 
         .btn-success {
@@ -106,10 +114,15 @@
         .nota{
             text-align: center;
         }
+
+        .texto{
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
+    <h6>{{ puesto.Fecha }}</h6>
     <div class="header">Ánalisis de Puestos</div>
     <div class="container">
         <div class="card">
@@ -128,12 +141,10 @@
 
             <table>
                 <tr>
-                    <th>Elaborado el: </th>
                     <th>Clave: </th>
                     <th>No. de Plazas</th>
                 </tr>
                 <tr>
-                    <td>{{ puesto.Fecha }}</td>
                     <td>{{ puesto.Clave }}</td>
                     <td>{{ puesto.NoPlazas }}</td>
                 </tr>
@@ -277,29 +288,36 @@
                     <h5>Competencias: </h5>
                     <h4>A=Con alto dominio,   B= Buen dominio,   C= Mínimo esperado.</h4>
                 </tr>
-                <tr>
-                    <small>Competencias Generales: </small>
-                    <th>Responsabilidad: </th>
-                    <th>Compromiso organizacional: </th>
-                    <th>Empatía</th>
-                </tr>
-                <tr>
-                    <td>{{ puesto.Responsabilidad }}</td>
-                    <td>{{ puesto.Compromiso }}</td>
-                    <td>{{ puesto.Empatia }}</td>
-                </tr>
             </table>
 
             <table>
-            <tr>
-                <small>Competencias Específicas: </small>
-                <th>Trabajo en equipo: </th>
-                <th>Dinamismo – Energía</th>
-            </tr>
-            <tr>
-                <td>{{ puesto.TrabajoEquipo }}</td>
-                <td>{{ puesto.Energia }}</td>
-            </tr>
+                <tr>
+                    <th>Competencias Generales: </th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="list-group mb-3">
+                            {% for generales in puesto.CompGe %}
+                            <li class="list-group-item">{{ generales }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Competencias Específicas: </th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="list-group mb-3">
+                            {% for especificas in puesto.CompEs %}
+                            <li class="list-group-item">{{ especificas }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+            
         </table>
 
         </div>
