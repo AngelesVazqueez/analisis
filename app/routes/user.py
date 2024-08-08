@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app, render_template, url_for, redirect, session, request, flash, make_response, jsonify
+from pymysql.cursors import DictCursor
 from xhtml2pdf import pisa
 from io import BytesIO
 import pymysql
@@ -669,7 +670,7 @@ def mostrarPuestos():
             connection = current_app.get_db_connection()
 
             if user:
-                with connection.cursor() as cursor:
+                with connection.cursor(DictCursor) as cursor:
                     query = """
                     SELECT 
                         p1.IdPuesto, 
@@ -716,9 +717,9 @@ def mostrarPuestos():
                         p1.id = %s;
                     """
                     cursor.execute(query, (user['id'],))
-                    puesto = cursor.fetchone()
+                    puestos = cursor.fetchall()
 
-                    if puesto:
+                    for puesto in puestos:
                         # Convertir la ubicación binaria a base64 si es necesario
                         ubicacion_bin = puesto.get('Ubicacion')
                         if ubicacion_bin:
