@@ -271,76 +271,13 @@
                                         <small>A=Con alto dominio B= Buen Dominio C= Mínimo esperado</small>
 
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Generales</h1>
-                                        <div class="row">
-                                            <div class="col-sm-5 col-md-6">
-                                                <small>Responsabilidad</small>
-                                                <select id="Responsabilidad" name="Responsabilidad" class="form-select"
-                                                    required>
-                                                    <option value="A" {% if puesto.Responsabilidad=='A' %}selected{%
-                                                        endif %}>A
-                                                    </option>
-                                                    <option value="B" {% if puesto.Responsabilidad=='B' %}selected{%
-                                                        endif %}>B
-                                                    </option>
-                                                    <option value="C" {% if puesto.Responsabilidad=='C' %}selected{%
-                                                        endif %}>C
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
-                                                <small>Compromiso</small>
-                                                <select id="Compromiso" name="Compromiso" class="form-select" required>
-                                                    <option value="A" {% if puesto.Compromiso=='A' %}selected{% endif
-                                                        %}>A
-                                                    </option>
-                                                    <option value="B" {% if puesto.Compromiso=='B' %}selected{% endif
-                                                        %}>B
-                                                    </option>
-                                                    <option value="C" {% if puesto.Compromiso=='C' %}selected{% endif
-                                                        %}>C
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-5 col-md-6">
-                                                <small>Empatia</small>
-                                                <select id="Empatia" name="Empatia" class="form-select" required>
-                                                    <option value="A" {% if puesto.Empatia=='A' %}selected{% endif %}>A
-                                                    </option>
-                                                    <option value="B" {% if puesto.Empatia=='B' %}selected{% endif %}>B
-                                                    </option>
-                                                    <option value="C" {% if puesto.Empatia=='C' %}selected{% endif %}>C
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <textarea class="form-control" name="CompGe" rows="3"
+                                            cols="50">{{ puesto.CompGe }}</textarea>
+
                                         <h1 class="modal-title fs-5" id="exampleModalLabel">Específicas</h1>
-                                        <div class="row">
-                                            <div class="col-sm-5 col-md-6">
-                                                <small>Trabajo en Equipo</small>
-                                                <select id="TrabajoEquipo" name="TrabajoEquipo" class="form-select"
-                                                    required>
-                                                    <option value="A" {% if puesto.TrabajoEquipo=='A' %}selected{% endif
-                                                        %}>A</option>
-                                                    <option value="B" {% if puesto.TrabajoEquipo=='B' %}selected{% endif
-                                                        %}>B</option>
-                                                    <option value="C" {% if puesto.TrabajoEquipo=='C' %}selected{% endif
-                                                        %}>C</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-5 offset-sm-2 col-md-6 offset-md-0">
-                                                <small>Energía</small>
-                                                <select id="Energia" name="Energia" class="form-select" required>
-                                                    <option value="A" {% if puesto.Energia=='A' %}selected{% endif %}>A
-                                                    </option>
-                                                    <option value="B" {% if puesto.Energia=='B' %}selected{% endif %}>B
-                                                    </option>
-                                                    <option value="C" {% if puesto.Energia=='C' %}selected{% endif %}>C
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <textarea class="form-control" name="CompEs" rows="3"
+                                            cols="50">{{ puesto.CompEs }}</textarea>
+                                        
                                         <div class="modal-footer mt-3">
                                             <button type="submit" class="btn boton">Actualizar</button>
                                         </div>

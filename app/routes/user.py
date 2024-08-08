@@ -260,11 +260,19 @@ def puesto():
         esfuerzo_mental = request.form.get('esfuerzo_mental')
         riesgo_accidente = request.form.get('riesgo_accidente')
         ambiente = request.form.get('ambiente')
-        responsabilidad = request.form.get('responsabilidad')
-        compromiso = request.form.get('compromiso')
-        empatia = request.form.get('empatia')
-        trabajo_equipo = request.form.get('trabajo_equipo')
-        energia = request.form.get('energia')
+        
+        # Captura del campo Competencias generales
+        CompGe = request.form.get('CompGe')
+        CompGe_lista = [r.strip() for r in CompGe.split(
+            ',')] if CompGe else []  # Convertir a lista
+        CompGe_str = ','.join(CompGe_lista)  # Convertir a cadena
+
+        # Captura del campo Competencias generales
+        CompEs = request.form.get('CompEs')
+        CompEs_lista = [r.strip() for r in CompEs.split(
+            ',')] if CompEs else []  # Convertir a lista
+        CompEs_str = ','.join(CompEs_lista)  # Convertir a cadena
+
         ubicacion = request.files.get('ubicacion')
 
         # Validaciones básicas de los campos del formulario
@@ -288,11 +296,11 @@ def puesto():
                     # Insertar el puesto
                     sql_puesto = """
                     INSERT INTO puestos 
-                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones, Nota) 
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    (NombrePuesto, DepartamentoId, Jefe, Clave, NoPlazas, Objetivo, FuncionesEspecificas, EquipoTrabajo, Fecha, Reemplazar, Reemplazado, Ubicacion, id, Relaciones, Nota, CompGe, CompEs) 
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
                     cursor.execute(sql_puesto, (
-                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_str, fecha, reemplaza, reemplazado, ubicacion.read() if ubicacion else None, user['id'], relaciones_str, nota
+                        nombre_puesto, id_departamento, jefe, clave, no_plazas, objetivo, funciones_str, equipo_str, fecha, reemplaza, reemplazado, ubicacion.read() if ubicacion else None, user['id'], relaciones_str, nota, CompGe_str, CompEs_str
                     ))
                     id_puesto = cursor.lastrowid
 
@@ -315,16 +323,6 @@ def puesto():
                     """
                     cursor.execute(sql_condiciones, (
                         esfuerzo_fisico, esfuerzo_mental, riesgo_accidente, ambiente, id_perfil
-                    ))
-
-                    # Insertar competencias
-                    sql_competencias = """
-                    INSERT INTO competencias
-                    (Responsabilidad, Compromiso, Empatia, TrabajoEquipo, Energia, IdPerfil)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    """
-                    cursor.execute(sql_competencias, (
-                        responsabilidad, compromiso, empatia, trabajo_equipo, energia, id_perfil
                     ))
 
                     # Confirmar transacción
@@ -394,6 +392,8 @@ def pdf(IdPuesto):
                         p1.Reemplazado, 
                         p1.Relaciones,
                         p1.Nota,
+                        p1.CompGe,
+                        p1.CompEs,
                         perfilpuesto.Edad, 
                         perfilpuesto.Sexo, 
                         perfilpuesto.EstadoCivil, 
@@ -404,11 +404,6 @@ def pdf(IdPuesto):
                         condicionestrabajo.EsfuerzoMental, 
                         condicionestrabajo.RiesgoAccidente, 
                         condicionestrabajo.Ambiente,
-                        competencias.Responsabilidad, 
-                        competencias.Compromiso, 
-                        competencias.Empatia, 
-                        competencias.TrabajoEquipo,
-                        competencias.Energia,
                         departamento.NombreDepartamento, 
                         areas.NombreArea
                     FROM 
@@ -417,8 +412,6 @@ def pdf(IdPuesto):
                         perfilpuesto ON perfilpuesto.IdPuesto = p1.IdPuesto
                     LEFT JOIN 
                         condicionestrabajo ON condicionestrabajo.IdPerfil = perfilpuesto.Idperfil
-                    LEFT JOIN 
-                        competencias ON competencias.IdPerfil = perfilpuesto.Idperfil
                     LEFT JOIN 
                         departamento ON p1.DepartamentoId = departamento.IdDepartamento
                     LEFT JOIN 
@@ -452,6 +445,16 @@ def pdf(IdPuesto):
         # Convertir el campo ConocimientosEspecificos a una lista
                 if puesto['ConocimientosEspecificos']:
                     puesto['ConocimientosEspecificos'] = puesto['ConocimientosEspecificos'].split(
+                        ',')
+        
+        # Convertir el campo Competencias generales a una lista
+                if puesto['CompGe']:
+                    puesto['CompGe'] = puesto['CompGe'].split(
+                        ',')
+        
+        # Convertir el campo Competencias especificas a una lista
+                if puesto['CompEs']:
+                    puesto['CompEs'] = puesto['CompEs'].split(
                         ',')
 
         cursor.close()
@@ -683,7 +686,9 @@ def mostrarPuestos():
                         p1.Fecha, 
                         p1.Reemplazar, 
                         p1.Reemplazado,
-                        p1.Nota, 
+                        p1.Nota,
+                        p1.CompGe,
+                        p1.CompEs,
                         p1.Relaciones,
                         perfilpuesto.Edad, 
                         perfilpuesto.Sexo, 
@@ -695,11 +700,6 @@ def mostrarPuestos():
                         condicionestrabajo.EsfuerzoMental, 
                         condicionestrabajo.RiesgoAccidente, 
                         condicionestrabajo.Ambiente,
-                        competencias.Responsabilidad, 
-                        competencias.Compromiso, 
-                        competencias.Empatia, 
-                        competencias.TrabajoEquipo,
-                        competencias.Energia,
                         departamento.NombreDepartamento, 
                         areas.NombreArea
                     FROM 
@@ -708,8 +708,6 @@ def mostrarPuestos():
                         perfilpuesto ON perfilpuesto.IdPuesto = p1.IdPuesto
                     LEFT JOIN 
                         condicionestrabajo ON condicionestrabajo.IdPerfil = perfilpuesto.Idperfil
-                    LEFT JOIN 
-                        competencias ON competencias.IdPerfil = perfilpuesto.Idperfil
                     LEFT JOIN 
                         departamento ON p1.DepartamentoId = departamento.IdDepartamento
                     LEFT JOIN 
@@ -758,14 +756,6 @@ def eliminar_puesto(IdPuesto):
             # Eliminar condiciones de trabajo de perfiles relacionados con el puesto
             cursor.execute("""
                 DELETE FROM condicionestrabajo 
-                WHERE IdPerfil IN (SELECT IdPerfil 
-                                FROM perfilpuesto 
-                                WHERE IdPuesto = %s)
-            """, (IdPuesto,))
-
-            # Eliminar competencias de perfiles relacionados con el puesto
-            cursor.execute("""
-                DELETE FROM competencias 
                 WHERE IdPerfil IN (SELECT IdPerfil 
                                 FROM perfilpuesto 
                                 WHERE IdPuesto = %s)
@@ -912,11 +902,8 @@ def actualizar_datos():
                 Escolaridad = request.form.get('Escolaridad')
                 ConocimientosEspecificos = request.form.get(
                     'ConocimientosEspecificos')
-                Responsabilidad = request.form.get('Responsabilidad')
-                Compromiso = request.form.get('Compromiso')
-                Empatia = request.form.get('Empatia')
-                TrabajoEquipo = request.form.get('TrabajoEquipo')
-                Energia = request.form.get('Energia')
+                CompGe = request.form.get('CompGe')
+                CompEs = request.form.get('CompEs')
 
                 if nueva_ubicacion and nueva_ubicacion.filename.endswith('.jpg'):
                     nueva_ubicacion_data = nueva_ubicacion.read()
@@ -987,6 +974,12 @@ def actualizar_datos():
                             if Relaciones:
                                 update_fields_puestos.append("Relaciones = %s")
                                 update_values_puestos.append(Relaciones)
+                            if CompGe:
+                                update_fields_puestos.append("CompGe = %s")
+                                update_values_puestos.append(CompGe)
+                            if CompEs:
+                                update_fields_puestos.append("CompEs = %s")
+                                update_values_puestos.append(CompEs)
 
                             update_values_puestos.append(IdPuesto)
 
@@ -1067,41 +1060,6 @@ def actualizar_datos():
                                     query_condiciones = f"UPDATE condicionestrabajo SET {', '.join(update_fields_condiciones)} WHERE IdPerfil = %s"
                                     cursor.execute(
                                         query_condiciones, update_values_condiciones)
-
-                                # Actualización de la tabla Competencias
-                                update_fields_competencias = []
-                                update_values_competencias = []
-
-                                if Responsabilidad:
-                                    update_fields_competencias.append(
-                                        "Responsabilidad = %s")
-                                    update_values_competencias.append(
-                                        Responsabilidad)
-                                if Compromiso:
-                                    update_fields_competencias.append(
-                                        "Compromiso = %s")
-                                    update_values_competencias.append(
-                                        Compromiso)
-                                if Empatia:
-                                    update_fields_competencias.append(
-                                        "Empatia = %s")
-                                    update_values_competencias.append(Empatia)
-                                if TrabajoEquipo:
-                                    update_fields_competencias.append(
-                                        "TrabajoEquipo = %s")
-                                    update_values_competencias.append(
-                                        TrabajoEquipo)
-                                if Energia:
-                                    update_fields_competencias.append(
-                                        "Energia = %s")
-                                    update_values_competencias.append(Energia)
-
-                                update_values_competencias.append(IdPerfil)
-
-                                if update_fields_competencias:
-                                    query_competencias = f"UPDATE competencias SET {', '.join(update_fields_competencias)} WHERE IdPerfil = %s"
-                                    cursor.execute(
-                                        query_competencias, update_values_competencias)
 
                             connection.commit()
                             flash('Datos actualizados correctamente')
