@@ -199,28 +199,6 @@ def delete_user(user_id):
                 )
             """, (user_id,))
 
-            # Eliminar Competencias de perfiles relacionados con el usuario
-            cursor.execute("""
-                DELETE FROM competencias 
-                WHERE IdPerfil IN (
-                    SELECT IdPerfil 
-                    FROM perfilpuesto 
-                    WHERE IdPuesto IN (
-                        SELECT IdPuesto 
-                        FROM puestos 
-                        WHERE DepartamentoId IN (
-                            SELECT IdDepartamento 
-                            FROM departamento 
-                            WHERE IdArea IN (
-                                SELECT IdArea 
-                                FROM areas 
-                                WHERE id = %s
-                            )
-                        )
-                    )
-                )
-            """, (user_id,))
-
             # Eliminar perfiles de puesto relacionados con el usuario
             cursor.execute("""
                 DELETE FROM perfilpuesto 
