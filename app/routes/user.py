@@ -732,8 +732,6 @@ def mostrarPuestos():
                         else:
                             puesto['Ubicacion'] = None
 
-                        
-
                         puestos_completos.append(puesto)
 
     except pymysql.MySQLError as err:
@@ -749,7 +747,6 @@ def mostrarPuestos():
     puestos = obtener_puestos(usuario_id)
 
     return render_template("puestos.html", data=puestos_completos, departamentos=departamentos, puestos=puestos)
-
 
 
 # Ruta para eliminar puestos.
