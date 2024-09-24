@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 load_dotenv()
 
 class Config:
-    DATABASE_URL = os.getenv('DATABASE_URL', 'mysql://root:wbFMtmaGoNJYXSIUMmMaVxlmTIkRckyA@monorail.proxy.rlwy.net:35091/railway')
+    DATABASE_URL = os.getenv('DATABASE_URL', 'mysql://root:oFdqClOuWtqwnHnXLqGDaEASLtmBNFHx@autorack.proxy.rlwy.net:20992/railway')
     SECRET_KEY = os.getenv('SECRET_KEY', 'M0i1Xc$GfPw3Yz@2SbQ9lKpA5rJhDtE7')  # Usa una clave por defecto en caso de que no esté en .env
 
     @staticmethod
