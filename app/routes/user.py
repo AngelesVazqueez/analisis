@@ -540,17 +540,6 @@ def eliminar_area(IdArea):
                                                                             FROM departamento 
                                                                             WHERE IdArea = %s)))
             """, (IdArea,))
-            # Eliminar competencias de perfiles relacionados con el área
-            cursor.execute("""
-                DELETE FROM competencias 
-                WHERE IdPerfil IN (SELECT IdPerfil 
-                                FROM perfilpuesto 
-                                WHERE IdPuesto IN (SELECT IdPuesto 
-                                                    FROM puestos 
-                                                    WHERE DepartamentoId IN (SELECT IdDepartamento 
-                                                                            FROM departamento 
-                                                                            WHERE IdArea = %s)))
-            """, (IdArea,))
             # Eliminar perfiles de puesto relacionados con el área
             cursor.execute(
                 "DELETE FROM perfilpuesto WHERE IdPuesto IN (SELECT IdPuesto FROM puestos WHERE DepartamentoId IN (SELECT IdDepartamento FROM departamento WHERE IdArea = %s))", (IdArea,))
@@ -619,17 +608,6 @@ def eliminar_depa(IdDepartamento):
             # Eliminar condiciones de trabajo de perfiles relacionados con el departamento
             cursor.execute("""
                 DELETE FROM condicionestrabajo 
-                WHERE IdPerfil IN (SELECT IdPerfil 
-                                FROM perfilpuesto 
-                                WHERE IdPuesto IN (SELECT IdPuesto 
-                                                    FROM puestos 
-                                                    WHERE DepartamentoId IN (SELECT IdDepartamento 
-                                                                            FROM departamento 
-                                                                            WHERE IdDepartamento = %s)))
-            """, (IdDepartamento,))
-            # Eliminar competencias de perfiles relacionados con el departamento
-            cursor.execute("""
-                DELETE FROM competencias 
                 WHERE IdPerfil IN (SELECT IdPerfil 
                                 FROM perfilpuesto 
                                 WHERE IdPuesto IN (SELECT IdPuesto 

@@ -253,7 +253,15 @@
                                         <small>Edad</small>
                                         <input type="text" class="form-control" value="{{ puesto.Edad }}" name="Edad">
                                         <small>Sexo</small>
-                                        <input type="text" class="form-control" value="{{ puesto.Sexo }}" name="Sexo">
+                                        <select id="Sexo" name="Sexo" class="form-select" required>
+                                            <option value="Femenino" {% if puesto.Sexo=='Femenino'
+                                                %}selected{% endif %}>Femenino</option>
+
+                                            <option value="Masculino" {% if puesto.Sexo=='Masculino'
+                                                %}selected{% endif %}>Masculino</option>
+
+                                            <option value="Indefinido" {% if puesto.Sexo=='Indefinido' %}selected{% endif %}>Indefinido</option>
+                                        </select>
                                         <small>Estado Civil</small>
                                         <input type="text" class="form-control" value="{{ puesto.EstadoCivil }}"
                                             name="EstadoCivil">
