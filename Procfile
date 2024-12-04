@@ -1,1 +1,1 @@
-gunicorn 'run:app'
+gunicorn run:app
