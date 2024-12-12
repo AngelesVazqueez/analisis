@@ -638,6 +638,7 @@ def eliminar_depa(IdDepartamento):
 @user_routes.route('/mostrarPuestos/', methods=['GET'])
 def mostrarPuestos():
     puestos_completos = []
+    puestos = []
     cursor = None
 
     try:
@@ -698,14 +699,9 @@ def mostrarPuestos():
                     puestos = cursor.fetchall()
 
                     for puesto in puestos:
-                        # Convertir la ubicación binaria a base64 si es necesario
                         ubicacion_bin = puesto.get('Ubicacion')
-                        if ubicacion_bin:
-                            if isinstance(ubicacion_bin, bytes):
-                                puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
-                            else:
-                                print("Ubicacion no es de tipo bytes")
-                                puesto['Ubicacion'] = ubicacion_bin
+                        if ubicacion_bin and isinstance(ubicacion_bin, bytes):
+                            puesto['Ubicacion'] = base64.b64encode(ubicacion_bin).decode('utf-8')
                         else:
                             puesto['Ubicacion'] = None
 
@@ -713,15 +709,14 @@ def mostrarPuestos():
 
     except pymysql.MySQLError as err:
         print(f"Error al obtener puestos completos: {err}")
-        return "Error en la consulta a la base de datos", 500
 
     finally:
         if cursor:
             cursor.close()
 
-    usuario_id = user['id']
-    departamentos = obtener_departamentos(usuario_id)
-    puestos = obtener_puestos(usuario_id)
+    usuario_id = user['id'] if 'user' in locals() else None
+    departamentos = obtener_departamentos(usuario_id) if usuario_id else []
+    puestos = obtener_puestos(usuario_id) if usuario_id else []
 
     return render_template("puestos.html", data=puestos_completos, departamentos=departamentos, puestos=puestos)
 
